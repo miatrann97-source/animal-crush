@@ -134,13 +134,11 @@ button:disabled { opacity:.55; cursor:default; }
 .tile .ripple::after { content:""; position:absolute; inset:0; background: radial-gradient(circle at 50% 50%, rgba(120,200,255,.45), rgba(120,200,255,0) 65%); animation: rippleWash 2s ease-out forwards; }
 @keyframes rippleRing { 0% { width:18%; height:18%; opacity:.95; } 100% { width:150%; height:150%; opacity:0; } }
 @keyframes rippleWash { 0% { opacity:1; } 100% { opacity:0; } }
-/* bomb tile: clearly a bomb, not an animal */
-.tile.bomb .inner { background: radial-gradient(circle at 35% 30%, #555, #161616 70%); box-shadow: 0 0 0 2px #ffe45e, 0 0 16px #ff9500, 0 2px 5px rgba(0,0,0,.22); animation: bombPulse 1s ease-in-out infinite; }
+/* bomb tile: colorful midnight-blue wolf head, clearly a special tile, not an animal */
+.tile.bomb .inner { background: radial-gradient(circle at 35% 30%, #1e3a8a, #0f1f4d 70%); box-shadow: 0 0 0 2px #7dd3fc, 0 0 16px #38bdf8, 0 2px 5px rgba(0,0,0,.22); animation: bombPulse 1s ease-in-out infinite; }
 @keyframes bombPulse { 0%,100% { filter: brightness(1); } 50% { filter: brightness(1.35); } }
-.bomb-emoji { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size: clamp(26px, 8vw, 42px); pointer-events:none; }
-.bomb-spark { position:absolute; right:4px; top:0; font-size: clamp(12px, 3.5vw, 18px); color:#ffe45e; text-shadow: 0 0 8px #ff9500; animation: sparkBlink .3s ease-in-out infinite alternate; pointer-events:none; }
-@keyframes sparkBlink { from { opacity:.4; transform: scale(.8) rotate(-10deg); } to { opacity:1; transform: scale(1.2) rotate(10deg); } }
-#bombDragEl { position:fixed; z-index:100; pointer-events:none; font-size:52px; transform: translate(-50%,-50%); filter: drop-shadow(0 6px 10px rgba(0,0,0,.4)); }
+#bombDragEl { position:fixed; z-index:100; pointer-events:none; width:64px; height:64px; transform: translate(-50%,-50%); filter: drop-shadow(0 6px 10px rgba(0,0,0,.4)); }
+#bombDragEl img { width:100%; height:100%; display:block; }
 .tile.bomb-target .inner { outline:3px solid #ff5c5c; outline-offset:-1px; box-shadow: 0 0 0 3px #fff, 0 0 18px #ff5c5c; }
 /* low time warning */
 .hud-stat.low b { color:#ff2d55; animation: timeBlink 1s ease-in-out infinite; }
@@ -397,6 +395,12 @@ button:disabled { opacity:.55; cursor:default; }
 .fx-beam { position:absolute; z-index:24; pointer-events:none; }
 .fx-beam.h { left:0; width:100%; height:12.5%; background: linear-gradient(180deg, rgba(255,190,0,0) 0%, rgba(255,210,60,.8) 16%, #fffbe8 40%, #ffffff 50%, #fffbe8 60%, rgba(255,210,60,.8) 84%, rgba(255,190,0,0) 100%); box-shadow: 0 0 26px 9px rgba(255,200,40,.95), 0 0 64px 20px rgba(255,170,0,.55); animation: beamSweepX .34s ease-out forwards; }
 .fx-beam.v { top:0; height:100%; width:12.5%; background: linear-gradient(90deg, rgba(255,190,0,0) 0%, rgba(255,210,60,.8) 16%, #fffbe8 40%, #ffffff 50%, #fffbe8 60%, rgba(255,210,60,.8) 84%, rgba(255,190,0,0) 100%); box-shadow: 0 0 26px 9px rgba(255,200,40,.95), 0 0 64px 20px rgba(255,170,0,.55); animation: beamSweepY .34s ease-out forwards; }
+/* big bright beam for many-tile clears (8+): a white-pink cross of light through
+   the cleared area, much wider and brighter than the striped beam */
+.fx-bigbeam { position:absolute; z-index:24; pointer-events:none; }
+.fx-bigbeam.v { top:0; height:100%; width:16%; transform: translateX(-50%); background: linear-gradient(90deg, rgba(255,180,240,0) 0%, rgba(255,150,230,.75) 18%, #fff0fb 38%, #ffffff 50%, #fff0fb 62%, rgba(255,150,230,.75) 82%, rgba(255,180,240,0) 100%); box-shadow: 0 0 30px 12px rgba(255,170,235,.8), 0 0 70px 26px rgba(255,120,220,.45); animation: bigBeamIn .55s ease-out forwards; }
+.fx-bigbeam.h { left:0; width:100%; height:16%; transform: translateY(-50%); background: linear-gradient(180deg, rgba(255,180,240,0) 0%, rgba(255,150,230,.75) 18%, #fff0fb 38%, #ffffff 50%, #fff0fb 62%, rgba(255,150,230,.75) 82%, rgba(255,180,240,0) 100%); box-shadow: 0 0 30px 12px rgba(255,170,235,.8), 0 0 70px 26px rgba(255,120,220,.45); animation: bigBeamIn .55s ease-out forwards; }
+@keyframes bigBeamIn { 0% { opacity:0; } 25% { opacity:1; } 100% { opacity:0; } }
 @keyframes beamSweepX { 0% { transform: scaleX(0); opacity:.55; } 45% { transform: scaleX(1); opacity:1; } 100% { transform: scaleX(1); opacity:0; } }
 @keyframes beamSweepY { 0% { transform: scaleY(0); opacity:.55; } 45% { transform: scaleY(1); opacity:1; } 100% { transform: scaleY(1); opacity:0; } }
 /* rainbow lightning: blue-white electric bolts, clearly different from the warm gold beam.
@@ -564,7 +568,8 @@ var IMG = {
   rabbit: "tiles/rabbit.png",
   mouse: "tiles/mouse.png",
   jellyfish: "tiles/jellyfish.png",
-  fox: "tiles/fox.png"
+  fox: "tiles/fox.png",
+  wolf: "tiles/wolf.png"
 };
 var ANIMALS = ["shark","otter","rabbit","mouse","jellyfish","fox"];
 </script>
@@ -575,7 +580,7 @@ var LANG = localStorage.getItem("animalCrushLang") || "vi";
 var STR = {
   vi: {
     tagline: "Xếp 3 bạn thú giống nhau để nổ tung! Càng xếp nhiều, điểm càng cao.",
-    howto: "<b>Cách chơi:</b><br>1. Chạm 1 ô rồi chạm ô bên cạnh để đổi chỗ, hoặc kéo để đổi chỗ.<br>2. Xếp 3 bạn giống nhau thành hàng ngang hoặc dọc để nổ.<br>3. Xếp 4 bạn: được GẤP ĐÔI điểm và tạo kẹo sọc.<br>4. Xếp 5 bạn: tạo kẹo cầu vồng.<br>5. Xếp hình chữ L hoặc T: tạo kẹo gói nổ 3x3.<br>6. Đạt đủ điểm mục tiêu trước khi hết lượt để qua màn!",
+    howto: "<b>Cách chơi:</b><br>1. Chạm 1 ô rồi chạm ô bên cạnh để đổi chỗ, hoặc kéo để đổi chỗ.<br>2. Xếp 3 bạn giống nhau thành hàng ngang hoặc dọc để nổ.<br>3. Xếp 4 bạn: được GẤP ĐÔI điểm và tạo kẹo sọc.<br>4. Xếp 5 bạn: tạo kẹo cầu vồng.<br>5. Xếp hình chữ L hoặc T: tạo kẹo gói nổ 3x3.<br>6. Đạt đủ điểm mục tiêu trước khi hết lượt để qua màn!<br>7. Kéo đầu sói (bom) vào một ô để nổ tung tất cả các ô cùng loại đó!",
     play: "Chơi ngay",
     level: "Màn",
     score: "Điểm",
@@ -615,7 +620,7 @@ var STR = {
   },
   en: {
     tagline: "Match 3 same animals to pop them! The more you match, the higher your score.",
-    howto: "<b>How to play:</b><br>1. Tap a tile, then tap a neighbour to swap, or drag to swap.<br>2. Match 3 same animals in a row or column to pop them.<br>3. Match 4: DOUBLE points and a striped candy.<br>4. Match 5: a rainbow candy.<br>5. Match an L or T shape: a wrapped candy that blasts 3x3.<br>6. Reach the target score before you run out of moves to clear the level!",
+    howto: "<b>How to play:</b><br>1. Tap a tile, then tap a neighbour to swap, or drag to swap.<br>2. Match 3 same animals in a row or column to pop them.<br>3. Match 4: DOUBLE points and a striped candy.<br>4. Match 5: a rainbow candy.<br>5. Match an L or T shape: a wrapped candy that blasts 3x3.<br>6. Reach the target score before you run out of moves to clear the level!<br>7. Drag the wolf (bomb) onto a tile to blast every tile of that animal!",
     play: "Play now",
     level: "Level",
     score: "Score",
@@ -1258,6 +1263,8 @@ async function resolveBoard(swapPos) {
     var ptsFor = function(cell) { return tilePts[cell[0] + "," + cell[1]] || 60; };
     expanded.beams.forEach(function(bm) { stripedBeam(bm, ptsFor); });
     expanded.rainbows.forEach(function(rb) { rainbowLightning(rb.from, rb.cells, ptsFor); });
+    /* Big bright beam when one clear step eats many tiles at once (8+). */
+    if (Object.keys(expanded.cells).length >= 8) bigBeam(Object.keys(expanded.cells).map(function(k) { return expanded.cells[k]; }));
     /* Screen shake removed: it gave An eye strain and headaches. No shake
        anywhere in the game now; flashes, confetti and sounds stay. */
     /* Special activations strike lightning at the special tiles (at least 2 bolts) */
@@ -1416,6 +1423,7 @@ async function doRainbowSwap(r1, c1, r2, c2) {
   AudioEng.sfx("rainbow");
   lightningTo([rb, other]);
   rainbowLightning(rb, list, function() { return 60; });
+  bigBeam(list); /* rainbow clears are usually 8+ tiles: big bright beam */
   chainedBeams.forEach(function(bm) { stripedBeam(bm, function() { return 60; }); });
   burstCells(list, 10, 250); /* rainbow clear bursts in each tile's own color */
   list.forEach(function(cell) { var el = tileEl(cell[0], cell[1]); if (el) el.classList.add("pop"); });
@@ -1481,7 +1489,7 @@ function afterTurn() {
   }
 }
 
-/* ---------- Bomb power-up: drag the bomb onto any tile to detonate a 5x5 blast ---------- */
+/* ---------- Bomb power-up: drag the wolf bomb onto a tile to explode EVERY tile of that animal ---------- */
 var bombDrag = null;
 function startBombDrag(e, pos) {
   if (state.busy || state.over) return;
@@ -1489,7 +1497,11 @@ function startBombDrag(e, pos) {
   bombDrag = { from: pos };
   var el = document.createElement("div");
   el.id = "bombDragEl";
-  el.textContent = "💣";
+  var dragImg = document.createElement("img");
+  dragImg.src = IMG.wolf;
+  dragImg.alt = "wolf bomb";
+  dragImg.draggable = false;
+  el.appendChild(dragImg);
   document.body.appendChild(el);
   moveBombDragEl(e);
   window.addEventListener("pointermove", onBombDragMove);
@@ -1531,19 +1543,39 @@ async function detonateBomb(target, from) {
   state.busy = true;
   clearHint();
   resetHintTimer();
+  /* Color-bomb rule: the bomb explodes EVERY tile of the animal it was dropped on.
+     Specials use their own animal type; a rainbow, another bomb or a typeless tile
+     falls back to the most common animal type on the board. Never nothing. */
+  var targetTl = state.board[target[0]] && state.board[target[0]][target[1]];
+  var type = null;
+  if (targetTl && targetTl.type && ANIMALS.indexOf(targetTl.type) >= 0) type = targetTl.type;
+  if (!type) {
+    var counts = {};
+    state.board.forEach(function(row) { row.forEach(function(t2) { if (t2 && ANIMALS.indexOf(t2.type) >= 0) counts[t2.type] = (counts[t2.type] || 0) + 1; }); });
+    var bestN = 0;
+    Object.keys(counts).forEach(function(ty) { if (counts[ty] > bestN) { bestN = counts[ty]; type = ty; } });
+    if (!type) type = "fox";
+  }
   var cells = {}, list = [];
   function addCell(r, c) {
     if (!inBoard(r, c)) return;
     var k = r + "," + c;
     if (!cells[k]) { cells[k] = [r, c]; list.push([r, c]); }
   }
-  for (var dr = -2; dr <= 2; dr++) for (var dc = -2; dc <= 2; dc++) addCell(target[0] + dr, target[1] + dc);
+  for (var r = 0; r < ROWS; r++) for (var c = 0; c < COLS; c++) {
+    var tl = state.board[r][c];
+    if (tl && tl.type === type) addCell(r, c);
+  }
   addCell(from[0], from[1]); /* the bomb itself is consumed */
-  var pts = list.length * 60 + 500; /* 60 per cleared tile + 500 bomb bonus */
+  var pts = list.length * 60; /* 60 per cleared tile, no flat bonus */
   state.score += pts;
   updateHUD();
   showFloatScore(pts, list);
-  explosionAt(list, "fox", { count: 80, max: 650, text: true });
+  /* Thunder lightning arcs from the bomb to every exploded tile */
+  rainbowLightning(from, list, function() { return 60; });
+  /* Big bright beam when many tiles clear at once (bomb clears usually 10+) */
+  bigBeam(list);
+  explosionAt(list, type, { count: 80, max: 650, text: true });
   flashBoard();
   flashScreen();
   list.forEach(function(cell) { var el = tileEl(cell[0], cell[1]); if (el) el.classList.add("pop"); });
@@ -1597,16 +1629,13 @@ function makeTileEl(tl) {
   var inner = document.createElement("div");
   inner.className = "inner";
   if (tl.type === "bomb") {
-    /* bomb: cartoon black bomb with a sparking fuse, clearly not an animal */
+    /* bomb: colorful midnight-blue wolf head, clearly a special tile, not an animal */
     div.classList.add("bomb");
-    var em = document.createElement("span");
-    em.className = "bomb-emoji";
-    em.textContent = "💣";
-    inner.appendChild(em);
-    var sp = document.createElement("span");
-    sp.className = "bomb-spark";
-    sp.textContent = "✦";
-    inner.appendChild(sp);
+    var img = document.createElement("img");
+    img.src = IMG.wolf;
+    img.alt = "wolf bomb";
+    img.draggable = false;
+    inner.appendChild(img);
   } else {
     var img = document.createElement("img");
     img.src = tl.type === "rainbow" ? IMG.fox : IMG[tl.type];
@@ -1644,7 +1673,7 @@ function refreshTileEl(tl, r, c) {
     inner.appendChild(b);
   }
   var img = inner.querySelector("img");
-  if (img) img.src = tl.type === "rainbow" ? IMG.fox : IMG[tl.type];
+  if (img) img.src = tl.type === "rainbow" ? IMG.fox : tl.type === "bomb" ? IMG.wolf : IMG[tl.type];
   inner.style.background = tl.type === "rainbow" ? "linear-gradient(135deg,#ff9a9e,#fecfef,#a18cd1,#84fab0,#8fd3f4)" : "";
 }
 function positionEl(el, r, c) {
@@ -1725,8 +1754,8 @@ function showFloatScore(points, cells) {
 /* ================= Explosion & lightning FX ================= */
 /* Explosion particle colors: each tile bursts in its own color. Rabbit is soft white/cream
    with a pink edge so it stays visible on the light background. */
-var ANIMAL_COLORS = { shark:"#1e90ff", otter:"#8b5a2b", rabbit:"#fff8ec", mouse:"#9aa0a6", jellyfish:"#b06bff", fox:"#ff8c1a", bomb:"#3a3a3a" };
-var ANIMAL_EDGE = { shark:"#0b5fa5", otter:"#5d3a17", rabbit:"#ff9ecf", mouse:"#6e7378", jellyfish:"#7c3fd4", fox:"#d35400", bomb:"#ffd23f" };
+var ANIMAL_COLORS = { shark:"#1e90ff", otter:"#8b5a2b", rabbit:"#fff8ec", mouse:"#9aa0a6", jellyfish:"#b06bff", fox:"#ff8c1a", bomb:"#38bdf8" };
+var ANIMAL_EDGE = { shark:"#0b5fa5", otter:"#5d3a17", rabbit:"#ff9ecf", mouse:"#6e7378", jellyfish:"#7c3fd4", fox:"#d35400", bomb:"#0ea5e9" };
 function fxLayer() { return document.getElementById("fxLayer"); }
 /* Live particle budget: keep phones smooth by never letting too many fly at once */
 var liveParticles = 0;
@@ -2016,6 +2045,39 @@ function stripedBeam(beam, ptsFor) {
   }
   flashTiles(cells);
   showTileScores(cells, ptsFor);
+}
+/* Big bright beam for many-tile clears (8+ tiles in one clear step): a bright
+   white-pink cross of light through the cleared area, with sparkles and shattered
+   pieces flying. Fires on bomb clears and big cascades; small clears keep their
+   normal effects. No screen shake. */
+function bigBeam(cells) {
+  var layer = fxLayer(); if (!layer || !cells || cells.length < 8) return;
+  var sr = 0, sc = 0;
+  cells.forEach(function(cell) { sr += cell[0]; sc += cell[1]; });
+  var cx = (sc / cells.length + 0.5) * 12.5, cy = (sr / cells.length + 0.5) * 12.5;
+  var v = document.createElement("div");
+  v.className = "fx-bigbeam v";
+  v.style.left = cx + "%";
+  layer.appendChild(v);
+  var h = document.createElement("div");
+  h.className = "fx-bigbeam h";
+  h.style.top = cy + "%";
+  layer.appendChild(h);
+  /* sparkles along the beams */
+  for (var i = 0; i < 10; i++) {
+    var along = (Math.random() * 80 - 40);
+    var sx = Math.random() < 0.5 ? cx + along : cx + (Math.random() * 8 - 4);
+    var sy = Math.random() < 0.5 ? cy + (Math.random() * 8 - 4) : cy + along;
+    spawnStar(layer, sx, sy);
+  }
+  /* shattered pieces flying from the cleared area: white, pink and gold shards */
+  var shards = ["#ffffff", "#ffb0e8", "#ffd23f", "#ffffff", "#ff9ecf", "#ffe45e"];
+  for (var j = 0; j < 14; j++) {
+    spawnConfetti(layer, cx + (Math.random() * 24 - 12), cy + (Math.random() * 24 - 12), shards[j % shards.length], "#ffffff");
+  }
+  flashScreen();
+  setTimeout(function() { if (v.parentNode) v.parentNode.removeChild(v); }, 600);
+  setTimeout(function() { if (h.parentNode) h.parentNode.removeChild(h); }, 600);
 }
 function addBoltPath(svg, d, stroke, width, opacity) {
   var p = document.createElementNS("http://www.w3.org/2000/svg", "path");
