@@ -126,6 +126,25 @@ button:disabled { opacity:.55; cursor:default; }
   animation: floatUp 0.9s ease-out forwards;
 }
 @keyframes floatUp { from { opacity:1; transform: translate(-50%,0); } to { opacity:0; transform: translate(-50%,-46px); } }
+
+/* ---------- Explosion & lightning FX ---------- */
+#board.shake { animation: boardShake .32s ease; }
+@keyframes boardShake {
+  0%, 100% { transform: translate(0,0); }
+  20% { transform: translate(-5px, 3px); }
+  40% { transform: translate(5px, -3px); }
+  60% { transform: translate(-4px, -2px); }
+  80% { transform: translate(3px, 2px); }
+}
+#fxLayer { position:absolute; inset:0; z-index:25; pointer-events:none; overflow:hidden; border-radius:18px; }
+.particle { position:absolute; border-radius:50%; pointer-events:none; will-change: transform, opacity; }
+.boom-text {
+  position:absolute; z-index:26; font-weight:900; font-size:34px; color:#ffcf3f;
+  text-shadow: 2px 2px 0 #fff, 0 0 18px #ff9d00, 0 4px 8px rgba(0,0,0,.3);
+  pointer-events:none; white-space:nowrap; transform: translate(-50%,-50%);
+}
+.fx-flash { position:absolute; inset:0; background:#fff; opacity:0; pointer-events:none; }
+.fx-bolt { position:absolute; inset:0; width:100%; height:100%; pointer-events:none; filter: drop-shadow(0 0 8px #fff) drop-shadow(0 0 16px #ffe45e); }
 #toast {
   position:absolute; left:50%; top:38%; transform: translateX(-50%);
   background: rgba(60,30,60,.88); color:#fff; font-size:18px; font-weight:bold;
@@ -201,6 +220,7 @@ input[type=text]:focus { border-color:#ff5c8a; }
   </div>
   <div id="boardWrap">
     <div id="board"></div>
+    <div id="fxLayer"></div>
     <div id="toast"></div>
   </div>
   <div class="card" id="gameLb"></div>
@@ -272,6 +292,7 @@ var STR = {
     newBest: "Kỷ lục mới!",
     shuffle: "Không còn nước đi, xáo trộn bảng!",
     nice: "Hay quá!",
+    boom: "BÙM!",
     great: "Tuyệt vời!",
     amazing: "Siêu đỉnh!",
     levelUp: "Lên màn mới, khó hơn rồi đó!",
@@ -307,6 +328,7 @@ var STR = {
     newBest: "New best!",
     shuffle: "No moves left, shuffling the board!",
     nice: "Nice!",
+    boom: "BOOM!",
     great: "Great!",
     amazing: "Amazing!",
     levelUp: "New level, harder now!",
@@ -356,6 +378,19 @@ var AudioEng = (function() {
     g.gain.exponentialRampToValueAtTime(0.0001, when + dur);
     o.connect(g); g.connect(dest || sfxGain);
     o.start(when); o.stop(when + dur + 0.05);
+  }
+  function noiseBurst(when, dur, vol, ftype, freq) {
+    var len = Math.max(1, Math.floor(ctx.sampleRate * dur));
+    var buf = ctx.createBuffer(1, len, ctx.sampleRate);
+    var d = buf.getChannelData(0);
+    for (var i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / len);
+    var src = ctx.createBufferSource(); src.buffer = buf;
+    var f = ctx.createBiquadFilter(); f.type = ftype || "lowpass"; f.frequency.value = freq || 800;
+    var g = ctx.createGain();
+    g.gain.setValueAtTime(vol || 0.3, when);
+    g.gain.exponentialRampToValueAtTime(0.0001, when + dur);
+    src.connect(f); f.connect(g); g.connect(sfxGain);
+    src.start(when); src.stop(when + dur);
   }
   function scheduleStep(s, when) {
     var m = MELODY[s % 32], b = BASS[s % 32];
@@ -408,6 +443,15 @@ var AudioEng = (function() {
       else if (name === "lose") { [392,330,262,196].forEach(function(f,i){ tone(f, 0.25, "triangle", 0.2, now + i*0.14); }); }
       else if (name === "select") { tone(700, 0.05, "sine", 0.18, now); }
       else if (name === "invalid") { tone(180, 0.12, "sine", 0.2, now, 120); }
+      else if (name === "boom") {
+        tone(150, 0.35, "sine", 0.5, now, 40);
+        tone(90, 0.3, "triangle", 0.3, now, 45);
+        noiseBurst(now, 0.22, 0.4, "lowpass", 500);
+      }
+      else if (name === "zap") {
+        noiseBurst(now, 0.18, 0.35, "bandpass", 3000);
+        tone(1800, 0.12, "square", 0.12, now, 300);
+      }
     }
   };
 })();
@@ -559,9 +603,9 @@ function shuffleBoard() {
 /* ================= Matching, specials, scoring ================= */
 function rateFor(len) { return len === 3 ? 60 : len === 4 ? 120 : 200; }
 
-/* Expand a clear set with special effects. Returns {cells:Set(keys), wrappedHits:[[r,c]], effects:[names]} */
+/* Expand a clear set with special effects. Returns {cells:Set(keys), wrappedHits:[[r,c]], effects:[names], strikes:[[r,c]]} */
 function expandClear(initialCells) {
-  var cells = {}, queue = [], wrappedHits = [], effects = [];
+  var cells = {}, queue = [], wrappedHits = [], effects = [], strikes = [];
   initialCells.forEach(function(cell) { cells[cell[0] + "," + cell[1]] = cell; queue.push(cell); });
   var processed = {};
   while (queue.length) {
@@ -570,6 +614,7 @@ function expandClear(initialCells) {
     var tl = state.board[r] && state.board[r][c];
     if (!tl || !tl.special || processed[tl.id]) continue;
     processed[tl.id] = true;
+    strikes.push([r, c]);
     if (tl.special === "h") {
       effects.push("striped");
       for (var cc = 0; cc < COLS; cc++) { var k = r + "," + cc; if (!cells[k]) { cells[k] = [r, cc]; queue.push([r, cc]); } }
@@ -597,7 +642,7 @@ function expandClear(initialCells) {
       }
     }
   }
-  return { cells: cells, wrappedHits: wrappedHits, effects: effects };
+  return { cells: cells, wrappedHits: wrappedHits, effects: effects, strikes: strikes };
 }
 
 /* Resolve all matches until the board settles. Returns total points earned. */
@@ -658,6 +703,16 @@ async function resolveBoard(swapPos) {
     else if (expanded.effects.indexOf("wrapped") >= 0) AudioEng.sfx("wrapped");
     else if (expanded.effects.indexOf("striped") >= 0) AudioEng.sfx("striped");
     else if (cascade > 1) AudioEng.sfx("cascade"); else AudioEng.sfx("pop");
+    /* Big-match explosions: 4+ match bursts, 5+ also strikes lightning */
+    found.runs.forEach(function(run) {
+      if (run.len < 4) return;
+      var cell0 = run.cells[0];
+      var tl0 = state.board[cell0[0]] && state.board[cell0[0]][cell0[1]];
+      explosionAt(run.cells, tl0 ? tl0.type : "fox");
+      if (run.len >= 5) lightningTo([run.cells[Math.floor(run.cells.length / 2)]]);
+    });
+    /* Special activations strike lightning at the special tiles */
+    if (expanded.strikes && expanded.strikes.length) lightningTo(expanded.strikes);
     /* Animate pop, then remove */
     var keys = Object.keys(expanded.cells);
     keys.forEach(function(k) {
@@ -699,6 +754,7 @@ async function resolveBoard(swapPos) {
         total += s2; state.score += s2; updateHUD();
         showFloatScore(s2, second);
         AudioEng.sfx("wrapped");
+        explosionAt(expanded.wrappedHits, "fox", { text: false, count: 5, color: "#ffd23f" });
         second.forEach(function(cell) { var el = tileEl(cell[0], cell[1]); if (el) el.classList.add("pop"); });
         await sleep(210);
         second.forEach(function(cell) {
@@ -755,6 +811,7 @@ async function doRainbowSwap(r1, c1, r2, c2) {
   state.score += pts; updateHUD();
   showFloatScore(pts, list);
   AudioEng.sfx("rainbow");
+  lightningTo([rb, other]);
   list.forEach(function(cell) { var el = tileEl(cell[0], cell[1]); if (el) el.classList.add("pop"); });
   await sleep(210);
   list.forEach(function(cell) {
@@ -945,6 +1002,128 @@ function showFloatScore(points, cells) {
   div.style.top = ((sr + 0.5) * 12.5) + "%";
   boardEl.appendChild(div);
   setTimeout(function() { if (div.parentNode) div.parentNode.removeChild(div); }, 950);
+}
+/* ================= Explosion & lightning FX ================= */
+var ANIMAL_COLORS = { shark:"#1e90ff", otter:"#8b5a2b", rabbit:"#ff9ecf", mouse:"#9aa0a6", jellyfish:"#b06bff", fox:"#ff8c1a" };
+function fxLayer() { return document.getElementById("fxLayer"); }
+function spawnParticle(layer, xPct, yPct, color, star) {
+  var p = document.createElement("div");
+  p.className = "particle";
+  if (star) {
+    p.textContent = "★";
+    p.style.background = "transparent";
+    p.style.color = "#ffd23f";
+    p.style.fontSize = (11 + Math.random() * 8) + "px";
+    p.style.textShadow = "0 0 6px #fff";
+    p.style.borderRadius = "0";
+  } else {
+    var size = 5 + Math.random() * 7;
+    p.style.width = size + "px"; p.style.height = size + "px";
+    p.style.background = color;
+    p.style.boxShadow = "0 0 6px " + color;
+  }
+  p.style.left = xPct + "%"; p.style.top = yPct + "%";
+  layer.appendChild(p);
+  var ang = Math.random() * Math.PI * 2;
+  var dist = 34 + Math.random() * 48;
+  var dx = Math.cos(ang) * dist, dy = Math.sin(ang) * dist - 14;
+  var anim = p.animate([
+    { transform: "translate(-50%,-50%) translate(0px,0px) scale(1)", opacity: 1 },
+    { transform: "translate(-50%,-50%) translate(" + dx + "px," + dy + "px) scale(0.2)", opacity: 0 }
+  ], { duration: 550 + Math.random() * 150, easing: "cubic-bezier(.17,.67,.35,1)" });
+  anim.onfinish = function() { if (p.parentNode) p.parentNode.removeChild(p); };
+  setTimeout(function() { if (p.parentNode) p.parentNode.removeChild(p); }, 900);
+}
+function showBoomText(xPct, yPct) {
+  var layer = fxLayer(); if (!layer) return;
+  var div = document.createElement("div");
+  div.className = "boom-text";
+  div.textContent = t("boom");
+  div.style.left = xPct + "%"; div.style.top = yPct + "%";
+  layer.appendChild(div);
+  var anim = div.animate([
+    { transform: "translate(-50%,-50%) scale(0.5) rotate(-6deg)", opacity: 0 },
+    { transform: "translate(-50%,-50%) scale(1.25) rotate(3deg)", opacity: 1, offset: 0.35 },
+    { transform: "translate(-50%,-50%) scale(1) rotate(0deg)", opacity: 1, offset: 0.6 },
+    { transform: "translate(-50%,-50%) scale(1.1) translateY(-18px)", opacity: 0 }
+  ], { duration: 750, easing: "ease-out" });
+  anim.onfinish = function() { if (div.parentNode) div.parentNode.removeChild(div); };
+  setTimeout(function() { if (div.parentNode) div.parentNode.removeChild(div); }, 900);
+}
+function shakeBoard() {
+  var b = document.getElementById("board");
+  if (!b) return;
+  b.classList.remove("shake");
+  void b.offsetWidth;
+  b.classList.add("shake");
+  setTimeout(function() { b.classList.remove("shake"); }, 360);
+}
+function flashBoard() {
+  var layer = fxLayer(); if (!layer) return;
+  var f = document.createElement("div");
+  f.className = "fx-flash";
+  layer.appendChild(f);
+  var anim = f.animate([{ opacity: 0.55 }, { opacity: 0 }], { duration: 220, easing: "ease-out" });
+  anim.onfinish = function() { if (f.parentNode) f.parentNode.removeChild(f); };
+  setTimeout(function() { if (f.parentNode) f.parentNode.removeChild(f); }, 400);
+}
+function explosionAt(cells, type, opts) {
+  opts = opts || {};
+  var layer = fxLayer(); if (!layer || !cells || !cells.length) return;
+  var base = opts.color || ANIMAL_COLORS[type] || "#ffd23f";
+  var colors = [base, "#ffd23f", "#ffffff", base];
+  var perCell = opts.count || 7;
+  var total = 0;
+  cells.forEach(function(cell) {
+    var cx = (cell[1] + 0.5) * 12.5, cy = (cell[0] + 0.5) * 12.5;
+    for (var i = 0; i < perCell && total < 42; i++, total++) {
+      var col = colors[Math.floor(Math.random() * colors.length)];
+      if (Math.random() < 0.25) spawnParticle(layer, cx, cy, col, true);
+      else spawnParticle(layer, cx, cy, col, false);
+    }
+  });
+  if (opts.text !== false) {
+    var sr = 0, sc = 0;
+    cells.forEach(function(cell) { sr += cell[0]; sc += cell[1]; });
+    showBoomText((sc / cells.length + 0.5) * 12.5, (sr / cells.length + 0.5) * 12.5);
+  }
+  if (opts.shake !== false) shakeBoard();
+  AudioEng.sfx("boom");
+}
+function lightningTo(cells) {
+  var layer = fxLayer(); if (!layer || !cells || !cells.length) return;
+  var svgNS = "http://www.w3.org/2000/svg";
+  var svg = document.createElementNS(svgNS, "svg");
+  svg.setAttribute("class", "fx-bolt");
+  svg.setAttribute("viewBox", "0 0 100 100");
+  svg.setAttribute("preserveAspectRatio", "none");
+  cells.forEach(function(cell) {
+    var x1 = (cell[1] + 0.5) * 12.5, y1 = (cell[0] + 0.5) * 12.5;
+    var x0 = x1 + (Math.random() * 8 - 4);
+    var segs = 7, pts = [];
+    for (var i = 0; i <= segs; i++) {
+      var yy = (y1 / segs) * i;
+      var xx = x0 + (x1 - x0) * (i / segs) + (i > 0 && i < segs ? (Math.random() * 7 - 3.5) : 0);
+      pts.push(xx.toFixed(1) + "," + yy.toFixed(1));
+    }
+    var d = "M" + pts.join(" L");
+    var outer = document.createElementNS(svgNS, "path");
+    outer.setAttribute("d", d); outer.setAttribute("fill", "none");
+    outer.setAttribute("stroke", "#ffe45e"); outer.setAttribute("stroke-width", "1.6");
+    outer.setAttribute("stroke-linejoin", "round"); outer.setAttribute("stroke-linecap", "round");
+    outer.setAttribute("opacity", "0.85");
+    var inner = document.createElementNS(svgNS, "path");
+    inner.setAttribute("d", d); inner.setAttribute("fill", "none");
+    inner.setAttribute("stroke", "#ffffff"); inner.setAttribute("stroke-width", "0.7");
+    inner.setAttribute("stroke-linejoin", "round"); inner.setAttribute("stroke-linecap", "round");
+    svg.appendChild(outer); svg.appendChild(inner);
+  });
+  layer.appendChild(svg);
+  flashBoard();
+  AudioEng.sfx("zap");
+  var anim = svg.animate([{ opacity: 1 }, { opacity: 1, offset: 0.55 }, { opacity: 0 }], { duration: 280, easing: "ease-out" });
+  anim.onfinish = function() { if (svg.parentNode) svg.parentNode.removeChild(svg); };
+  setTimeout(function() { if (svg.parentNode) svg.parentNode.removeChild(svg); }, 500);
 }
 var toastTimer = null;
 function showToast(msg) {
