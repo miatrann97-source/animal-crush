@@ -555,6 +555,7 @@ input[type=text]:focus { border-color:#ff5c8a; }
 </style>
 </head>
 <body>
+<audio id="applauseAudio" src="applause.mp3" preload="auto"></audio>
 <div id="bgDecor" aria-hidden="true"></div>
 <div class="screen" id="startScreen">
   <svg class="rainbow-arc" width="120" height="34" viewBox="0 0 120 34"><path d="M6 32 A54 54 0 0 1 114 32" fill="none" stroke="#ff2d55" stroke-width="5" stroke-linecap="round"/><path d="M14 32 A46 46 0 0 1 106 32" fill="none" stroke="#ff9500" stroke-width="5" stroke-linecap="round"/><path d="M22 32 A38 38 0 0 1 98 32" fill="none" stroke="#ffe600" stroke-width="5" stroke-linecap="round"/><path d="M30 32 A30 30 0 0 1 90 32" fill="none" stroke="#2ed573" stroke-width="5" stroke-linecap="round"/><path d="M38 32 A22 22 0 0 1 82 32" fill="none" stroke="#00b4ff" stroke-width="5" stroke-linecap="round"/></svg>
@@ -915,12 +916,10 @@ var AudioEng = (function() {
       }
       else if (name === "click") { tone(950, 0.05, "sine", 0.2, now, 1300); }
       else if (name === "winJingle") { [523,659,784,1047,784,1047,1319].forEach(function(f,i){ tone(f, 0.18, "triangle", 0.25, now + i*0.09); }); }
-      else if (name === "applause") { /* crowd clapping when a level is cleared: many short bandpass noise claps, staggered */
+      else if (name === "applause") { /* real crowd applause + cheering recording (cut from An's TikTok video: loudest 5s, normalized, fade-out at the end) */
         if (!musicOn) return; /* respects the mute toggle */
-        for (var i = 0; i < 26; i++) {
-          noiseBurst(now + i * 0.07 + Math.random() * 0.04, 0.06, 0.22 + Math.random() * 0.2, "bandpass", 1100 + Math.random() * 900);
-        }
-        noiseBurst(now, 1.8, 0.1, "bandpass", 900); /* soft crowd wash underneath */
+        var a = document.getElementById("applauseAudio");
+        if (a) { a.currentTime = 0; a.volume = 0.9; a.play().catch(function(){}); }
       }
       else if (name === "icePour") { /* ice cubes pouring into a glass at level start (Mẫu A approved): bright ringing clinks, one per tile, + trickling water underneath */
         if (!musicOn) return; /* respects the mute toggle */
