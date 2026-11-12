@@ -162,6 +162,8 @@ button:disabled { opacity:.55; cursor:default; }
 /* ---------- Win celebration ---------- */
 #celebrate { position:fixed; inset:0; z-index:60; pointer-events:none; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; overflow:hidden; }
 #celebrate.hidden { display:none !important; }
+.celeb-shark { width: min(260px, 58vw); height: auto; animation: sharkJump .55s ease-in-out infinite alternate; filter: drop-shadow(0 8px 16px rgba(0,0,0,.3)); }
+@keyframes sharkJump { from { transform: translateY(0) rotate(-4deg) scale(1); } to { transform: translateY(-20px) rotate(4deg) scale(1.04); } }
 .celeb-text { font-size: clamp(38px, 11vw, 64px); font-weight:900; color:#ffcf3f; text-shadow: 3px 3px 0 #fff, 0 0 24px #ff9d00, 0 6px 14px rgba(0,0,0,.35); animation: celebPop .7s cubic-bezier(.2,1.6,.4,1) both; }
 @keyframes celebPop { 0% { transform: scale(.2) rotate(-8deg); opacity:0; } 60% { transform: scale(1.15) rotate(2deg); opacity:1; } 100% { transform: scale(1) rotate(0); opacity:1; } }
 .celeb-stars { display:flex; gap:10px; }
@@ -282,6 +284,7 @@ input[type=text]:focus { border-color:#ff5c8a; }
 </div>
 
 <div id="celebrate" class="hidden">
+  <img class="celeb-shark" src="win-shark.png" alt="Bé cá ăn mừng chiến thắng">
   <div class="celeb-text" id="celebText"></div>
   <div class="celeb-stars" id="celebStars"></div>
 </div>
