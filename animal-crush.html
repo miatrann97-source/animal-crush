@@ -502,6 +502,11 @@ var AudioEng = (function() {
         noiseBurst(now, 0.18, 0.35, "bandpass", 3000);
         tone(1800, 0.12, "square", 0.12, now, 300);
       }
+      else if (name === "water") { /* clear water droplet plip on tile touch */
+        var f = 900 * (0.9 + Math.random() * 0.2);
+        tone(f, 0.18, "sine", 0.3, now, f * 0.55);
+        noiseBurst(now, 0.08, 0.12, "highpass", 4200);
+      }
     }
   };
 })();
@@ -1338,7 +1343,7 @@ function onTilePointerDown(e, tl) {
   }
   if (!pos) return;
   dragStart = { pos: pos, x: e.clientX, y: e.clientY, moved: false };
-  AudioEng.sfx("select");
+  AudioEng.sfx("water");
   if (state.selected && state.selected[0] === pos[0] && state.selected[1] === pos[1]) {
     state.selected = null; renderSelection(); dragStart = null; return;
   }
