@@ -400,14 +400,26 @@ button:disabled { opacity:.55; cursor:default; }
 }
 .fx-flash { position:absolute; inset:0; background:#fff; opacity:0; pointer-events:none; }
 .fx-bolt { position:absolute; inset:0; width:100%; height:100%; pointer-events:none; filter: drop-shadow(0 0 8px #fff) drop-shadow(0 0 16px #ffe45e); }
-/* striped-candy beam: white-hot core with a warm gold glow, sweeping out from the candy */
+/* striped-candy beam: white-hot core with a warm gold glow, sweeping out from the candy.
+   Thunder version: much stronger glow so the beam blazes across the row/column. */
 .fx-beam { position:absolute; z-index:24; pointer-events:none; }
-.fx-beam.h { left:0; width:100%; height:12.5%; background: linear-gradient(180deg, rgba(255,190,0,0) 0%, rgba(255,210,60,.8) 16%, #fffbe8 40%, #ffffff 50%, #fffbe8 60%, rgba(255,210,60,.8) 84%, rgba(255,190,0,0) 100%); box-shadow: 0 0 16px 5px rgba(255,200,40,.8), 0 0 42px 12px rgba(255,170,0,.4); animation: beamSweepX .34s ease-out forwards; }
-.fx-beam.v { top:0; height:100%; width:12.5%; background: linear-gradient(90deg, rgba(255,190,0,0) 0%, rgba(255,210,60,.8) 16%, #fffbe8 40%, #ffffff 50%, #fffbe8 60%, rgba(255,210,60,.8) 84%, rgba(255,190,0,0) 100%); box-shadow: 0 0 16px 5px rgba(255,200,40,.8), 0 0 42px 12px rgba(255,170,0,.4); animation: beamSweepY .34s ease-out forwards; }
+.fx-beam.h { left:0; width:100%; height:12.5%; background: linear-gradient(180deg, rgba(255,190,0,0) 0%, rgba(255,210,60,.8) 16%, #fffbe8 40%, #ffffff 50%, #fffbe8 60%, rgba(255,210,60,.8) 84%, rgba(255,190,0,0) 100%); box-shadow: 0 0 26px 9px rgba(255,200,40,.95), 0 0 64px 20px rgba(255,170,0,.55); animation: beamSweepX .34s ease-out forwards; }
+.fx-beam.v { top:0; height:100%; width:12.5%; background: linear-gradient(90deg, rgba(255,190,0,0) 0%, rgba(255,210,60,.8) 16%, #fffbe8 40%, #ffffff 50%, #fffbe8 60%, rgba(255,210,60,.8) 84%, rgba(255,190,0,0) 100%); box-shadow: 0 0 26px 9px rgba(255,200,40,.95), 0 0 64px 20px rgba(255,170,0,.55); animation: beamSweepY .34s ease-out forwards; }
 @keyframes beamSweepX { 0% { transform: scaleX(0); opacity:.55; } 45% { transform: scaleX(1); opacity:1; } 100% { transform: scaleX(1); opacity:0; } }
 @keyframes beamSweepY { 0% { transform: scaleY(0); opacity:.55; } 45% { transform: scaleY(1); opacity:1; } 100% { transform: scaleY(1); opacity:0; } }
-/* rainbow lightning: blue-white electric bolts, clearly different from the warm gold beam */
-.fx-bolt-blue { position:absolute; inset:0; width:100%; height:100%; pointer-events:none; filter: drop-shadow(0 0 6px #7dd3fc) drop-shadow(0 0 14px #38bdf8); }
+/* rainbow lightning: blue-white electric bolts, clearly different from the warm gold beam.
+   Thunder version: much thicker glow so the bolts blaze across the board. */
+.fx-bolt-blue { position:absolute; inset:0; width:100%; height:100%; pointer-events:none; filter: drop-shadow(0 0 10px #bae6fd) drop-shadow(0 0 26px #38bdf8) drop-shadow(0 0 44px #0ea5e9); }
+/* thunder flash: icy blue full-screen flash for lightning strikes */
+.fx-flash-thunder { background: #cfeeff; }
+/* giant head zoom: one tile image swelling up and flying out at the player */
+.fx-giant-head { position:absolute; width:12.5%; aspect-ratio:1/1; z-index:30; pointer-events:none; transform: translate(-50%,-50%); filter: drop-shadow(0 8px 22px rgba(0,0,0,.4)) drop-shadow(0 0 26px rgba(255,255,255,.65)); will-change: transform, opacity; }
+/* giant BÙM! text for the giant-head explosion: much bigger than the normal one */
+.boom-text-giant {
+  position:absolute; z-index:31; font-weight:900; font-size: clamp(130px, 42vw, 230px); color:#ffcf3f;
+  text-shadow: 4px 4px 0 #fff, 0 0 34px #ff9d00, 0 8px 18px rgba(0,0,0,.4);
+  pointer-events:none; white-space:nowrap; transform: translate(-50%,-50%);
+}
 /* tiles caught in a beam or a lightning zap flash bright white before they pop */
 .tile.beam-flash .inner { animation: tileFlash .3s ease-out both; }
 @keyframes tileFlash { 0% { filter: brightness(1); } 30% { filter: brightness(2.6) saturate(.3); } 100% { filter: brightness(2.2) saturate(.4); } }
@@ -649,6 +661,7 @@ var AudioEng = (function() {
   var ctx = null, master = null, musicGain = null, sfxGain = null;
   var musicOn = localStorage.getItem("animalCrushMusic") !== "off";
   var musicTimer = null, step = 0, nextTime = 0;
+  var lastThunder = -10; /* time of the last thunder strike: rapid re-fires only crack, no rumble pile-up */
   var BPM = 120, STEP_DUR = 60 / BPM / 2; /* 8th notes, gently swung (long-short) */
   /* Bright bouncy music-box melody in G major, 64 steps (8 bars).
      Chords: G - C - G - D - Em - C - D - G. "" after a note holds it longer. */
@@ -791,6 +804,19 @@ var AudioEng = (function() {
       else if (name === "zap") {
         noiseBurst(now, 0.18, 0.35, "bandpass", 3000);
         tone(1800, 0.12, "square", 0.12, now, 300);
+      }
+      else if (name === "thunder") { /* THUNDER: sharp crack + low rolling rumble, "sấm sét đùng đùng" */
+        if (!musicOn) return; /* respects the mute toggle */
+        var since = now - lastThunder;
+        lastThunder = now;
+        noiseBurst(now, 0.12, 0.35, "highpass", 3200); /* sharp crack */
+        tone(2400, 0.08, "square", 0.12, now, 420);
+        if (since < 0.45) return; /* re-fired within the same strike: crack only, no rumble pile-up */
+        noiseBurst(now + 0.05, 1.1, 0.32, "lowpass", 240); /* long rolling rumble */
+        tone(70, 1.0, "sine", 0.32, now + 0.05, 28); /* sub-bass roll */
+        tone(50, 1.2, "sine", 0.26, now + 0.15, 24);
+        noiseBurst(now + 0.3, 0.4, 0.2, "bandpass", 900); /* second crackle */
+        tone(120, 0.5, "triangle", 0.18, now + 0.3, 45);
       }
       else if (name === "water") { /* water droplet "tí tách": fast pitch drop + tick + faint resonance tail */
         var base = 1000 * (0.9 + Math.random() * 0.2); /* 900-1100Hz, ±10% per tap */
@@ -1167,6 +1193,24 @@ async function resolveBoard(swapPos) {
     /* Water chime: matched tiles ring like a glass harp the moment they find each other.
        Pitch rises with match size; each cascade round climbs one step higher. */
     AudioEng.sfx("chime", { biggest: biggest, wrapped: found.wrapped.length > 0, cascade: cascade });
+    /* Giant head zoom for 4+ matches (and L/T): that animal's head swells up, zooms
+       out at the player and explodes in a huge bang. Plain 3-matches never trigger it.
+       If several 4+ runs meet at once, the biggest one gets the spotlight. */
+    var giantRun = null, giantType = null;
+    found.runs.forEach(function(run) {
+      if (run.len >= 4 && (!giantRun || run.len > giantRun.len)) giantRun = run;
+    });
+    if (giantRun) {
+      var g0 = giantRun.cells[0];
+      var gtl = state.board[g0[0]] && state.board[g0[0]][g0[1]];
+      giantType = (gtl && gtl.type && gtl.type !== "rainbow") ? gtl.type : "fox";
+    } else if (found.wrapped.length) {
+      var w0 = found.wrapped[0];
+      var wtl = state.board[w0[0]] && state.board[w0[0]][w0[1]];
+      giantType = (wtl && wtl.type && wtl.type !== "rainbow") ? wtl.type : "fox";
+      giantRun = { cells: [w0] };
+    }
+    if (giantRun) await giantHeadBoom(giantType, giantRun.cells);
     /* Cells cleared by special effects burst in their own tile colors too */
     if (extraCells.length) burstCells(extraCells.map(function(k){ return k.split(",").map(Number); }), 10, 200);
     /* Striped beams sweep their row/column; rainbow lightning arcs to its targets.
@@ -1177,8 +1221,10 @@ async function resolveBoard(swapPos) {
     var ptsFor = function(cell) { return tilePts[cell[0] + "," + cell[1]] || 60; };
     expanded.beams.forEach(function(bm) { stripedBeam(bm, ptsFor); });
     expanded.rainbows.forEach(function(rb) { rainbowLightning(rb.from, rb.cells, ptsFor); });
-    /* Whole-screen shake scaled by the biggest match this step */
-    if (biggest >= 5 || expanded.effects.length) shakeScreen("lg");
+    /* Whole-screen shake scaled by the biggest match this step; thunder strikes
+       (beams and rainbow lightning) shake hardest and are not overridden below */
+    if (expanded.rainbows.length || expanded.beams.length) shakeScreen("xl");
+    else if (biggest >= 5 || expanded.effects.length) shakeScreen("lg");
     else if (biggest === 4) shakeScreen("md");
     else shakeScreen("sm");
     /* Special activations strike lightning at the special tiles (at least 2 bolts) */
@@ -1937,6 +1983,7 @@ function stripedBeam(beam, ptsFor) {
     div.style.transformOrigin = "50% " + ((beam.from[0] + 0.5) * 12.5) + "%";
   }
   layer.appendChild(div);
+  flashScreen(); shakeScreen("xl");
   setTimeout(function() { if (div.parentNode) div.parentNode.removeChild(div); }, 420);
   for (var i = 0; i < 5; i++) {
     var cell = cells[Math.floor(Math.random() * cells.length)];
@@ -1967,43 +2014,127 @@ function rainbowLightning(fromCell, cells, ptsFor) {
   svg.setAttribute("viewBox", "0 0 100 100");
   svg.setAttribute("preserveAspectRatio", "none");
   var fx = (fromCell[1] + 0.5) * 12.5, fy = (fromCell[0] + 0.5) * 12.5;
-  targets.forEach(function(cell) {
-    var tx = (cell[1] + 0.5) * 12.5, ty = (cell[0] + 0.5) * 12.5;
-    var dx = tx - fx, dy = ty - fy;
-    var len = Math.sqrt(dx * dx + dy * dy); if (len < 1) return;
+  /* Build one jagged bolt path from (fx,fy) to (tx,ty) with a random zigzag.
+     Returns {d, mid} where mid is the middle point, for branch offshoots. */
+  function boltD(sx, sy, tx, ty) {
+    var dx = tx - sx, dy = ty - sy;
+    var len = Math.sqrt(dx * dx + dy * dy); if (len < 1) return null;
     var nx = dx / len, ny = dy / len;
     var px = -ny, py = nx; /* perpendicular, for the zigzag jitter */
     var segs = 5 + Math.floor(Math.random() * 3);
-    var numPts = [];
+    var pts = [];
     for (var i = 0; i <= segs; i++) {
       var t = i / segs;
       var off = (i === 0 || i === segs) ? 0 : (Math.random() * 5 - 2.5);
-      numPts.push([fx + dx * t + px * off, fy + dy * t + py * off]);
+      pts.push([sx + dx * t + px * off, sy + dy * t + py * off]);
     }
-    var d = "M" + numPts.map(function(p) { return p[0].toFixed(1) + "," + p[1].toFixed(1); }).join(" L");
-    addBoltPath(svg, d, "#38bdf8", 1.7, 0.85);
-    addBoltPath(svg, d, "#bae6fd", 0.9, 0.95);
-    addBoltPath(svg, d, "#ffffff", 0.45, 1);
-    /* branch: a short jagged offshoot from the middle of the bolt */
-    if (Math.random() < 0.45) {
-      var mid = numPts[Math.floor(segs / 2)];
+    return { d: "M" + pts.map(function(p) { return p[0].toFixed(1) + "," + p[1].toFixed(1); }).join(" L"), mid: pts[Math.floor(segs / 2)] };
+  }
+  targets.forEach(function(cell) {
+    var tx = (cell[1] + 0.5) * 12.5, ty = (cell[0] + 0.5) * 12.5;
+    /* THUNDER main bolt: 2-3x thicker than before, white-hot core */
+    var main = boltD(fx, fy, tx, ty); if (!main) return;
+    addBoltPath(svg, main.d, "#38bdf8", 4.2, 0.85);
+    addBoltPath(svg, main.d, "#bae6fd", 2.2, 0.95);
+    addBoltPath(svg, main.d, "#ffffff", 1.1, 1);
+    /* second strike: a parallel bolt hitting the same tile, half the time */
+    if (Math.random() < 0.5) {
+      var second = boltD(fx, fy, tx, ty);
+      if (second) {
+        addBoltPath(svg, second.d, "#38bdf8", 2.6, 0.7);
+        addBoltPath(svg, second.d, "#ffffff", 0.7, 0.9);
+      }
+    }
+    /* branches: jagged offshoots from the middle of the bolt, usually one or two */
+    var branches = Math.random() < 0.8 ? (Math.random() < 0.4 ? 2 : 1) : 0;
+    for (var bi = 0; bi < branches; bi++) {
+      var mid = main.mid;
       var ang = Math.random() * Math.PI * 2;
-      var bl = 4 + Math.random() * 5;
+      var bl = 5 + Math.random() * 7;
       var ex = mid[0] + Math.cos(ang) * bl, ey = mid[1] + Math.sin(ang) * bl;
       var mx = (mid[0] + ex) / 2 + (Math.random() * 3 - 1.5), my = (mid[1] + ey) / 2 + (Math.random() * 3 - 1.5);
       var bd = "M" + mid[0].toFixed(1) + "," + mid[1].toFixed(1) + " L" + mx.toFixed(1) + "," + my.toFixed(1) + " L" + ex.toFixed(1) + "," + ey.toFixed(1);
-      addBoltPath(svg, bd, "#7dd3fc", 0.7, 0.7);
-      addBoltPath(svg, bd, "#ffffff", 0.3, 0.8);
+      addBoltPath(svg, bd, "#7dd3fc", 1.4, 0.8);
+      addBoltPath(svg, bd, "#ffffff", 0.6, 0.9);
     }
   });
   layer.appendChild(svg);
+  flashScreen(); flashBoard(); shakeScreen("xl");
+  AudioEng.sfx("thunder");
   var anim = svg.animate([
-    { opacity: 1 }, { opacity: 0.35, offset: 0.3 }, { opacity: 1, offset: 0.55 }, { opacity: 0 }
-  ], { duration: 340, easing: "ease-out" });
+    { opacity: 1 }, { opacity: 0.3, offset: 0.25 }, { opacity: 1, offset: 0.45 }, { opacity: 0.4, offset: 0.7 }, { opacity: 0 }
+  ], { duration: 480, easing: "ease-out" });
   anim.onfinish = function() { if (svg.parentNode) svg.parentNode.removeChild(svg); };
   setTimeout(function() { if (svg.parentNode) svg.parentNode.removeChild(svg); }, 500);
   flashTiles(targets);
   showTileScores(targets, ptsFor);
+}
+/* Icy blue full-screen flash for thunder strikes */
+function flashThunder() {
+  var f = document.createElement("div");
+  f.className = "fx-flash-screen fx-flash-thunder";
+  document.body.appendChild(f);
+  var anim = f.animate([{ opacity: 0.85 }, { opacity: 0 }], { duration: 500, easing: "ease-out" });
+  anim.onfinish = function() { if (f.parentNode) f.parentNode.removeChild(f); };
+  setTimeout(function() { if (f.parentNode) f.parentNode.removeChild(f); }, 650);
+}
+/* Giant BÙM! text for the giant-head explosion: much bigger than the normal one */
+function giantBoomText(xPct, yPct) {
+  var layer = fxLayer(); if (!layer) return;
+  var div = document.createElement("div");
+  div.className = "boom-text-giant";
+  div.textContent = t("boom");
+  div.style.left = xPct + "%"; div.style.top = yPct + "%";
+  layer.appendChild(div);
+  var anim = div.animate([
+    { transform: "translate(-50%,-50%) scale(0.3) rotate(-10deg)", opacity: 0 },
+    { transform: "translate(-50%,-50%) scale(1.15) rotate(3deg)", opacity: 1, offset: 0.4 },
+    { transform: "translate(-50%,-50%) scale(1) rotate(0deg)", opacity: 1, offset: 0.65 },
+    { transform: "translate(-50%,-50%) scale(1.05) translateY(-24px)", opacity: 0 }
+  ], { duration: 900, easing: "ease-out" });
+  anim.onfinish = function() { if (div.parentNode) div.parentNode.removeChild(div); };
+  setTimeout(function() { if (div.parentNode) div.parentNode.removeChild(div); }, 1050);
+}
+/* Giant head zoom: for a 4+ match (or L/T), that animal's head swells up and zooms
+   straight out at the player, then explodes in a huge bang with confetti everywhere.
+   Total ~620ms: zoom ~320ms, explosion ~300ms. The normal tile explosion for the
+   matched tiles still happens underneath, right after. */
+async function giantHeadBoom(type, cells) {
+  var layer = fxLayer(); if (!layer || !cells || !cells.length) return;
+  var src = IMG[type] || IMG.fox;
+  var sr = 0, sc = 0;
+  cells.forEach(function(cell) { sr += cell[0]; sc += cell[1]; });
+  var cx = (sc / cells.length + 0.5) * 12.5, cy = (sr / cells.length + 0.5) * 12.5;
+  var img = document.createElement("img");
+  img.className = "fx-giant-head";
+  img.src = src;
+  img.alt = "";
+  img.style.left = cx + "%"; img.style.top = cy + "%";
+  layer.appendChild(img);
+  var zoom = img.animate([
+    { transform: "translate(-50%,-50%) scale(0.9) rotate(0deg)", opacity: 1 },
+    { transform: "translate(-50%,-50%) scale(5.4) rotate(-7deg)", opacity: 1, offset: 0.55 },
+    { transform: "translate(-50%,-50%) scale(4.7) rotate(6deg)", opacity: 1, offset: 0.8 },
+    { transform: "translate(-50%,-50%) scale(5.1) rotate(0deg)", opacity: 1 }
+  ], { duration: 320, easing: "ease-out" });
+  try { await zoom.finished; } catch (e) { await sleep(320); }
+  if (img.parentNode) img.parentNode.removeChild(img);
+  /* huge confetti storm in the animal's own colors + gold, flying everywhere */
+  var col = { fill: ANIMAL_COLORS[type] || "#ffd23f", edge: ANIMAL_EDGE[type] || "#d35400" };
+  for (var i = 0; i < 90; i++) {
+    var roll = Math.random();
+    var gold = roll < 0.25;
+    var f2 = gold ? "#ffd23f" : col.fill, e2 = gold ? "#ffffff" : col.edge;
+    if (roll < 0.55) spawnConfetti(layer, cx, cy, f2, e2);
+    else if (roll < 0.9) spawnDroplet(layer, cx, cy, f2, e2);
+    else spawnStar(layer, cx, cy);
+  }
+  giantBoomText(cx, cy);
+  flashScreen(); flashThunder();
+  shakeScreen("xl"); shakeBoard();
+  AudioEng.sfx("thunder");
+  AudioEng.sfx("boom");
+  await sleep(300);
 }
 var CELEB_COLORS = ["#ff2d78","#ff9500","#ffe600","#2ed573","#00d2ff","#a55eea","#ff6b9d"];
 function celebrateWin() {
