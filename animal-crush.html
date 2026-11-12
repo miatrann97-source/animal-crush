@@ -763,6 +763,7 @@ function t(key) { return STR[LANG][key]; }
 /* ================= Audio ================= */
 var AudioEng = (function() {
   var ctx = null, master = null, musicGain = null, sfxGain = null;
+  var applauseBuf = null, applauseArrayBuf = null, applauseLoading = false;
   var musicOn = localStorage.getItem("animalCrushMusic") !== "off";
   var musicTimer = null, step = 0, nextTime = 0;
   var lastThunder = -10; /* time of the last thunder strike: rapid re-fires only crack, no rumble pile-up */
@@ -805,7 +806,24 @@ var AudioEng = (function() {
       sfxGain = ctx.createGain(); sfxGain.gain.value = 0.5; sfxGain.connect(master);
     }
     if (ctx.state === "suspended") ctx.resume();
+    decodeApplause();
     return true;
+  }
+  /* Real crowd applause recording (cut from An's video): fetch the file as
+     soon as the page loads, decode it once the AudioContext exists, then play
+     it through sfxGain. (The <audio> element approach stayed silent on iOS
+     when play() was called outside a tap gesture, so the win applause was
+     never heard.) */
+  function fetchApplause() {
+    if (applauseLoading || applauseBuf || applauseArrayBuf) return;
+    applauseLoading = true;
+    fetch("applause.mp3").then(function(r){ if (!r.ok) throw new Error("applause fetch failed"); return r.arrayBuffer(); })
+      .then(function(ab){ applauseArrayBuf = ab; decodeApplause(); })
+      .catch(function(){ applauseLoading = false; });
+  }
+  function decodeApplause() {
+    if (!ctx || !applauseArrayBuf || applauseBuf) return;
+    ctx.decodeAudioData(applauseArrayBuf, function(buf){ applauseBuf = buf; }, function(){});
   }
   function tone(freq, dur, type, vol, when, slideTo, dest) {
     var o = ctx.createOscillator(), g = ctx.createGain();
@@ -867,6 +885,7 @@ var AudioEng = (function() {
       nextTime += longStep ? STEP_DUR * 1.25 : STEP_DUR * 0.75; /* gentle swing */
     }
   }
+  fetchApplause(); /* start downloading the applause recording on page load */
   return {
     unlock: function() { ensure(); },
     startMusic: function() {
@@ -918,8 +937,15 @@ var AudioEng = (function() {
       else if (name === "winJingle") { [523,659,784,1047,784,1047,1319].forEach(function(f,i){ tone(f, 0.18, "triangle", 0.25, now + i*0.09); }); }
       else if (name === "applause") { /* real crowd applause + cheering recording (cut from An's TikTok video: loudest 5s, normalized, fade-out at the end) */
         if (!musicOn) return; /* respects the mute toggle */
-        var a = document.getElementById("applauseAudio");
-        if (a) { a.currentTime = 0; a.volume = 0.9; a.play().catch(function(){}); }
+        if (applauseBuf) {
+          var src = ctx.createBufferSource(); src.buffer = applauseBuf;
+          src.connect(sfxGain);
+          src.start(now);
+        } else {
+          /* buffer not ready yet: fall back to the audio element */
+          var a = document.getElementById("applauseAudio");
+          if (a) { a.currentTime = 0; a.volume = 0.9; a.play().catch(function(){}); }
+        }
       }
       else if (name === "icePour") { /* ice cubes pouring into a glass at level start (Mẫu A approved): bright ringing clinks, one per tile, + trickling water underneath */
         if (!musicOn) return; /* respects the mute toggle */
