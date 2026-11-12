@@ -670,7 +670,7 @@ var AudioEng = (function() {
         ctx = new (window.AudioContext || window.webkitAudioContext)();
       } catch (e) { return false; }
       master = ctx.createGain(); master.gain.value = 0.9; master.connect(ctx.destination);
-      musicGain = ctx.createGain(); musicGain.gain.value = musicOn ? 0.16 : 0; musicGain.connect(master);
+      musicGain = ctx.createGain(); musicGain.gain.value = musicOn ? 0.32 : 0; musicGain.connect(master);
       sfxGain = ctx.createGain(); sfxGain.gain.value = 0.5; sfxGain.connect(master);
     }
     if (ctx.state === "suspended") ctx.resume();
@@ -739,7 +739,7 @@ var AudioEng = (function() {
       musicOn = !musicOn;
       localStorage.setItem("animalCrushMusic", musicOn ? "on" : "off");
       if (!ensure()) return musicOn;
-      if (musicGain) musicGain.gain.value = musicOn ? 0.16 : 0;
+      if (musicGain) musicGain.gain.value = musicOn ? 0.32 : 0;
       if (musicOn) this.startMusic(); else this.stopMusic();
       return musicOn;
     },
