@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Animal Crush</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&display=swap" rel="stylesheet">
 <style>
 * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
 body {
@@ -74,21 +75,27 @@ button:disabled { opacity:.55; cursor:default; }
 
 /* ---------- HUD ---------- */
 #hud {
-  width:100%; background: rgba(255,255,255,.92); border-radius: 18px;
-  padding: 10px 12px; box-shadow: 0 4px 14px rgba(0,0,0,.12);
+  width:100%; background-color: #fffdf5;
+  background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22120%22%20height%3D%22120%22%20viewBox%3D%220%200%20120%20120%22%3E%0A%3Cg%20opacity%3D%220.55%22%3E%0A%20%20%3Cg%20fill%3D%22%23ff9ecf%22%3E%3Cellipse%20cx%3D%2216%22%20cy%3D%2224%22%20rx%3D%224%22%20ry%3D%223.2%22%2F%3E%3Ccircle%20cx%3D%2210.5%22%20cy%3D%2218.5%22%20r%3D%221.8%22%2F%3E%3Ccircle%20cx%3D%2214%22%20cy%3D%2216.5%22%20r%3D%221.8%22%2F%3E%3Ccircle%20cx%3D%2217.5%22%20cy%3D%2216.5%22%20r%3D%221.8%22%2F%3E%3Ccircle%20cx%3D%2221%22%20cy%3D%2218.5%22%20r%3D%221.8%22%2F%3E%3C%2Fg%3E%0A%20%20%3Cg%20fill%3D%22%234db8ff%22%3E%3Cpath%20d%3D%22M66%2014%20Q74%208%2082%2014%20Q74%2020%2066%2014%20Z%22%2F%3E%3Cpath%20d%3D%22M82%2014%20L88%2010%20L88%2018%20Z%22%2F%3E%3C%2Fg%3E%0A%20%20%3Cg%20fill%3D%22%23ffb347%22%3E%3Cpath%20d%3D%22M102%2046%20L104%2051%20L109%2051.5%20L105%2055%20L106.5%2060%20L102%2057.5%20L97.5%2060%20L99%2055%20L95%2051.5%20L100%2051%20Z%22%2F%3E%3C%2Fg%3E%0A%20%20%3Cg%20fill%3D%22%23ff9ecf%22%3E%3Cellipse%20cx%3D%2226%22%20cy%3D%2272%22%20rx%3D%222.6%22%20ry%3D%225.5%22%2F%3E%3Cellipse%20cx%3D%2233%22%20cy%3D%2272%22%20rx%3D%222.6%22%20ry%3D%225.5%22%2F%3E%3Ccircle%20cx%3D%2229.5%22%20cy%3D%2282%22%20r%3D%225%22%2F%3E%3C%2Fg%3E%0A%20%20%3Cg%20fill%3D%22%234db8ff%22%3E%3Cpath%20d%3D%22M62%2092%20Q70%2078%2078%2090%20Q70%2094%2062%2092%20Z%22%2F%3E%3C%2Fg%3E%0A%20%20%3Cg%20fill%3D%22%23ff5c8a%22%3E%3Cpath%20d%3D%22M104%20100%20C100%2096%2098%2093.5%2098%2091.5%20C98%2089.5%2099.5%2088%20101.5%2088%20C102.8%2088%20103.8%2088.8%20104%2090%20C104.2%2088.8%20105.2%2088%20106.5%2088%20C108.5%2088%20110%2089.5%20110%2091.5%20C110%2093.5%20108%2096%20104%20100%20Z%22%2F%3E%3C%2Fg%3E%0A%20%20%3Cg%20fill%3D%22%23b06bff%22%3E%3Cpath%20d%3D%22M46%2044%20A7%207%200%200%201%2060%2044%20Z%22%2F%3E%3Cpath%20d%3D%22M49%2044%20Q49%2049%2048%2051%20M53%2044%20Q53%2049%2053%2051%20M57%2044%20Q57%2049%2058%2051%22%20stroke%3D%22%23b06bff%22%20stroke-width%3D%221.6%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%2F%3E%3C%2Fg%3E%0A%3C%2Fg%3E%0A%3C%2Fsvg%3E");
+  background-size: 120px 120px;
+  border-radius: 24px; position:relative;
+  padding: 16px 18px 18px; box-shadow: 0 8px 24px rgba(0,0,0,.18);
   display:flex; flex-direction:column; gap:8px;
 }
+.hud-doodle { position:absolute; pointer-events:none; line-height:0; z-index:1; }
 .hud-row { display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap; }
-.hud-stat { font-size:15px; line-height:1.35; }
-.hud-stat b { font-size:19px; color:#ff5c8a; }
-.hud-stat .target { color:#7c4dff; }
+.hud-stat { font-family: 'Baloo 2', "Comic Sans MS", "Chalkboard SE", sans-serif; font-size:16px; font-weight:700; line-height:1.35; color:#4a3527; }
+.hud-stat b { font-size:24px; font-weight:800; background: linear-gradient(90deg, #ff2d55, #ff9500, #ffe600, #2ed573, #00d2ff, #7b5cff, #ff2d78); -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-stroke: 0.7px #000; }
 .hud-btns { display:flex; gap:6px; }
 .icon-btn {
   padding:6px 10px; font-size:15px; border-radius:12px; min-width:40px;
   background:#fff; color:#5a4632; box-shadow: 0 3px 0 #e0d8d0;
 }
-.progress { height:12px; background:#f0e6da; border-radius:999px; overflow:hidden; }
-#progressFill { height:100%; width:0%; background: linear-gradient(90deg, #ffb347, #ff5c8a); border-radius:999px; transition: width .3s ease; }
+#hud .icon-btn { font-family: 'Baloo 2', "Comic Sans MS", "Chalkboard SE", sans-serif; font-weight:700; border: 2px solid #ff5c8a; }
+#hud .icon-btn.blue { border-color: #00b4ff; }
+#hud .icon-btn.green { border-color: #2ed573; }
+.progress { height:14px; background:#f0e6da; border-radius:999px; overflow:hidden; border: 2px solid #ffd23f; }
+#progressFill { height:100%; width:0%; background: linear-gradient(90deg, #ff2d55, #ff9500, #ffe600, #2ed573, #00d2ff, #7b5cff); border-radius:999px; transition: width .3s ease; }
 
 /* ---------- Board ---------- */
 #boardWrap { width:100%; max-width:480px; position:relative; }
@@ -498,20 +505,26 @@ input[type=text]:focus { border-color:#ff5c8a; }
 
 <div class="screen hidden" id="gameScreen">
   <div id="hud">
+    <span class="hud-doodle" style="top:-12px; left:14px;"><svg width="26" height="26" viewBox="0 0 24 24"><path d="M12 1 L14.5 8.5 L22 9 L16.5 14 L18.5 21.5 L12 17.5 L5.5 21.5 L7.5 14 L2 9 L9.5 8.5 Z" fill="#ffd23f" stroke="#ff9500" stroke-width="1.2"/></svg></span>
+    <span class="hud-doodle" style="top:-10px; right:22px;"><svg width="24" height="24" viewBox="0 0 24 24"><path d="M12 21 C5 15 2 11 2 7.5 C2 4.5 4.5 2 7.5 2 C9.5 2 11 3.5 12 5 C13 3.5 14.5 2 16.5 2 C19.5 2 22 4.5 22 7.5 C22 11 19 15 12 21 Z" fill="#ff5c8a" stroke="#d6336c" stroke-width="1"/></svg></span>
+    <span class="hud-doodle" style="bottom:-8px; left:38%;"><svg width="30" height="14" viewBox="0 0 30 14"><path d="M2 8 Q7 2 12 8 T22 8 T28 6" fill="none" stroke="#00b4ff" stroke-width="2.5" stroke-linecap="round"/></svg></span>
+    <span class="hud-doodle" style="bottom:-6px; right:10px;"><svg width="22" height="22" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#ffe600" stroke="#ff9500" stroke-width="1.5"/><circle cx="8.5" cy="10" r="1.4" fill="#333"/><circle cx="15.5" cy="10" r="1.4" fill="#333"/><path d="M8 14.5 Q12 17.5 16 14.5" fill="none" stroke="#333" stroke-width="1.5" stroke-linecap="round"/></svg></span>
+    <span class="hud-doodle" style="top:38%; left:-8px;"><svg width="18" height="18" viewBox="0 0 24 24"><path d="M12 2 L13.5 9 L21 10 L15 14.5 L17 22 L12 17.5 L7 22 L9 14.5 L3 10 L10.5 9 Z" fill="#7b5cff"/></svg></span>
+    <span class="hud-doodle" style="top:42%; right:-6px;"><svg width="16" height="16" viewBox="0 0 24 24"><path d="M12 2 L13 10 L21 11 L14 15 L16 23 L12 18 L8 23 L10 15 L3 11 L11 10 Z" fill="#2ed573"/></svg></span>
     <div class="hud-row">
       <div class="hud-stat"><span id="lblLevel"></span> <b id="levelNum">1</b></div>
       <div class="hud-stat"><span id="lblScore"></span> <b id="scoreNum">0</b></div>
       <div class="hud-stat"><span id="lblBest"></span> <b id="bestNum">0</b></div>
       <div class="hud-btns">
         <button class="icon-btn" id="langBtn">VI | EN</button>
-        <button class="icon-btn" id="musicBtn">🔊</button>
-        <button class="icon-btn" id="homeBtn">🏠</button>
+        <button class="icon-btn blue" id="musicBtn">🔊</button>
+        <button class="icon-btn green" id="homeBtn">🏠</button>
       </div>
     </div>
     <div class="hud-row">
       <div class="hud-stat"><span id="lblTarget"></span> <b class="target" id="targetNum">4000</b></div>
       <div class="hud-stat"><span id="lblMoves"></span> <b id="movesNum">90</b></div>
-      <div class="hud-stat"><span id="lblTime"></span> <b id="timeNum">5:00</b></div>
+      <div class="hud-stat"><span id="lblTime"></span> <b id="timeNum">7:00</b></div>
     </div>
     <div class="progress"><div id="progressFill"></div></div>
   </div>
@@ -898,7 +911,7 @@ var state = {
   score: 0,
   moves: 0,
   target: 1000,
-  timeLeft: 300,   /* 5 minutes per level, always */
+  timeLeft: 420,   /* 7 minutes per level, always */
   best: parseInt(localStorage.getItem("animalCrushBest") || "0", 10) || 0,
   busy: false,
   over: false,
@@ -2538,7 +2551,7 @@ boardEl.addEventListener("contextmenu", function(e) { e.preventDefault(); });
 </script>
 <script>
 "use strict";
-/* ================= 5-minute timer (always 5:00 per level) ================= */
+/* ================= 7-minute timer (always 7:00 per level) ================= */
 var timerId = null;
 function updateTimerDisplay() {
   var el = document.getElementById("timeNum");
@@ -2551,7 +2564,7 @@ function updateTimerDisplay() {
 }
 function startTimer() {
   stopTimer();
-  state.timeLeft = 300;
+  state.timeLeft = 420;
   updateTimerDisplay();
   timerId = setInterval(function() {
     if (state.over) return;
@@ -2802,7 +2815,7 @@ function applyLang() {
   document.getElementById("lblMoves").textContent = t("moves") + ":";
   document.getElementById("lblTime").textContent = t("time") + ":";
   var lc = levelConfig(state.level);
-  document.getElementById("levelInfo").textContent = t("level") + " " + state.level + " · " + t("target") + ": " + lc.target + " · " + lc.moves + " " + t("movesLeft") + " · ⏱ 5:00";
+  document.getElementById("levelInfo").textContent = t("level") + " " + state.level + " · " + t("target") + ": " + lc.target + " · " + lc.moves + " " + t("movesLeft") + " · ⏱ 7:00";
   document.getElementById("saveScoreBtn").textContent = t("save");
   document.getElementById("nextBtn").textContent = t("next");
   document.getElementById("retryBtn").textContent = t("retry");
