@@ -112,6 +112,17 @@ button:disabled { opacity:.55; cursor:default; }
 .tile img { width:100%; height:100%; object-fit:cover; display:block; pointer-events:none; }
 .tile.selected .inner { outline:3px solid #ffcf3f; outline-offset:-1px; transform: scale(1.1); box-shadow: 0 0 0 3px #fff, 0 0 14px #ffcf3f; z-index:5; }
 .tile.pop .inner { transform: scale(.1); opacity:0; }
+/* match bounce: matched tiles hop up and down happily before they pop.
+   Runs on the outer .tile via the `translate`/`scale` properties, so it
+   composes with the inline grid-position transform (no layout shift). */
+.tile.match-bounce { animation: matchBounce .21s ease-out; }
+@keyframes matchBounce {
+  0% { translate: 0 0; scale: 1 1; }
+  30% { translate: 0 -32%; scale: .94 1.08; }
+  55% { translate: 0 0; scale: 1.09 .85; }
+  75% { translate: 0 -12%; scale: .97 1.04; }
+  100% { translate: 0 0; scale: 1 1; }
+}
 .tile.new .inner { animation: dropIn .25s ease; }
 @keyframes dropIn { from { transform: translateY(-30%) scale(.8); } to { transform: none; } }
 /* hint: pulsing yellow outline on the two swappable tiles */
@@ -624,19 +635,35 @@ var AudioEng = (function() {
   var ctx = null, master = null, musicGain = null, sfxGain = null;
   var musicOn = localStorage.getItem("animalCrushMusic") !== "off";
   var musicTimer = null, step = 0, nextTime = 0;
-  var BPM = 132, STEP_DUR = 60 / BPM / 2; /* 8th notes */
-  /* Cheerful original melody in C major, 32 steps (4 bars) */
+  var BPM = 120, STEP_DUR = 60 / BPM / 2; /* 8th notes, gently swung (long-short) */
+  /* Bright bouncy music-box melody in G major, 64 steps (8 bars).
+     Chords: G - C - G - D - Em - C - D - G. "" after a note holds it longer. */
   var MELODY = [
-    "E5","G5","A5","G5","E5","C5","D5","E5",
-    "F5","E5","D5","C5","D5","E5","D5","C5",
-    "E5","G5","A5","C6","A5","G5","E5","D5",
-    "E5","D5","C5","D5","E5","G5","E5",""
+    "D5","G5","B5","D6","B5","G5","A5","B5",
+    "C6","B5","A5","G5","A5","G5","E5","D5",
+    "D5","G5","B5","D6","B5","A5","G5","E5",
+    "F#5","E5","D5","E5","D5","B4","D5","",
+    "E5","G5","B5","E6","D6","B5","A5","G5",
+    "E6","D6","C6","B5","A5","G5","A5","B5",
+    "A5","B5","C6","B5","A5","G5","F#5","E5",
+    "D5","E5","F#5","G5","G5","","",""
   ];
-  var BASS = ["C3","G3","A3","G3","F3","G3","C3","G3","C3","G3","A3","G3","F3","G3","C3","G3",
-              "C3","G3","A3","G3","F3","G3","C3","G3","C3","G3","A3","G3","F3","G3","C3","G3"];
-  var FREQ = { C3:130.81, D3:146.83, E3:164.81, F3:174.61, G3:196.00, A3:220.00, B3:246.94,
+  var BASS = [
+    "G2","","B2","","D3","","B2","",
+    "C3","","E3","","G3","","E3","",
+    "G2","","B2","","D3","","A2","",
+    "D3","","F#3","","A3","","B2","",
+    "E3","","G3","","B3","","G3","",
+    "C3","","E3","","G3","","A2","",
+    "D3","","F#3","","A3","","F#3","",
+    "G2","","B2","","D3","","G3",""
+  ];
+  /* Diatonic third above each melody note (G major) for a soft music-box duet */
+  var HARM = { D5:"F#5", G5:"B5", B5:"D6", D6:"F#6", A5:"C6", C6:"E6",
+    E5:"G5", "F#5":"A5", B4:"D5", E6:"G6" };
+  var FREQ = { G2:98.00, A2:110.00, B2:123.47, C3:130.81, D3:146.83, E3:164.81, "F#3":185.00, F3:174.61, G3:196.00, A3:220.00, B3:246.94,
     C4:261.63, D4:293.66, E4:329.63, F4:349.23, G4:392.00, A4:440.00, B4:493.88,
-    C5:523.25, D5:587.33, E5:659.25, F5:698.46, G5:783.99, A5:880.00, B5:987.77, C6:1046.50 };
+    C5:523.25, D5:587.33, E5:659.25, F5:698.46, "F#5":739.99, G5:783.99, A5:880.00, B5:987.77, C6:1046.50, D6:1174.66, E6:1318.51, "F#6":1479.98, G6:1567.98, A6:1760.00 };
   function ensure() {
     if (!ctx) {
       try {
@@ -673,8 +700,14 @@ var AudioEng = (function() {
     src.start(when); src.stop(when + dur);
   }
   function scheduleStep(s, when) {
-    var m = MELODY[s % 32], b = BASS[s % 32];
-    if (m) tone(FREQ[m], STEP_DUR * 0.95, "square", 0.12, when, null, musicGain);
+    var m = MELODY[s % 64], b = BASS[s % 64];
+    if (m) {
+      var hold = 1;
+      while (hold < 4 && MELODY[(s + hold) % 64] === "") hold++;
+      tone(FREQ[m], STEP_DUR * hold * 0.95, "triangle", 0.14, when, null, musicGain);
+      var h = HARM[m];
+      if (h) tone(FREQ[h], STEP_DUR * hold * 0.95, "sine", 0.04, when, null, musicGain);
+    }
     if (s % 2 === 0 && b) tone(FREQ[b], STEP_DUR * 1.8, "triangle", 0.16, when, null, musicGain);
     if (s % 4 === 2) { /* soft hat tick */
       var o = ctx.createOscillator(), g = ctx.createGain();
@@ -687,8 +720,9 @@ var AudioEng = (function() {
     if (!ctx || !musicOn) return;
     while (nextTime < ctx.currentTime + 0.25) {
       scheduleStep(step, nextTime);
-      step = (step + 1) % 32;
-      nextTime += STEP_DUR;
+      var longStep = (step % 2 === 0);
+      step = (step + 1) % 64;
+      nextTime += longStep ? STEP_DUR * 1.25 : STEP_DUR * 0.75; /* gentle swing */
     }
   }
   return {
@@ -757,6 +791,23 @@ var AudioEng = (function() {
         tone(f * 0.55, 0.09, "sine", 0.16, now, f * 1.15); /* spring up */
         tone(f * 1.15, 0.13, "sine", 0.13, now + 0.08, f * 0.6); /* bounce back down */
         tone(f * 2, 0.05, "triangle", 0.05, now, f * 2.4); /* bright little tink on top */
+      }
+      else if (name === "chime") { /* clear crystalline water-instrument chime: glass-harp arpeggio, G major pentatonic */
+        if (!musicOn) return; /* respects the mute toggle */
+        var o = arg || {};
+        var PENTA = [FREQ.G5, FREQ.A5, FREQ.B5, FREQ.D6, FREQ.E6, FREQ.G6, FREQ.A6];
+        var start = Math.min(2, Math.max(0, (o.cascade || 1) - 1)); /* cascades climb one pentatonic step higher */
+        var steps;
+        if (o.wrapped) steps = [0, 1, 2, 3, 4, 5]; /* L/T: fuller 6-note chime */
+        else if ((o.biggest || 3) >= 5) steps = [0, 2, 3, 4, 5];
+        else if ((o.biggest || 3) === 4) steps = [0, 2, 3, 4];
+        else steps = [0, 2, 3]; /* 3-match: root, third, fifth */
+        steps.forEach(function(s, i) {
+          var cf = PENTA[Math.min(start + s, PENTA.length - 1)];
+          if (!cf) return;
+          tone(cf, 0.9, "sine", 0.22, now + i * 0.055); /* pure glass fundamental, long ring */
+          tone(cf * 2, 0.55, "sine", 0.06, now + i * 0.055); /* octave shimmer */
+        });
       }
     }
   };
@@ -1003,6 +1054,22 @@ function expandClear(initialCells) {
   return { cells: cells, wrappedHits: wrappedHits, effects: effects, strikes: strikes };
 }
 
+/* Hop the given cells happily, then pop them. Total ~230ms, barely longer than
+   the old 210ms pop window: the bounce gets an 80ms head start at full size,
+   then the pop shrinks the tile while it lands. */
+async function bounceThenPop(cells) {
+  cells.forEach(function(cell) {
+    var el = tileEl(cell[0], cell[1]);
+    if (el) el.classList.add("match-bounce");
+  });
+  await sleep(80);
+  cells.forEach(function(cell) {
+    var el = tileEl(cell[0], cell[1]);
+    if (el) el.classList.add("pop");
+  });
+  await sleep(150);
+}
+
 /* Resolve all matches until the board settles. Returns total points earned. */
 async function resolveBoard(swapPos) {
   var total = 0, cascade = 0;
@@ -1079,6 +1146,9 @@ async function resolveBoard(swapPos) {
         smallMatchFx(run.cells, type);
       }
     });
+    /* Water chime: matched tiles ring like a glass harp the moment they find each other.
+       Pitch rises with match size; each cascade round climbs one step higher. */
+    AudioEng.sfx("chime", { biggest: biggest, wrapped: found.wrapped.length > 0, cascade: cascade });
     /* Cells cleared by special effects burst in their own tile colors too */
     if (extraCells.length) burstCells(extraCells.map(function(k){ return k.split(",").map(Number); }), 10, 200);
     /* Whole-screen shake scaled by the biggest match this step */
@@ -1093,14 +1163,9 @@ async function resolveBoard(swapPos) {
       }
       lightningTo(boltCells);
     }
-    /* Animate pop, then remove */
+    /* Bounce the matched tiles happily, then pop them */
     var keys = Object.keys(expanded.cells);
-    keys.forEach(function(k) {
-      var cell = expanded.cells[k];
-      var el = tileEl(cell[0], cell[1]);
-      if (el) el.classList.add("pop");
-    });
-    await sleep(210);
+    await bounceThenPop(keys.map(function(k) { return expanded.cells[k]; }));
     keys.forEach(function(k) {
       var cell = expanded.cells[k];
       var tl = state.board[cell[0]][cell[1]];
@@ -1135,8 +1200,7 @@ async function resolveBoard(swapPos) {
         showFloatScore(s2, second);
         AudioEng.sfx("wrapped");
         explosionAt(expanded.wrappedHits, "fox", { text: false, count: 10, color: "#ffd23f" });
-        second.forEach(function(cell) { var el = tileEl(cell[0], cell[1]); if (el) el.classList.add("pop"); });
-        await sleep(210);
+        await bounceThenPop(second);
         second.forEach(function(cell) {
           var tl = state.board[cell[0]][cell[1]];
           if (tl) { removeTileEl(tl.id); state.board[cell[0]][cell[1]] = null; }
