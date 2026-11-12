@@ -52,8 +52,14 @@ button {
 button:active { transform: translateY(3px); box-shadow: 0 1px 0 #d63d68; }
 button.small { padding: 8px 16px; font-size: 15px; }
 button.green { background: linear-gradient(180deg, #7ee081, #43b581); box-shadow: 0 4px 0 #2e8b57, 0 6px 12px rgba(0,0,0,.18); }
-button.rainbow { font-family: 'Baloo 2', "Comic Sans MS", "Chalkboard SE", sans-serif; font-size:22px; padding: 14px 44px; background: linear-gradient(90deg, #ff2d55, #ff9500, #ffe600, #2ed573, #00d2ff, #7b5cff); background-size: 200% 100%; box-shadow: 0 5px 0 rgba(0,0,0,.25), 0 8px 16px rgba(0,0,0,.25); text-shadow: 0 2px 3px rgba(0,0,0,.3); animation: playPulse 1.8s ease-in-out infinite; }
-@keyframes playPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+button.rainbow { position:relative; overflow:hidden; font-family: 'Baloo 2', "Comic Sans MS", "Chalkboard SE", sans-serif; font-size:22px; padding: 14px 42px; background: linear-gradient(135deg, rgba(255,255,255,.85) 0%, rgba(170,215,255,.75) 30%, rgba(255,170,225,.75) 60%, rgba(200,180,255,.75) 85%, rgba(255,255,255,.85) 100%); border: 2px solid rgba(255,255,255,.95); text-shadow: 0 2px 4px rgba(80,120,180,.6); box-shadow: inset 0 0 22px rgba(255,255,255,.9), 0 8px 20px rgba(0,0,0,.18), 0 0 24px rgba(170,215,255,.6); animation: bubbleWobble 2.2s ease-in-out infinite; }
+button.rainbow::before { content:''; position:absolute; left:12px; top:5px; width:46px; height:22px; border-radius:50%; background:rgba(255,255,255,.9); filter: blur(1px); transform: rotate(-12deg); pointer-events:none; }
+button.rainbow .mini-bubble { position:absolute; border-radius:50%; border:1.5px solid rgba(255,255,255,.9); background:rgba(255,255,255,.35); animation: bubbleFloat 2s ease-in-out infinite; pointer-events:none; }
+button.rainbow .mini-bubble.b1 { right:14px; top:6px; width:12px; height:12px; }
+button.rainbow .mini-bubble.b2 { left:16px; bottom:5px; width:8px; height:8px; animation-delay:.7s; }
+button.rainbow:active { transform: translateY(2px) scale(.98); box-shadow: inset 0 0 22px rgba(255,255,255,.9), 0 4px 12px rgba(0,0,0,.18), 0 0 24px rgba(170,215,255,.6); }
+@keyframes bubbleWobble { 0%, 100% { transform: scale(1, 1) rotate(0deg); } 50% { transform: scale(1.04, .97) rotate(.6deg); } }
+@keyframes bubbleFloat { 0%, 100% { transform: translateY(0); opacity:.6; } 50% { transform: translateY(-5px); opacity:1; } }
 button.green:active { box-shadow: 0 1px 0 #2e8b57; }
 button.blue { background: linear-gradient(180deg, #7cc4ff, #3f8cff); box-shadow: 0 4px 0 #2b62b8, 0 6px 12px rgba(0,0,0,.18); }
 button.blue:active { box-shadow: 0 1px 0 #2b62b8; }
@@ -75,6 +81,9 @@ button:disabled { opacity:.55; cursor:default; }
 }
 .howto { text-align:left; font-size:16px; line-height:1.75; }
 .card.howto, #startLb { background-color: #fffdf5; background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22150%22%20height%3D%22150%22%20viewBox%3D%220%200%20150%20150%22%3E%0A%3Cg%20opacity%3D%220.20%22%3E%0A%20%20%3Cg%20fill%3D%22%23ff9ecf%22%3E%3Cellipse%20cx%3D%2222%22%20cy%3D%2230%22%20rx%3D%224%22%20ry%3D%223.2%22%2F%3E%3Ccircle%20cx%3D%2216.5%22%20cy%3D%2224.5%22%20r%3D%221.8%22%2F%3E%3Ccircle%20cx%3D%2220%22%20cy%3D%2222.5%22%20r%3D%221.8%22%2F%3E%3Ccircle%20cx%3D%2223.5%22%20cy%3D%2222.5%22%20r%3D%221.8%22%2F%3E%3Ccircle%20cx%3D%2227%22%20cy%3D%2224.5%22%20r%3D%221.8%22%2F%3E%3C%2Fg%3E%0A%20%20%3Cg%20fill%3D%22%234db8ff%22%3E%3Cpath%20d%3D%22M102%2020%20Q110%2014%20118%2020%20Q110%2026%20102%2020%20Z%22%2F%3E%3Cpath%20d%3D%22M118%2020%20L124%2016%20L124%2024%20Z%22%2F%3E%3C%2Fg%3E%0A%20%20%3Cg%20fill%3D%22%23ffb347%22%3E%3Cpath%20d%3D%22M28%20108%20L30%20113%20L35%20113.5%20L31%20117%20L32.5%20122%20L28%20119.5%20L23.5%20122%20L25%20117%20L21%20113.5%20L26%20113%20Z%22%2F%3E%3C%2Fg%3E%0A%20%20%3Cg%20fill%3D%22%23b06bff%22%3E%3Cpath%20d%3D%22M108%20108%20A7%207%200%200%201%20122%20108%20Z%22%2F%3E%3Cpath%20d%3D%22M111%20108%20Q111%20113%20110%20115%20M115%20108%20Q115%20113%20115%20115%20M119%20108%20Q119%20113%20120%20115%22%20stroke%3D%22%23b06bff%22%20stroke-width%3D%221.6%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%2F%3E%3C%2Fg%3E%0A%3C%2Fg%3E%0A%3C%2Fsvg%3E"); background-size: 150px 150px; }
+.howto-head { display:flex; align-items:center; justify-content:space-between; gap:8px; cursor:pointer; }
+.howto-head .howto-title { margin-bottom:0; }
+.howto-toggle { display:none; flex:0 0 auto; font-size:13px; font-weight:800; color:#7c4dff; background:#efe9ff; border:2px solid #d9d2ff; border-radius:999px; padding:3px 10px; white-space:nowrap; }
 .howto-title { font-family: 'Baloo 2', "Comic Sans MS", "Chalkboard SE", sans-serif; font-size:20px; font-weight:800; background: linear-gradient(90deg, #ff2d55, #ff9500, #ffe600, #2ed573, #00d2ff, #7b5cff); -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-stroke: 0.5px #000; margin-bottom: 8px; }
 .rule { display:flex; gap:10px; align-items:flex-start; font-size:16px; font-weight:600; color:#4a3527; line-height:1.5; margin-top:6px; }
 .rule .num { flex: 0 0 26px; width:26px; height:26px; border-radius:50%; color:#fff; font-weight:800; font-size:15px; display:flex; align-items:center; justify-content:center; border:2px solid #fff; box-shadow: 0 2px 4px rgba(0,0,0,.2); margin-top:1px; }
@@ -525,6 +534,24 @@ input[type=text]:focus { border-color:#ff5c8a; }
   .hud-stat { font-size:13px; } .hud-stat b { font-size:17px; }
   button { font-size:16px; padding: 11px 20px; }
 }
+/* Mobile: compact start screen + collapsible how-to (An approved 2026-11-12) */
+@media (max-width: 520px) {
+  .screen { gap:8px; padding: 10px 12px 20px; }
+  .logo-row img { width:44px; height:44px; }
+  .tagline { font-size:15px; }
+  #startScreen .card { padding:12px 14px; }
+  .howto { font-size:15px; line-height:1.5; }
+  .howto-title { font-size:18px; }
+  .rule { font-size:15px; line-height:1.45; margin-top:4px; }
+  button.rainbow { font-size:20px; padding:12px 40px; }
+  .best-line { font-size:16px; }
+  .level-info { font-size:15px; }
+  .visit-count { font-size:14px; }
+  #startLb h2 { font-size:17px !important; margin-bottom:4px !important; }
+  .howto-toggle { display:inline-block; }
+  #howto .howto-rules { display:none; }
+  #howto.open .howto-rules { display:block; }
+}
 </style>
 </head>
 <body>
@@ -534,11 +561,11 @@ input[type=text]:focus { border-color:#ff5c8a; }
   <h1>Animal Crush</h1>
   <div class="logo-row" id="logoRow"></div>
   <p class="tagline" id="tagline"></p>
+  <button id="playBtn" class="rainbow"><span class="mini-bubble b1"></span><span class="mini-bubble b2"></span><span class="play-label"></span></button>
   <div class="card howto" id="howto"></div>
   <p class="visit-count" id="visitCount"></p>
   <p class="best-line" id="bestLine"></p>
   <p class="level-info" id="levelInfo"></p>
-  <button id="playBtn" class="rainbow"></button>
   <div class="card" id="startLb"></div>
   <div class="hud-btns">
     <button class="icon-btn" id="langBtnStart">VI | EN</button>
@@ -648,6 +675,8 @@ var STR = {
   vi: {
     tagline: "Xếp 3 bạn thú giống nhau để nổ tung! Càng xếp nhiều, điểm càng cao.",
     howto: "<b>Cách chơi:</b><br>1. Chạm 1 ô rồi chạm ô bên cạnh để đổi chỗ, hoặc kéo để đổi chỗ.<br>2. Xếp 3 bạn giống nhau thành hàng ngang hoặc dọc để nổ.<br>3. Xếp 4 bạn: được GẤP ĐÔI điểm và tạo kẹo sọc.<br>4. Xếp 5 bạn: tạo kẹo cầu vồng.<br>5. Xếp hình chữ L hoặc T: tạo kẹo gói nổ 3x3.<br>6. Đạt đủ điểm mục tiêu trước khi hết lượt để qua màn!<br>7. Kéo đầu sói (bom) vào một ô để nổ tung tất cả các ô cùng loại đó!",
+    howtoShow: "Xem hướng dẫn ▾",
+    howtoHide: "Thu gọn ▴",
     play: "Chơi ngay",
     level: "Màn",
     score: "Điểm",
@@ -688,6 +717,8 @@ var STR = {
   en: {
     tagline: "Match 3 same animals to pop them! The more you match, the higher your score.",
     howto: "<b>How to play:</b><br>1. Tap a tile, then tap a neighbour to swap, or drag to swap.<br>2. Match 3 same animals in a row or column to pop them.<br>3. Match 4: DOUBLE points and a striped candy.<br>4. Match 5: a rainbow candy.<br>5. Match an L or T shape: a wrapped candy that blasts 3x3.<br>6. Reach the target score before you run out of moves to clear the level!<br>7. Drag the wolf (bomb) onto a tile to blast every tile of that animal!",
+    howtoShow: "Show guide ▾",
+    howtoHide: "Hide ▴",
     play: "Play now",
     level: "Level",
     score: "Score",
@@ -2951,13 +2982,23 @@ function renderHowto() {
   var parts = raw.split("<br>");
   var title = parts.shift().replace(/<\/?b>/g, "");
   var colors = ["#ff5c8a", "#ff9500", "#e6b800", "#2ed573", "#00b4ff", "#7b5cff", "#ff2d78"];
-  var out = '<div class="howto-title">' + title + "</div>";
+  var wasOpen = document.getElementById("howto").classList.contains("open");
+  var out = '<div class="howto-head" onclick="toggleHowto()"><div class="howto-title">' + title + '</div><span class="howto-toggle" id="howtoToggle">' + t(wasOpen ? "howtoHide" : "howtoShow") + "</span></div>";
+  out += '<div class="howto-rules">';
   parts.forEach(function(line, i) {
     var m = line.match(/^\s*(\d+)\.\s*([\s\S]*)$/);
     if (!m) { out += '<div class="rule"><span>' + line + "</span></div>"; return; }
     out += '<div class="rule"><span class="num" style="background:' + colors[i % colors.length] + ';">' + m[1] + "</span><span>" + m[2] + "</span></div>";
   });
+  out += "</div>";
   document.getElementById("howto").innerHTML = out;
+  if (wasOpen) document.getElementById("howto").classList.add("open");
+}
+function toggleHowto() {
+  var card = document.getElementById("howto");
+  var open = card.classList.toggle("open");
+  var tog = document.getElementById("howtoToggle");
+  if (tog) tog.textContent = t(open ? "howtoHide" : "howtoShow");
 }
 function applyLang() {
   document.documentElement.lang = LANG;
@@ -2966,7 +3007,7 @@ function applyLang() {
   else tag = tag.replace("pop them!", "<b>pop them!</b>");
   document.getElementById("tagline").innerHTML = tag;
   renderHowto();
-  document.getElementById("playBtn").textContent = t("play");
+  document.getElementById("playBtn").querySelector(".play-label").textContent = t("play");
   document.getElementById("lblLevel").textContent = t("level") + ":";
   document.getElementById("lblScore").textContent = t("score") + ":";
   document.getElementById("lblBest").textContent = t("best") + ":";
