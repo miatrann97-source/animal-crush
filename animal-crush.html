@@ -2069,6 +2069,28 @@ function startBoings() {
   }, 150);
 }
 function stopBoings() { if (boingTimer) { clearInterval(boingTimer); boingTimer = null; } }
+/* Chipmunk voice on the transition screen: a cheerful "Let's go!" in a high,
+   fast chipmunk voice (Web Speech API). Plays once per transition, respects the
+   mute toggle, and fails silently if speech synthesis is unavailable. */
+function speakLetsGo() {
+  try {
+    if (!AudioEng.isMusicOn()) return; /* muted: no voice */
+    if (!("speechSynthesis" in window) || !window.speechSynthesis) return;
+    if (typeof SpeechSynthesisUtterance === "undefined") return;
+    var u = new SpeechSynthesisUtterance("Let's go!");
+    u.lang = "en-US";
+    u.pitch = 2;   /* max pitch: chipmunk-high */
+    u.rate = 1.3;  /* fast and cheerful */
+    u.volume = 1;
+    var voices = window.speechSynthesis.getVoices() || [];
+    var en = null;
+    for (var i = 0; i < voices.length; i++) {
+      if (voices[i].lang && voices[i].lang.indexOf("en") === 0) { en = voices[i]; break; }
+    }
+    if (en) u.voice = en; /* otherwise the default voice is used */
+    window.speechSynthesis.speak(u);
+  } catch (e) { /* speech unavailable: fail silently, train + boings + music keep working */ }
+}
 function showTransition(fromLevel) {
   var next = fromLevel + 1;
   var ov = document.getElementById("transitionScreen");
@@ -2079,6 +2101,7 @@ function showTransition(fromLevel) {
   var row = ov.querySelector(".trans-row");
   if (row) { row.style.animation = "none"; void row.offsetWidth; row.style.animation = ""; }
   startBoings();
+  speakLetsGo(); /* chipmunk "Let's go!" once per transition */
   clearTimeout(transTimer);
   transTimer = setTimeout(function() {
     stopBoings();
@@ -2299,7 +2322,7 @@ document.getElementById("homeBtn").addEventListener("click", function() {
   state.over = true;
   stopTimer();
   stopHintTimer();
-  AudioEng.stopMusic();
+  /* music keeps playing on the start screen: it is the game's background music */
   document.getElementById("gameScreen").classList.add("hidden");
   document.getElementById("endScreen").classList.add("hidden");
   stopBoings();
@@ -2319,7 +2342,7 @@ document.getElementById("retryBtn").addEventListener("click", function() { start
 document.getElementById("endHomeBtn").addEventListener("click", function() {
   stopTimer();
   stopHintTimer();
-  AudioEng.stopMusic();
+  /* music keeps playing on the start screen: it is the game's background music */
   document.getElementById("endScreen").classList.add("hidden");
   document.getElementById("gameScreen").classList.add("hidden");
   stopBoings();
@@ -2327,6 +2350,18 @@ document.getElementById("endHomeBtn").addEventListener("click", function() {
   document.getElementById("startScreen").classList.remove("hidden");
   applyLang();
 });
+
+/* Music starts on the very first tap anywhere (browsers block audio until the
+   user interacts), so the start screen has music too and it plays through the
+   whole game: start screen, gameplay, win celebration, transition, end screen. */
+var musicStarted = false;
+function startMusicOnFirstTap() {
+  if (musicStarted) return;
+  musicStarted = true;
+  AudioEng.unlock();
+  AudioEng.startMusic();
+}
+document.addEventListener("pointerdown", startMusicOnFirstTap);
 
 /* ================= Init ================= */
 (function init() {
