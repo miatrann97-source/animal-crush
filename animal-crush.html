@@ -176,21 +176,23 @@ button:disabled { opacity:.55; cursor:default; }
 @keyframes floatUp { from { opacity:1; transform: translate(-50%,0); } to { opacity:0; transform: translate(-50%,-46px); } }
 
 /* ---------- Explosion & lightning FX ---------- */
-#board.shake { animation: boardShake .38s ease; }
+#board.shake { animation: boardShake .55s ease; }
 @keyframes boardShake {
   0%, 100% { transform: translate(0,0); }
-  20% { transform: translate(-14px, 8px); }
-  40% { transform: translate(14px, -8px); }
-  60% { transform: translate(-11px, -7px); }
-  80% { transform: translate(10px, 7px); }
+  20% { transform: translate(-24px, 14px); }
+  40% { transform: translate(24px, -14px); }
+  60% { transform: translate(-19px, -12px); }
+  80% { transform: translate(17px, 12px); }
 }
 /* ---------- Whole-screen shake (scaled by match size) ---------- */
-#gameScreen.shake-sm { animation: shakeSm .35s ease; }
-#gameScreen.shake-md { animation: shakeMd .4s ease; }
-#gameScreen.shake-lg { animation: shakeLg .45s ease; }
-@keyframes shakeSm { 0%,100% { transform: translate(0,0); } 25% { transform: translate(-6px,3px); } 50% { transform: translate(6px,-3px); } 75% { transform: translate(-4px,-3px); } }
-@keyframes shakeMd { 0%,100% { transform: translate(0,0); } 20% { transform: translate(-11px,6px); } 40% { transform: translate(11px,-6px); } 60% { transform: translate(-9px,-6px); } 80% { transform: translate(9px,6px); } }
-@keyframes shakeLg { 0%,100% { transform: translate(0,0); } 15% { transform: translate(-18px,10px) rotate(-1.2deg); } 30% { transform: translate(18px,-10px) rotate(1.2deg); } 45% { transform: translate(-15px,-9px) rotate(-.9deg); } 60% { transform: translate(15px,9px) rotate(.9deg); } 75% { transform: translate(-10px,6px); } 90% { transform: translate(9px,-6px); } }
+#gameScreen.shake-sm { animation: shakeSm .5s ease; }
+#gameScreen.shake-md { animation: shakeMd .6s ease; }
+#gameScreen.shake-lg { animation: shakeLg .75s ease; }
+#gameScreen.shake-xl { animation: shakeXl .85s ease; }
+@keyframes shakeSm { 0%,100% { transform: translate(0,0); } 25% { transform: translate(-10px,5px); } 50% { transform: translate(10px,-5px); } 75% { transform: translate(-7px,-5px); } }
+@keyframes shakeMd { 0%,100% { transform: translate(0,0); } 20% { transform: translate(-18px,10px); } 40% { transform: translate(18px,-10px); } 60% { transform: translate(-15px,-10px); } 80% { transform: translate(15px,10px); } }
+@keyframes shakeLg { 0%,100% { transform: translate(0,0); } 15% { transform: translate(-28px,16px) rotate(-2deg); } 30% { transform: translate(28px,-16px) rotate(2deg); } 45% { transform: translate(-23px,-14px) rotate(-1.5deg); } 60% { transform: translate(23px,14px) rotate(1.5deg); } 75% { transform: translate(-16px,10px); } 90% { transform: translate(14px,-10px); } }
+@keyframes shakeXl { 0%,100% { transform: translate(0,0); } 12% { transform: translate(-36px,20px) rotate(-2.5deg); } 24% { transform: translate(36px,-20px) rotate(2.5deg); } 36% { transform: translate(-30px,-18px) rotate(-2deg); } 48% { transform: translate(30px,18px) rotate(2deg); } 60% { transform: translate(-24px,14px) rotate(-1.5deg); } 72% { transform: translate(22px,-12px) rotate(1.5deg); } 84% { transform: translate(-14px,8px); } }
 /* ---------- Win celebration ---------- */
 #celebrate { position:fixed; inset:0; z-index:60; pointer-events:none; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; overflow:hidden; }
 #celebrate.hidden { display:none !important; }
@@ -204,10 +206,14 @@ button:disabled { opacity:.55; cursor:default; }
 .confetti-piece { position:absolute; top:-14px; pointer-events:none; will-change: transform; }
 .tile.dance .inner { animation: tileDance .5s ease-in-out infinite alternate; }
 @keyframes tileDance { from { transform: translateY(0) rotate(-4deg) scale(1); } to { transform: translateY(-6px) rotate(4deg) scale(1.08); } }
-#fxLayer { position:absolute; inset:0; z-index:25; pointer-events:none; overflow:hidden; border-radius:18px; }
+#fxLayer { position:absolute; inset:0; z-index:25; pointer-events:none; border-radius:18px; }
+/* no overflow:hidden here on purpose: explosion debris must fly out across the whole screen */
 .particle { position:absolute; border-radius:50%; pointer-events:none; will-change: transform, opacity; }
+.particle.confetti { border-radius:2px; }
+.particle.droplet { border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%; }
+.fx-flash-screen { position:fixed; inset:0; background:#fff; opacity:0; pointer-events:none; z-index:45; }
 .boom-text {
-  position:absolute; z-index:26; font-weight:900; font-size:84px; color:#ffcf3f;
+  position:absolute; z-index:26; font-weight:900; font-size:120px; color:#ffcf3f;
   text-shadow: 3px 3px 0 #fff, 0 0 26px #ff9d00, 0 6px 12px rgba(0,0,0,.35);
   pointer-events:none; white-space:nowrap; transform: translate(-50%,-50%);
 }
@@ -537,12 +543,15 @@ var AudioEng = (function() {
       else if (name === "lose") { [392,330,262,196].forEach(function(f,i){ tone(f, 0.25, "triangle", 0.2, now + i*0.14); }); }
       else if (name === "select") { tone(700, 0.05, "sine", 0.18, now); }
       else if (name === "invalid") { tone(180, 0.12, "sine", 0.2, now, 120); }
-      else if (name === "boom") {
-        tone(120, 0.45, "sine", 0.7, now, 28);
-        tone(70, 0.4, "sine", 0.55, now, 24);
-        tone(90, 0.3, "triangle", 0.35, now, 40);
-        noiseBurst(now, 0.35, 0.55, "lowpass", 350);
-        noiseBurst(now + 0.03, 0.2, 0.3, "lowpass", 900);
+      else if (name === "boom") { /* thunderous double boom: deep sub-bass thump + rumbling second hit, "ầm ầm" */
+        tone(140, 0.6, "sine", 0.85, now, 26);
+        tone(55, 0.65, "sine", 0.85, now, 20);
+        tone(100, 0.4, "triangle", 0.4, now, 38);
+        noiseBurst(now, 0.5, 0.65, "lowpass", 300);
+        noiseBurst(now + 0.05, 0.3, 0.4, "lowpass", 800);
+        tone(90, 0.5, "sine", 0.5, now + 0.18, 24); /* second rumble */
+        tone(48, 0.5, "sine", 0.5, now + 0.18, 20);
+        noiseBurst(now + 0.18, 0.35, 0.4, "lowpass", 250);
       }
       else if (name === "crack") { /* crisp snappy match pop: bright snap + low thump */
         noiseBurst(now, 0.1, 0.4, "highpass", 2600);
@@ -883,6 +892,8 @@ async function resolveBoard(swapPos) {
         smallMatchFx(run.cells, type);
       }
     });
+    /* Cells cleared by special effects burst in their own tile colors too */
+    if (extraCells.length) burstCells(extraCells.map(function(k){ return k.split(",").map(Number); }), 10, 200);
     /* Whole-screen shake scaled by the biggest match this step */
     if (biggest >= 5 || expanded.effects.length) shakeScreen("lg");
     else if (biggest === 4) shakeScreen("md");
@@ -936,7 +947,7 @@ async function resolveBoard(swapPos) {
         total += s2; state.score += s2; updateHUD();
         showFloatScore(s2, second);
         AudioEng.sfx("wrapped");
-        explosionAt(expanded.wrappedHits, "fox", { text: false, count: 5, color: "#ffd23f" });
+        explosionAt(expanded.wrappedHits, "fox", { text: false, count: 10, color: "#ffd23f" });
         second.forEach(function(cell) { var el = tileEl(cell[0], cell[1]); if (el) el.classList.add("pop"); });
         await sleep(210);
         second.forEach(function(cell) {
@@ -1046,6 +1057,7 @@ async function doRainbowSwap(r1, c1, r2, c2) {
   showFloatScore(pts, list);
   AudioEng.sfx("rainbow");
   lightningTo([rb, other]);
+  burstCells(list, 10, 250); /* rainbow clear bursts in each tile's own color */
   list.forEach(function(cell) { var el = tileEl(cell[0], cell[1]); if (el) el.classList.add("pop"); });
   await sleep(210);
   list.forEach(function(cell) {
@@ -1171,9 +1183,10 @@ async function detonateBomb(target, from) {
   state.score += pts;
   updateHUD();
   showFloatScore(pts, list);
-  explosionAt(list, "fox", { count: 55, max: 420, text: true });
-  shakeScreen("lg");
+  explosionAt(list, "fox", { count: 80, max: 650, text: true });
+  shakeScreen("xl");
   flashBoard();
+  flashScreen();
   list.forEach(function(cell) { var el = tileEl(cell[0], cell[1]); if (el) el.classList.add("pop"); });
   await sleep(280);
   list.forEach(function(cell) {
@@ -1351,35 +1364,124 @@ function showFloatScore(points, cells) {
   setTimeout(function() { if (div.parentNode) div.parentNode.removeChild(div); }, 950);
 }
 /* ================= Explosion & lightning FX ================= */
-var ANIMAL_COLORS = { shark:"#1e90ff", otter:"#8b5a2b", rabbit:"#ff9ecf", mouse:"#9aa0a6", jellyfish:"#b06bff", fox:"#ff8c1a" };
+/* Explosion particle colors: each tile bursts in its own color. Rabbit is soft white/cream
+   with a pink edge so it stays visible on the light background. */
+var ANIMAL_COLORS = { shark:"#1e90ff", otter:"#8b5a2b", rabbit:"#fff8ec", mouse:"#9aa0a6", jellyfish:"#b06bff", fox:"#ff8c1a", bomb:"#3a3a3a" };
+var ANIMAL_EDGE = { shark:"#0b5fa5", otter:"#5d3a17", rabbit:"#ff9ecf", mouse:"#6e7378", jellyfish:"#7c3fd4", fox:"#d35400", bomb:"#ffd23f" };
 function fxLayer() { return document.getElementById("fxLayer"); }
-function spawnParticle(layer, xPct, yPct, color, star) {
+/* Live particle budget: keep phones smooth by never letting too many fly at once */
+var liveParticles = 0;
+var MAX_LIVE_PARTICLES = 650;
+function trackParticle(p, dur) {
+  liveParticles++;
+  var finished = false;
+  var done = function() {
+    if (finished) return; finished = true;
+    if (p.parentNode) p.parentNode.removeChild(p);
+    liveParticles = Math.max(0, liveParticles - 1);
+  };
+  setTimeout(done, dur + 150);
+  return done;
+}
+function colorForCell(r, c, fallbackType) {
+  var tl = state.board[r] && state.board[r][c];
+  var type = tl ? tl.type : (fallbackType || "fox");
+  if (type === "rainbow") type = "fox";
+  return { fill: ANIMAL_COLORS[type] || "#ffd23f", edge: ANIMAL_EDGE[type] || "#d35400" };
+}
+/* Confetti paper: small rectangle in the tile's color with a darker edge, fluttering
+   and spinning as it flies across the whole screen */
+function spawnConfetti(layer, xPct, yPct, fill, edge) {
+  if (liveParticles >= MAX_LIVE_PARTICLES) return;
   var p = document.createElement("div");
-  p.className = "particle";
-  if (star) {
-    p.textContent = "★";
-    p.style.background = "transparent";
-    p.style.color = "#ffd23f";
-    p.style.fontSize = (18 + Math.random() * 16) + "px";
-    p.style.textShadow = "0 0 8px #fff";
-    p.style.borderRadius = "0";
-  } else {
-    var size = 8 + Math.random() * 14;
-    p.style.width = size + "px"; p.style.height = size + "px";
-    p.style.background = color;
-    p.style.boxShadow = "0 0 8px " + color;
-  }
+  p.className = "particle confetti";
+  var w = 9 + Math.random() * 9, h = 6 + Math.random() * 6;
+  p.style.width = w + "px"; p.style.height = h + "px";
+  p.style.background = fill;
+  p.style.border = "1px solid " + edge;
+  p.style.boxShadow = "0 0 6px " + fill;
   p.style.left = xPct + "%"; p.style.top = yPct + "%";
   layer.appendChild(p);
   var ang = Math.random() * Math.PI * 2;
-  var dist = 90 + Math.random() * 170;
-  var dx = Math.cos(ang) * dist, dy = Math.sin(ang) * dist - 20;
+  var dist = 220 + Math.random() * 480; /* fly across the entire screen */
+  var dx = Math.cos(ang) * dist, dy = Math.sin(ang) * dist - 40;
+  var spin = (Math.random() < 0.5 ? -1 : 1) * (360 + Math.random() * 720);
+  var sway = Math.random() * 70 - 35;
+  var dur = 1100 + Math.random() * 700;
   var anim = p.animate([
-    { transform: "translate(-50%,-50%) translate(0px,0px) scale(1)", opacity: 1 },
-    { transform: "translate(-50%,-50%) translate(" + dx + "px," + dy + "px) scale(0.2)", opacity: 0 }
-  ], { duration: 900 + Math.random() * 500, easing: "cubic-bezier(.17,.67,.35,1)" });
-  anim.onfinish = function() { if (p.parentNode) p.parentNode.removeChild(p); };
-  setTimeout(function() { if (p.parentNode) p.parentNode.removeChild(p); }, 1500);
+    { transform: "translate(-50%,-50%) translate(0px,0px) rotate(0deg)", opacity: 1 },
+    { transform: "translate(-50%,-50%) translate(" + (dx * 0.45).toFixed(0) + "px," + (dy * 0.45 - 30).toFixed(0) + "px) rotate(" + (spin * 0.4).toFixed(0) + "deg)", opacity: 1, offset: 0.35 },
+    { transform: "translate(-50%,-50%) translate(" + (dx * 0.75 + sway).toFixed(0) + "px," + (dy * 0.75 + 40).toFixed(0) + "px) rotate(" + (spin * 0.7).toFixed(0) + "deg)", opacity: 1, offset: 0.7 },
+    { transform: "translate(-50%,-50%) translate(" + dx.toFixed(0) + "px," + (dy + 130).toFixed(0) + "px) rotate(" + spin.toFixed(0) + "deg)", opacity: 0 }
+  ], { duration: dur, easing: "ease-out" });
+  var done = trackParticle(p, dur);
+  anim.onfinish = done;
+}
+/* Water droplet: splashes up fast, then arcs down with gravity, tinted in the tile's color */
+function spawnDroplet(layer, xPct, yPct, fill, edge) {
+  if (liveParticles >= MAX_LIVE_PARTICLES) return;
+  var p = document.createElement("div");
+  p.className = "particle droplet";
+  var size = 7 + Math.random() * 8;
+  p.style.width = size + "px"; p.style.height = (size * 1.25) + "px";
+  p.style.background = "radial-gradient(circle at 35% 30%, #ffffff 0%, " + fill + " 55%, " + edge + " 100%)";
+  p.style.boxShadow = "0 0 7px " + fill;
+  p.style.left = xPct + "%"; p.style.top = yPct + "%";
+  layer.appendChild(p);
+  var ang = Math.random() * Math.PI * 2;
+  var dist = 180 + Math.random() * 420;
+  var dx = Math.cos(ang) * dist;
+  var up = 60 + Math.random() * 120;
+  var fall = 200 + Math.random() * 240;
+  var dur = 900 + Math.random() * 500;
+  var anim = p.animate([
+    { transform: "translate(-50%,-50%) translate(0px,0px) scale(1)", opacity: 1, offset: 0, easing: "cubic-bezier(.2,.7,.3,1)" },
+    { transform: "translate(-50%,-50%) translate(" + (dx * 0.5).toFixed(0) + "px," + (-up).toFixed(0) + "px) scale(1)", opacity: 1, offset: 0.4, easing: "cubic-bezier(.5,0,.8,.4)" },
+    { transform: "translate(-50%,-50%) translate(" + dx.toFixed(0) + "px," + fall.toFixed(0) + "px) scale(.7)", opacity: 0, offset: 1 }
+  ], { duration: dur });
+  var done = trackParticle(p, dur);
+  anim.onfinish = done;
+}
+/* Gold star sparkle for extra pop */
+function spawnStar(layer, xPct, yPct) {
+  if (liveParticles >= MAX_LIVE_PARTICLES) return;
+  var p = document.createElement("div");
+  p.className = "particle";
+  p.textContent = "★";
+  p.style.background = "transparent";
+  p.style.color = "#ffd23f";
+  p.style.fontSize = (20 + Math.random() * 18) + "px";
+  p.style.textShadow = "0 0 10px #fff";
+  p.style.borderRadius = "0";
+  p.style.left = xPct + "%"; p.style.top = yPct + "%";
+  layer.appendChild(p);
+  var ang = Math.random() * Math.PI * 2;
+  var dist = 220 + Math.random() * 460;
+  var dx = Math.cos(ang) * dist, dy = Math.sin(ang) * dist - 30;
+  var dur = 900 + Math.random() * 500;
+  var anim = p.animate([
+    { transform: "translate(-50%,-50%) translate(0px,0px) scale(1) rotate(0deg)", opacity: 1 },
+    { transform: "translate(-50%,-50%) translate(" + dx.toFixed(0) + "px," + dy.toFixed(0) + "px) scale(0.2) rotate(180deg)", opacity: 0 }
+  ], { duration: dur, easing: "cubic-bezier(.17,.67,.35,1)" });
+  var done = trackParticle(p, dur);
+  anim.onfinish = done;
+}
+/* Burst every listed cell in its own tile color (used for special-expanded clears) */
+function burstCells(cells, perCell, cap) {
+  var layer = fxLayer(); if (!layer || !cells || !cells.length) return;
+  var total = 0, limit = cap || 200;
+  /* spread the cap evenly so every cleared cell bursts */
+  var per = Math.min(perCell, Math.max(1, Math.floor(limit / cells.length)));
+  cells.forEach(function(cell) {
+    var col = colorForCell(cell[0], cell[1], "fox");
+    var cx = (cell[1] + 0.5) * 12.5, cy = (cell[0] + 0.5) * 12.5;
+    for (var i = 0; i < per && total < limit; i++, total++) {
+      var roll = Math.random();
+      if (roll < 0.5) spawnConfetti(layer, cx, cy, col.fill, col.edge);
+      else if (roll < 0.88) spawnDroplet(layer, cx, cy, col.fill, col.edge);
+      else spawnStar(layer, cx, cy);
+    }
+  });
 }
 function showBoomText(xPct, yPct) {
   var layer = fxLayer(); if (!layer) return;
@@ -1390,12 +1492,12 @@ function showBoomText(xPct, yPct) {
   layer.appendChild(div);
   var anim = div.animate([
     { transform: "translate(-50%,-50%) scale(0.4) rotate(-8deg)", opacity: 0 },
-    { transform: "translate(-50%,-50%) scale(2.1) rotate(4deg)", opacity: 1, offset: 0.35 },
-    { transform: "translate(-50%,-50%) scale(1.5) rotate(0deg)", opacity: 1, offset: 0.6 },
-    { transform: "translate(-50%,-50%) scale(1.6) translateY(-26px)", opacity: 0 }
-  ], { duration: 1000, easing: "ease-out" });
+    { transform: "translate(-50%,-50%) scale(2.6) rotate(4deg)", opacity: 1, offset: 0.35 },
+    { transform: "translate(-50%,-50%) scale(1.9) rotate(0deg)", opacity: 1, offset: 0.6 },
+    { transform: "translate(-50%,-50%) scale(2) translateY(-30px)", opacity: 0 }
+  ], { duration: 1100, easing: "ease-out" });
   anim.onfinish = function() { if (div.parentNode) div.parentNode.removeChild(div); };
-  setTimeout(function() { if (div.parentNode) div.parentNode.removeChild(div); }, 1150);
+  setTimeout(function() { if (div.parentNode) div.parentNode.removeChild(div); }, 1250);
 }
 function shakeBoard() {
   var b = document.getElementById("board");
@@ -1403,27 +1505,38 @@ function shakeBoard() {
   b.classList.remove("shake");
   void b.offsetWidth;
   b.classList.add("shake");
-  setTimeout(function() { b.classList.remove("shake"); }, 360);
+  setTimeout(function() { b.classList.remove("shake"); }, 560);
 }
 function flashBoard() {
   var layer = fxLayer(); if (!layer) return;
   var f = document.createElement("div");
   f.className = "fx-flash";
   layer.appendChild(f);
-  var anim = f.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 550, easing: "ease-out" });
+  var anim = f.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 800, easing: "ease-out" });
   anim.onfinish = function() { if (f.parentNode) f.parentNode.removeChild(f); };
-  setTimeout(function() { if (f.parentNode) f.parentNode.removeChild(f); }, 700);
+  setTimeout(function() { if (f.parentNode) f.parentNode.removeChild(f); }, 950);
+}
+/* Full-screen flash for the biggest explosions: covers the whole viewport */
+function flashScreen() {
+  var f = document.createElement("div");
+  f.className = "fx-flash-screen";
+  document.body.appendChild(f);
+  var anim = f.animate([{ opacity: 0.95 }, { opacity: 0 }], { duration: 700, easing: "ease-out" });
+  anim.onfinish = function() { if (f.parentNode) f.parentNode.removeChild(f); };
+  setTimeout(function() { if (f.parentNode) f.parentNode.removeChild(f); }, 850);
 }
 function smallMatchFx(cells, type) {
   var layer = fxLayer(); if (!layer || !cells || !cells.length) return;
-  var base = ANIMAL_COLORS[type] || "#ffd23f";
-  var colors = [base, "#ffd23f", "#ffffff"];
   var total = 0;
+  var perCell = Math.min(18, Math.max(1, Math.floor(140 / cells.length)));
   cells.forEach(function(cell) {
+    var col = colorForCell(cell[0], cell[1], type);
     var cx = (cell[1] + 0.5) * 12.5, cy = (cell[0] + 0.5) * 12.5;
-    for (var i = 0; i < 16 && total < 70; i++, total++) {
-      var col = colors[Math.floor(Math.random() * colors.length)];
-      spawnParticle(layer, cx, cy, col, Math.random() < 0.3);
+    for (var i = 0; i < perCell && total < 140; i++, total++) {
+      var roll = Math.random();
+      if (roll < 0.5) spawnConfetti(layer, cx, cy, col.fill, col.edge);
+      else if (roll < 0.88) spawnDroplet(layer, cx, cy, col.fill, col.edge);
+      else spawnStar(layer, cx, cy);
     }
   });
   lightningTo(cells);
@@ -1431,25 +1544,26 @@ function smallMatchFx(cells, type) {
 function shakeScreen(size) {
   var s = document.getElementById("gameScreen");
   if (!s) return;
-  s.classList.remove("shake-sm", "shake-md", "shake-lg");
+  s.classList.remove("shake-sm", "shake-md", "shake-lg", "shake-xl");
   void s.offsetWidth;
   s.classList.add("shake-" + (size || "sm"));
-  setTimeout(function() { s.classList.remove("shake-sm", "shake-md", "shake-lg"); }, 420);
+  setTimeout(function() { s.classList.remove("shake-sm", "shake-md", "shake-lg", "shake-xl"); }, 900);
 }
 function explosionAt(cells, type, opts) {
   opts = opts || {};
   var layer = fxLayer(); if (!layer || !cells || !cells.length) return;
-  var base = opts.color || ANIMAL_COLORS[type] || "#ffd23f";
-  var colors = [base, "#ffd23f", "#ffffff", base];
-  var perCell = opts.count || 40;
-  var cap = opts.max || 260;
+  var cap = opts.max || 420;
+  /* spread the cap evenly so every cell bursts (the bomb cell is last in the list) */
+  var perCell = Math.min(opts.count || 55, Math.max(1, Math.floor(cap / cells.length)));
   var total = 0;
   cells.forEach(function(cell) {
+    var col = opts.color ? { fill: opts.color, edge: "#ffffff" } : colorForCell(cell[0], cell[1], type);
     var cx = (cell[1] + 0.5) * 12.5, cy = (cell[0] + 0.5) * 12.5;
     for (var i = 0; i < perCell && total < cap; i++, total++) {
-      var col = colors[Math.floor(Math.random() * colors.length)];
-      if (Math.random() < 0.35) spawnParticle(layer, cx, cy, col, true);
-      else spawnParticle(layer, cx, cy, col, false);
+      var roll = Math.random();
+      if (roll < 0.5) spawnConfetti(layer, cx, cy, col.fill, col.edge);
+      else if (roll < 0.88) spawnDroplet(layer, cx, cy, col.fill, col.edge);
+      else spawnStar(layer, cx, cy);
     }
   });
   if (opts.text !== false) {
@@ -1458,6 +1572,7 @@ function explosionAt(cells, type, opts) {
     showBoomText((sc / cells.length + 0.5) * 12.5, (sr / cells.length + 0.5) * 12.5);
   }
   if (opts.shake !== false) shakeBoard();
+  flashScreen();
   AudioEng.sfx("boom");
 }
 function lightningTo(cells) {
