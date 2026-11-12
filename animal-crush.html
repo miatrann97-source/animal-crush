@@ -134,17 +134,187 @@ button:disabled { opacity:.55; cursor:default; }
 /* low time warning */
 .hud-stat.low b { color:#ff2d55; animation: timeBlink 1s ease-in-out infinite; }
 @keyframes timeBlink { 0%,100% { opacity:1; } 50% { opacity:.45; } }
-/* level transition / waiting screen with the walking shark girl */
-#transitionScreen { position:fixed; inset:0; z-index:55; display:flex; align-items:center; justify-content:center; background: linear-gradient(135deg, rgba(255,45,120,.88), rgba(255,149,0,.88), rgba(0,210,255,.88)); padding:16px; }
+/* level transition screen with the bouncing animal train over a doodle sky.
+   The 6 heads travel left to right like a train (6s loop) while each head hops
+   high like a ball (0.9s per head, neighbours offset 0.15s so the wave rolls
+   across the train). Each hop squashes on landing, stretches on takeoff, and
+   leaves a glowing light trail in its own color under it. --ths is the head
+   size, sized to the 440px card so the train fits on desktop and phone. */
+#transitionScreen { position:fixed; inset:0; z-index:55; display:flex; align-items:center; justify-content:center; background: linear-gradient(135deg, rgba(255,45,120,.88), rgba(255,149,0,.88), rgba(0,210,255,.88)); padding:16px; --ths: clamp(40px, 12.5vw, 64px); }
 #transitionScreen.hidden { display:none !important; }
 .trans-card { background: rgba(255,255,255,.94); border-radius:24px; padding:22px 18px; width:100%; max-width:440px; text-align:center; display:flex; flex-direction:column; gap:10px; align-items:center; box-shadow: 0 12px 40px rgba(0,0,0,.3); }
 .trans-card h2 { font-size: clamp(22px, 6vw, 30px); }
 .trans-card p { font-size:17px; }
-.trans-track { width:100%; height:170px; position:relative; overflow:hidden; border-radius:16px; background: linear-gradient(180deg, #bfe9ff, #e8f9ff 60%, #cdeed9); }
-.trans-walker { position:absolute; left:0; bottom:6px; animation: walkAcross 3.6s linear forwards; will-change: transform; }
-.trans-walker img { height:150px; width:auto; animation: walkBob .45s ease-in-out infinite alternate; filter: drop-shadow(0 6px 8px rgba(0,0,0,.25)); }
-@keyframes walkAcross { from { transform: translateX(-120%); } to { transform: translateX(560%); } }
-@keyframes walkBob { from { transform: translateY(0) rotate(-4deg); } to { transform: translateY(-14px) rotate(4deg); } }
+.trans-track { width:100%; height:calc(var(--ths) * 2.15 + 48px); position:relative; overflow:hidden; border-radius:16px; background: linear-gradient(180deg, #bfe9ff, #e8f9ff 60%, #cdeed9); }
+.trans-doodles { position:absolute; inset:0; z-index:1; opacity:.55; pointer-events:none; }
+.trans-doodles svg { width:100%; height:100%; display:block; }
+.trans-ground { position:absolute; left:0; right:0; bottom:0; height:26px; background: linear-gradient(180deg, #9ed69e, #7cc47c); border-top:3px solid #ffffff; z-index:0; }
+.trans-row { position:absolute; left:0; right:0; bottom:26px; z-index:2; display:flex; justify-content:space-evenly; align-items:flex-end; padding:0 6px; animation: transTrain 6s linear infinite; }
+@keyframes transTrain { from { transform: translateX(-100%); } to { transform: translateX(100%); } }
+.trans-spot { position:relative; width:var(--ths); height:calc(var(--ths) * 2.15); flex:0 1 auto; }
+.trans-shadow { position:absolute; left:12%; bottom:0; width:76%; height:10px; background:rgba(46,90,40,.28); border-radius:50%; animation: transShadow 0.9s linear infinite; animation-delay: var(--d); }
+.trans-trail { position:absolute; left:30%; bottom:0; width:40%; height:calc(var(--ths) * 1.05); border-radius:999px 999px 0 0; background: linear-gradient(180deg, var(--c2) 0%, var(--c) 45%, transparent 100%); box-shadow: 0 0 18px 4px var(--c); filter: blur(2px); opacity:0; transform: scaleY(0.04); transform-origin:50% 100%; animation: transTrail 0.9s linear infinite; animation-delay: var(--d); }
+.trans-head { position:absolute; left:0; bottom:0; width:100%; height:var(--ths); font-size:var(--ths); transform-origin:50% 100%; animation: transHop 0.9s linear infinite; animation-delay: var(--d); }
+.trans-head img { width:100%; height:100%; display:block; }
+@keyframes transHop {
+  0% { transform: translateY(0em) scale(1, 1) rotate(0deg); }
+  2% { transform: translateY(0em) scale(1.01, 0.98) rotate(0.5deg); }
+  4% { transform: translateY(0em) scale(1.04, 0.94) rotate(0.99deg); }
+  6% { transform: translateY(0em) scale(1.08, 0.9) rotate(1.47deg); }
+  8% { transform: translateY(0em) scale(1.11, 0.86) rotate(1.93deg); }
+  10% { transform: translateY(0em) scale(1.12, 0.84) rotate(2.35deg); }
+  12% { transform: translateY(-0.101em) scale(1.1, 0.87) rotate(2.74deg); }
+  14% { transform: translateY(-0.202em) scale(1.06, 0.93) rotate(3.08deg); }
+  16% { transform: translateY(-0.303em) scale(1, 1.01) rotate(3.38deg); }
+  18% { transform: translateY(-0.384em) scale(0.96, 1.07) rotate(3.62deg); }
+  20% { transform: translateY(-0.464em) scale(0.94, 1.1) rotate(3.8deg); }
+  22% { transform: translateY(-0.545em) scale(0.94, 1.1) rotate(3.93deg); }
+  24% { transform: translateY(-0.626em) scale(0.94, 1.1) rotate(3.99deg); }
+  26% { transform: translateY(-0.687em) scale(0.94, 1.09) rotate(3.99deg); }
+  28% { transform: translateY(-0.747em) scale(0.95, 1.09) rotate(3.93deg); }
+  30% { transform: translateY(-0.808em) scale(0.95, 1.08) rotate(3.8deg); }
+  32% { transform: translateY(-0.848em) scale(0.95, 1.08) rotate(3.62deg); }
+  34% { transform: translateY(-0.888em) scale(0.96, 1.07) rotate(3.38deg); }
+  36% { transform: translateY(-0.929em) scale(0.96, 1.07) rotate(3.08deg); }
+  38% { transform: translateY(-0.969em) scale(0.97, 1.06) rotate(2.74deg); }
+  40% { transform: translateY(-0.989em) scale(0.97, 1.06) rotate(2.35deg); }
+  42% { transform: translateY(-1.01em) scale(0.97, 1.05) rotate(1.93deg); }
+  44% { transform: translateY(-1.03em) scale(0.98, 1.05) rotate(1.47deg); }
+  46% { transform: translateY(-1.05em) scale(0.98, 1.04) rotate(0.99deg); }
+  48% { transform: translateY(-1.05em) scale(0.98, 1.04) rotate(0.5deg); }
+  50% { transform: translateY(-1.05em) scale(0.98, 1.04) rotate(0deg); }
+  52% { transform: translateY(-1.05em) scale(0.98, 1.04) rotate(-0.5deg); }
+  54% { transform: translateY(-1.03em) scale(0.98, 1.04) rotate(-0.99deg); }
+  56% { transform: translateY(-1.01em) scale(0.98, 1.04) rotate(-1.47deg); }
+  58% { transform: translateY(-0.989em) scale(0.98, 1.04) rotate(-1.93deg); }
+  60% { transform: translateY(-0.969em) scale(0.98, 1.04) rotate(-2.35deg); }
+  62% { transform: translateY(-0.929em) scale(0.97, 1.05) rotate(-2.74deg); }
+  64% { transform: translateY(-0.888em) scale(0.97, 1.05) rotate(-3.08deg); }
+  66% { transform: translateY(-0.848em) scale(0.97, 1.05) rotate(-3.38deg); }
+  68% { transform: translateY(-0.808em) scale(0.97, 1.05) rotate(-3.62deg); }
+  70% { transform: translateY(-0.747em) scale(0.97, 1.05) rotate(-3.8deg); }
+  72% { transform: translateY(-0.687em) scale(0.97, 1.05) rotate(-3.93deg); }
+  74% { transform: translateY(-0.626em) scale(0.97, 1.05) rotate(-3.99deg); }
+  76% { transform: translateY(-0.545em) scale(0.96, 1.06) rotate(-3.99deg); }
+  78% { transform: translateY(-0.464em) scale(0.96, 1.06) rotate(-3.93deg); }
+  80% { transform: translateY(-0.384em) scale(0.96, 1.06) rotate(-3.8deg); }
+  82% { transform: translateY(-0.303em) scale(0.96, 1.06) rotate(-3.62deg); }
+  84% { transform: translateY(-0.202em) scale(0.96, 1.06) rotate(-3.38deg); }
+  86% { transform: translateY(-0.101em) scale(0.96, 1.06) rotate(-3.08deg); }
+  88% { transform: translateY(0em) scale(1, 1.01) rotate(-2.74deg); }
+  90% { transform: translateY(0em) scale(1.08, 0.91) rotate(-2.35deg); }
+  92% { transform: translateY(0em) scale(1.15, 0.83) rotate(-1.93deg); }
+  94% { transform: translateY(0em) scale(1.15, 0.83) rotate(-1.47deg); }
+  96% { transform: translateY(0em) scale(1.1, 0.89) rotate(-0.99deg); }
+  98% { transform: translateY(0em) scale(1.03, 0.96) rotate(-0.5deg); }
+  100% { transform: translateY(0em) scale(1, 1) rotate(0deg); }
+}
+@keyframes transShadow {
+  0% { transform: scaleX(1); opacity: 0.3; }
+  2% { transform: scaleX(1); opacity: 0.3; }
+  4% { transform: scaleX(1); opacity: 0.3; }
+  6% { transform: scaleX(1); opacity: 0.3; }
+  8% { transform: scaleX(1); opacity: 0.3; }
+  10% { transform: scaleX(1); opacity: 0.3; }
+  12% { transform: scaleX(0.944); opacity: 0.278; }
+  14% { transform: scaleX(0.888); opacity: 0.256; }
+  16% { transform: scaleX(0.833); opacity: 0.234; }
+  18% { transform: scaleX(0.788); opacity: 0.216; }
+  20% { transform: scaleX(0.743); opacity: 0.198; }
+  22% { transform: scaleX(0.699); opacity: 0.181; }
+  24% { transform: scaleX(0.654); opacity: 0.163; }
+  26% { transform: scaleX(0.621); opacity: 0.15; }
+  28% { transform: scaleX(0.587); opacity: 0.136; }
+  30% { transform: scaleX(0.554); opacity: 0.123; }
+  32% { transform: scaleX(0.532); opacity: 0.114; }
+  34% { transform: scaleX(0.509); opacity: 0.105; }
+  36% { transform: scaleX(0.487); opacity: 0.097; }
+  38% { transform: scaleX(0.465); opacity: 0.088; }
+  40% { transform: scaleX(0.453); opacity: 0.083; }
+  42% { transform: scaleX(0.442); opacity: 0.079; }
+  44% { transform: scaleX(0.431); opacity: 0.074; }
+  46% { transform: scaleX(0.42); opacity: 0.07; }
+  48% { transform: scaleX(0.42); opacity: 0.07; }
+  50% { transform: scaleX(0.42); opacity: 0.07; }
+  52% { transform: scaleX(0.42); opacity: 0.07; }
+  54% { transform: scaleX(0.431); opacity: 0.074; }
+  56% { transform: scaleX(0.442); opacity: 0.079; }
+  58% { transform: scaleX(0.453); opacity: 0.083; }
+  60% { transform: scaleX(0.465); opacity: 0.088; }
+  62% { transform: scaleX(0.487); opacity: 0.097; }
+  64% { transform: scaleX(0.509); opacity: 0.105; }
+  66% { transform: scaleX(0.532); opacity: 0.114; }
+  68% { transform: scaleX(0.554); opacity: 0.123; }
+  70% { transform: scaleX(0.587); opacity: 0.136; }
+  72% { transform: scaleX(0.621); opacity: 0.15; }
+  74% { transform: scaleX(0.654); opacity: 0.163; }
+  76% { transform: scaleX(0.699); opacity: 0.181; }
+  78% { transform: scaleX(0.743); opacity: 0.198; }
+  80% { transform: scaleX(0.788); opacity: 0.216; }
+  82% { transform: scaleX(0.833); opacity: 0.234; }
+  84% { transform: scaleX(0.888); opacity: 0.256; }
+  86% { transform: scaleX(0.944); opacity: 0.278; }
+  88% { transform: scaleX(1); opacity: 0.3; }
+  90% { transform: scaleX(1); opacity: 0.3; }
+  92% { transform: scaleX(1); opacity: 0.3; }
+  94% { transform: scaleX(1); opacity: 0.3; }
+  96% { transform: scaleX(1); opacity: 0.3; }
+  98% { transform: scaleX(1); opacity: 0.3; }
+  100% { transform: scaleX(1); opacity: 0.3; }
+}
+@keyframes transTrail {
+  0% { transform: scaleY(0.04); opacity: 0; }
+  2% { transform: scaleY(0.04); opacity: 0; }
+  4% { transform: scaleY(0.04); opacity: 0; }
+  6% { transform: scaleY(0.04); opacity: 0; }
+  8% { transform: scaleY(0.04); opacity: 0; }
+  10% { transform: scaleY(0.04); opacity: 0; }
+  12% { transform: scaleY(0.096); opacity: 0.138; }
+  14% { transform: scaleY(0.192); opacity: 0.241; }
+  16% { transform: scaleY(0.288); opacity: 0.333; }
+  18% { transform: scaleY(0.365); opacity: 0.402; }
+  20% { transform: scaleY(0.442); opacity: 0.469; }
+  22% { transform: scaleY(0.519); opacity: 0.533; }
+  24% { transform: scaleY(0.596); opacity: 0.595; }
+  26% { transform: scaleY(0.654); opacity: 0.641; }
+  28% { transform: scaleY(0.712); opacity: 0.685; }
+  30% { transform: scaleY(0.769); opacity: 0.73; }
+  32% { transform: scaleY(0.808); opacity: 0.759; }
+  34% { transform: scaleY(0.846); opacity: 0.787; }
+  36% { transform: scaleY(0.885); opacity: 0.816; }
+  38% { transform: scaleY(0.923); opacity: 0.844; }
+  40% { transform: scaleY(0.942); opacity: 0.858; }
+  42% { transform: scaleY(0.962); opacity: 0.872; }
+  44% { transform: scaleY(0.981); opacity: 0.886; }
+  46% { transform: scaleY(1); opacity: 0.9; }
+  48% { transform: scaleY(1); opacity: 0.9; }
+  50% { transform: scaleY(1); opacity: 0.9; }
+  52% { transform: scaleY(1); opacity: 0.9; }
+  54% { transform: scaleY(0.981); opacity: 0.886; }
+  56% { transform: scaleY(0.962); opacity: 0.872; }
+  58% { transform: scaleY(0.942); opacity: 0.858; }
+  60% { transform: scaleY(0.923); opacity: 0.844; }
+  62% { transform: scaleY(0.885); opacity: 0.816; }
+  64% { transform: scaleY(0.846); opacity: 0.787; }
+  66% { transform: scaleY(0.808); opacity: 0.759; }
+  68% { transform: scaleY(0.769); opacity: 0.73; }
+  70% { transform: scaleY(0.712); opacity: 0.685; }
+  72% { transform: scaleY(0.654); opacity: 0.641; }
+  74% { transform: scaleY(0.596); opacity: 0.595; }
+  76% { transform: scaleY(0.519); opacity: 0.533; }
+  78% { transform: scaleY(0.442); opacity: 0.469; }
+  80% { transform: scaleY(0.365); opacity: 0.402; }
+  82% { transform: scaleY(0.288); opacity: 0.333; }
+  84% { transform: scaleY(0.192); opacity: 0.241; }
+  86% { transform: scaleY(0.096); opacity: 0.138; }
+  88% { transform: scaleY(0.04); opacity: 0; }
+  90% { transform: scaleY(0.04); opacity: 0; }
+  92% { transform: scaleY(0.04); opacity: 0; }
+  94% { transform: scaleY(0.04); opacity: 0; }
+  96% { transform: scaleY(0.04); opacity: 0; }
+  98% { transform: scaleY(0.04); opacity: 0; }
+  100% { transform: scaleY(0.04); opacity: 0; }
+}
 /* special overlays */
 .tile .badge {
   position:absolute; right:1px; top:1px; font-size: clamp(11px, 3vw, 17px); line-height:1;
@@ -327,7 +497,17 @@ input[type=text]:focus { border-color:#ff5c8a; }
   <div class="trans-card">
     <h2 id="transTitle"></h2>
     <p id="transMsg"></p>
-    <div class="trans-track"><div class="trans-walker"><img id="transShark" src="walk-shark.png" alt="Bé cá"></div></div>
+    <div class="trans-track"><div class="trans-doodles" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg"><defs><pattern id="transDoodles" width="220" height="180" patternUnits="userSpaceOnUse"><path d="M28,14 L31,23 L40,26 L31,29 L28,38 L25,29 L16,26 L25,23 Z" fill="#ffd23f"/><polygon points="150,8 153.5,16.5 162.5,16.5 155.5,22 158,30.5 150,25.5 142,30.5 144.5,22 137.5,16.5 146.5,16.5" fill="#ff5c8a"/><path d="M196,20 C192,15 186,17 186,22 C186,27 192,30 196,34 C200,30 206,27 206,22 C206,17 200,15 196,20 Z" fill="#ff6b81"/><path d="M52,86 Q58,78 64,86 T76,86 T88,86" fill="none" stroke="#00b4ff" stroke-width="3.5" stroke-linecap="round"/><path d="M128,84 a5,5 0 0 1 5,5 a9,9 0 0 1 -9,4 a13,13 0 0 1 -9,-11 a17,17 0 0 1 14,-14" fill="none" stroke="#b06bff" stroke-width="3.5" stroke-linecap="round"/><g fill="none" stroke-width="3.5" stroke-linecap="round"><path d="M168,150 A18,18 0 0 1 204,150" stroke="#ff6b6b"/><path d="M173,150 A13,13 0 0 1 199,150" stroke="#ffb347"/><path d="M178,150 A8,8 0 0 1 194,150" stroke="#2ed573"/></g><path d="M28,158 a8,8 0 0 1 6,-10 a9,9 0 0 1 15,-3 a8,8 0 0 1 11,9 a7,7 0 0 1 -5,7 Z" fill="#ffffff" stroke="#aee3ff" stroke-width="2.5"/><circle cx="105" cy="40" r="4" fill="#2ed573"/><circle cx="118" cy="52" r="3" fill="#ff9500"/><circle cx="18" cy="130" r="3.5" fill="#ff5c8a"/><circle cx="205" cy="60" r="3" fill="#2ed573"/><path d="M98,120 h14 M105,113 v14" stroke="#ff9500" stroke-width="3.5" stroke-linecap="round"/><path d="M150,120 L142,136 h7 L146,150 L156,132 h-7 Z" fill="#ffd23f"/><g fill="none" stroke="#ff9500" stroke-width="2.5" stroke-linecap="round"><circle cx="60" cy="140" r="10"/><path d="M56,138 h.1 M64,138 h.1"/><path d="M55,142 Q60,146 65,142"/></g></pattern></defs><rect width="100%" height="100%" fill="url(#transDoodles)"/></svg></div>
+      <div class="trans-row">
+        <div class="trans-spot" style="--d:0s; --c:#1e90ff; --c2:#aee3ff"><div class="trans-shadow"></div><div class="trans-trail"></div><div class="trans-head"><img src="tiles/shark.png" alt="Bé cá mập" style="transform:translateY(7.42%)"></div></div>
+        <div class="trans-spot" style="--d:-0.75s; --c:#8b5a2b; --c2:#e8b06a"><div class="trans-shadow"></div><div class="trans-trail"></div><div class="trans-head"><img src="tiles/otter.png" alt="Bé rái cá" style="transform:translateY(10.16%)"></div></div>
+        <div class="trans-spot" style="--d:-0.6s; --c:#ff9ec7; --c2:#ffffff"><div class="trans-shadow"></div><div class="trans-trail"></div><div class="trans-head"><img src="tiles/rabbit.png" alt="Bé thỏ" style="transform:translateY(1.56%)"></div></div>
+        <div class="trans-spot" style="--d:-0.45s; --c:#9aa0a6; --c2:#ffffff"><div class="trans-shadow"></div><div class="trans-trail"></div><div class="trans-head"><img src="tiles/mouse.png" alt="Bé chuột" style="transform:translateY(5.86%)"></div></div>
+        <div class="trans-spot" style="--d:-0.3s; --c:#b06bff; --c2:#e3c8ff"><div class="trans-shadow"></div><div class="trans-trail"></div><div class="trans-head"><img src="tiles/jellyfish.png" alt="Bé sứa" style="transform:translateY(5.08%)"></div></div>
+        <div class="trans-spot" style="--d:-0.15s; --c:#ff8c1a; --c2:#ffd9a0"><div class="trans-shadow"></div><div class="trans-trail"></div><div class="trans-head"><img src="tiles/fox.png" alt="Bé cáo" style="transform:translateY(0.78%)"></div></div>
+      </div>
+      <div class="trans-ground"></div>
+    </div>
     <p id="transNext"></p>
   </div>
 </div>
@@ -368,7 +548,7 @@ var STR = {
     movesLeft: "lượt",
     time: "Thời gian",
     transDone: "Màn {n} hoàn thành!",
-    transWalk: "Bé cá đang đi đến Màn {n}...",
+    transWalk: "Bạn làm tốt lắm, qua màn {n} thôi!",
     transNext: "Màn {n} sắp mở ra!",
     leaderboard: "Bảng thành tích",
     top10: "Top 10 chung",
@@ -408,7 +588,7 @@ var STR = {
     movesLeft: "moves",
     time: "Time",
     transDone: "Level {n} cleared!",
-    transWalk: "Little fish is walking to Level {n}...",
+    transWalk: "Great job, on to level {n}!",
     transNext: "Level {n} is about to open!",
     leaderboard: "Leaderboard",
     top10: "Shared top 10",
@@ -529,7 +709,7 @@ var AudioEng = (function() {
       if (musicOn) this.startMusic(); else this.stopMusic();
       return musicOn;
     },
-    sfx: function(name) {
+    sfx: function(name, arg) {
       if (!ctx) return;
       if (!ensure()) return;
       var now = ctx.currentTime;
@@ -570,6 +750,13 @@ var AudioEng = (function() {
         tone(base, 0.09, "sine", 0.35, now, 320); /* droplet plink: fast drop to ~320Hz in 0.09s */
         tone(base * 2.2, 0.05, "triangle", 0.06, now, base * 1.6); /* bright tink */
         tone(320, 0.18, "sine", 0.12, now + 0.08, 240); /* faint resonance tail */
+      }
+      else if (name === "boing") { /* cute bouncy boing: quick pitch rise then fall, like a cartoon bounce */
+        if (!musicOn) return; /* respects the mute toggle */
+        var f = (typeof arg === "number" && arg > 0) ? arg : 660;
+        tone(f * 0.55, 0.09, "sine", 0.16, now, f * 1.15); /* spring up */
+        tone(f * 1.15, 0.13, "sine", 0.13, now + 0.08, f * 0.6); /* bounce back down */
+        tone(f * 2, 0.05, "triangle", 0.05, now, f * 2.4); /* bright little tink on top */
       }
     }
   };
@@ -1804,6 +1991,20 @@ function stopTimer() { if (timerId) { clearInterval(timerId); timerId = null; } 
 
 /* ================= Levels & end screens ================= */
 var transTimer = null;
+var boingTimer = null;
+/* Happy pentatonic notes for the bouncing train: C5 D5 E5 G5 A5 C6. One soft boing
+   per hop beat, staggered 150ms with the wave, so it sounds like a playful
+   plip-plip-plip rolling across the train. */
+var BOING_NOTES = [523.25, 587.33, 659.25, 783.99, 880.00, 1046.50];
+function startBoings() {
+  stopBoings();
+  var i = 0;
+  boingTimer = setInterval(function() {
+    AudioEng.sfx("boing", BOING_NOTES[i % BOING_NOTES.length]);
+    i++;
+  }, 150);
+}
+function stopBoings() { if (boingTimer) { clearInterval(boingTimer); boingTimer = null; } }
 function showTransition(fromLevel) {
   var next = fromLevel + 1;
   var ov = document.getElementById("transitionScreen");
@@ -1811,15 +2012,18 @@ function showTransition(fromLevel) {
   document.getElementById("transMsg").textContent = t("transWalk").replace("{n}", next);
   document.getElementById("transNext").textContent = t("transNext").replace("{n}", next);
   ov.classList.remove("hidden");
-  var walker = ov.querySelector(".trans-walker");
-  if (walker) { walker.style.animation = "none"; void walker.offsetWidth; walker.style.animation = ""; }
+  var row = ov.querySelector(".trans-row");
+  if (row) { row.style.animation = "none"; void row.offsetWidth; row.style.animation = ""; }
+  startBoings();
   clearTimeout(transTimer);
   transTimer = setTimeout(function() {
+    stopBoings();
     ov.classList.add("hidden");
     startLevel(next);
   }, 3900);
 }
 function startLevel(level) {
+  stopBoings();
   state.level = level;
   var cfg = levelConfig(level);
   state.target = cfg.target;
@@ -1835,6 +2039,7 @@ function startLevel(level) {
   updateHUD();
   document.getElementById("startScreen").classList.add("hidden");
   document.getElementById("endScreen").classList.add("hidden");
+  stopBoings();
   document.getElementById("transitionScreen").classList.add("hidden");
   document.getElementById("gameScreen").classList.remove("hidden");
   renderGameLb();
@@ -1866,7 +2071,7 @@ function endLevel(won) {
   }
   updateHUD();
   if (won) {
-    /* win: celebrate, then the shark girl walks to the next level, which opens by itself */
+    /* win: celebrate, then the bouncing train carries us to the next level, which opens by itself */
     setTimeout(function() { showTransition(state.level); }, 2700);
   } else {
     setTimeout(function() { showEnd(won, isBest); }, 700);
@@ -2033,6 +2238,7 @@ document.getElementById("homeBtn").addEventListener("click", function() {
   AudioEng.stopMusic();
   document.getElementById("gameScreen").classList.add("hidden");
   document.getElementById("endScreen").classList.add("hidden");
+  stopBoings();
   document.getElementById("transitionScreen").classList.add("hidden");
   document.getElementById("startScreen").classList.remove("hidden");
   applyLang();
@@ -2052,6 +2258,7 @@ document.getElementById("endHomeBtn").addEventListener("click", function() {
   AudioEng.stopMusic();
   document.getElementById("endScreen").classList.add("hidden");
   document.getElementById("gameScreen").classList.add("hidden");
+  stopBoings();
   document.getElementById("transitionScreen").classList.add("hidden");
   document.getElementById("startScreen").classList.remove("hidden");
   applyLang();
