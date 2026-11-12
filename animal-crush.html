@@ -357,23 +357,7 @@ button:disabled { opacity:.55; cursor:default; }
 @keyframes floatUp { from { opacity:1; transform: translate(-50%,0); } to { opacity:0; transform: translate(-50%,-46px); } }
 
 /* ---------- Explosion & lightning FX ---------- */
-#board.shake { animation: boardShake .55s ease; }
-@keyframes boardShake {
-  0%, 100% { transform: translate(0,0); }
-  20% { transform: translate(-24px, 14px); }
-  40% { transform: translate(24px, -14px); }
-  60% { transform: translate(-19px, -12px); }
-  80% { transform: translate(17px, 12px); }
-}
-/* ---------- Whole-screen shake (scaled by match size) ---------- */
-#gameScreen.shake-sm { animation: shakeSm .5s ease; }
-#gameScreen.shake-md { animation: shakeMd .6s ease; }
-#gameScreen.shake-lg { animation: shakeLg .75s ease; }
-#gameScreen.shake-xl { animation: shakeXl .85s ease; }
-@keyframes shakeSm { 0%,100% { transform: translate(0,0); } 25% { transform: translate(-10px,5px); } 50% { transform: translate(10px,-5px); } 75% { transform: translate(-7px,-5px); } }
-@keyframes shakeMd { 0%,100% { transform: translate(0,0); } 20% { transform: translate(-18px,10px); } 40% { transform: translate(18px,-10px); } 60% { transform: translate(-15px,-10px); } 80% { transform: translate(15px,10px); } }
-@keyframes shakeLg { 0%,100% { transform: translate(0,0); } 15% { transform: translate(-28px,16px) rotate(-2deg); } 30% { transform: translate(28px,-16px) rotate(2deg); } 45% { transform: translate(-23px,-14px) rotate(-1.5deg); } 60% { transform: translate(23px,14px) rotate(1.5deg); } 75% { transform: translate(-16px,10px); } 90% { transform: translate(14px,-10px); } }
-@keyframes shakeXl { 0%,100% { transform: translate(0,0); } 12% { transform: translate(-36px,20px) rotate(-2.5deg); } 24% { transform: translate(36px,-20px) rotate(2.5deg); } 36% { transform: translate(-30px,-18px) rotate(-2deg); } 48% { transform: translate(30px,18px) rotate(2deg); } 60% { transform: translate(-24px,14px) rotate(-1.5deg); } 72% { transform: translate(22px,-12px) rotate(1.5deg); } 84% { transform: translate(-14px,8px); } }
+/* Screen shake animations removed: they gave An eye strain and headaches. */
 /* ---------- Win celebration ---------- */
 #celebrate { position:fixed; inset:0; z-index:60; pointer-events:none; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; overflow:hidden; }
 #celebrate.hidden { display:none !important; }
@@ -392,6 +376,14 @@ button:disabled { opacity:.55; cursor:default; }
 .particle { position:absolute; border-radius:50%; pointer-events:none; will-change: transform, opacity; }
 .particle.confetti { border-radius:2px; }
 .particle.droplet { border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%; }
+/* water-bubble burst: translucent shiny bubble + ripple ring over matched tiles */
+.fx-bubble { position:absolute; width:12.5%; aspect-ratio:1/1; transform: translate(-50%,-50%); border-radius:50%; pointer-events:none; z-index:23;
+  background: radial-gradient(circle at 32% 30%, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.28) 20%, rgba(165,220,255,0.18) 55%, rgba(125,211,252,0.4) 100%);
+  border: 2px solid rgba(255,255,255,0.75);
+  box-shadow: inset 0 0 8px rgba(255,255,255,0.6), 0 0 10px rgba(125,211,252,0.5); }
+.fx-bubble::after { content:""; position:absolute; left:16%; top:10%; width:36%; height:24%; border-radius:50%; border-top:3px solid rgba(255,255,255,0.95); transform: rotate(-25deg); }
+.fx-ripple { position:absolute; width:12.5%; aspect-ratio:1/1; transform: translate(-50%,-50%); border-radius:50%; pointer-events:none; z-index:23;
+  border: 2px solid rgba(186,230,253,0.9); box-shadow: 0 0 8px rgba(125,211,252,0.6); }
 .fx-flash-screen { position:fixed; inset:0; background:#fff; opacity:0; pointer-events:none; z-index:45; }
 .boom-text {
   position:absolute; z-index:26; font-weight:900; font-size:120px; color:#ffcf3f;
@@ -833,6 +825,14 @@ var AudioEng = (function() {
         tone(base * 2.2, 0.05, "triangle", 0.06, now, base * 1.6); /* bright tink */
         tone(320, 0.18, "sine", 0.12, now + 0.08, 240); /* faint resonance tail */
       }
+      else if (name === "bubble") { /* soft water-bubble "plop": low round drop, no snap */
+        if (!musicOn) return; /* respects the mute toggle */
+        var t0 = now + ((arg && arg.delay) || 0);
+        var bbase = 380 + Math.random() * 120; /* 380-500Hz, varies per bubble */
+        tone(bbase, 0.09, "sine", 0.22, t0, 130); /* soft low plop: gentle drop to ~130Hz */
+        tone(160, 0.12, "sine", 0.1, t0 + 0.02, 110); /* faint round resonance */
+        noiseBurst(t0, 0.05, 0.12, "lowpass", 700); /* soft wet blip, no snap */
+      }
       else if (name === "boing") { /* cute bouncy boing: quick pitch rise then fall, like a cartoon bounce */
         if (!musicOn) return; /* respects the mute toggle */
         var f = (typeof arg === "number" && arg > 0) ? arg : 660;
@@ -1201,6 +1201,8 @@ async function resolveBoard(swapPos) {
     /* Water chime: matched tiles ring like a glass harp the moment they find each other.
        Pitch rises with match size; each cascade round climbs one step higher. */
     AudioEng.sfx("chime", { biggest: biggest, wrapped: found.wrapped.length > 0, cascade: cascade });
+    /* Water-bubble burst: every matched tile pops like a water bubble. */
+    bubbleBurst(clearCells);
     /* Giant head zoom for 4+ matches (and L/T): that animal's head swells up, zooms
        out at the player and explodes in a huge bang. Plain 3-matches never trigger it.
        If several 4+ runs meet at once, the biggest one gets the spotlight. */
@@ -1218,7 +1220,34 @@ async function resolveBoard(swapPos) {
       giantType = (wtl && wtl.type && wtl.type !== "rainbow") ? wtl.type : "fox";
       giantRun = { cells: [w0] };
     }
-    if (giantRun) await giantHeadBoom(giantType, giantRun.cells);
+    if (giantRun) {
+      /* 4-5 thunder bolts strike down from the sky onto the matched tiles,
+         together with the giant head moment. For a 4/5-match the bolts hit
+         every tile of the run; for an L/T they hit the whole L/T shape.
+         Plain 3-matches never get them. */
+      var thunderCells = [];
+      if (giantRun.cells.length > 1) {
+        thunderCells = giantRun.cells.slice();
+      } else {
+        var wkeys = {};
+        found.wrapped.forEach(function(w) { wkeys[w[0] + "," + w[1]] = true; });
+        var seen = {};
+        found.runs.forEach(function(run) {
+          var touches = false;
+          run.cells.forEach(function(cell) { if (wkeys[cell[0] + "," + cell[1]]) touches = true; });
+          if (touches) run.cells.forEach(function(cell) {
+            var k = cell[0] + "," + cell[1];
+            if (!seen[k]) { seen[k] = true; thunderCells.push(cell); }
+          });
+        });
+        found.wrapped.forEach(function(w) {
+          var k = w[0] + "," + w[1];
+          if (!seen[k]) { seen[k] = true; thunderCells.push(w); }
+        });
+      }
+      thunderStrikes(thunderCells);
+      await giantHeadBoom(giantType, giantRun.cells);
+    }
     /* Cells cleared by special effects burst in their own tile colors too */
     if (extraCells.length) burstCells(extraCells.map(function(k){ return k.split(",").map(Number); }), 10, 200);
     /* Striped beams sweep their row/column; rainbow lightning arcs to its targets.
@@ -1229,12 +1258,8 @@ async function resolveBoard(swapPos) {
     var ptsFor = function(cell) { return tilePts[cell[0] + "," + cell[1]] || 60; };
     expanded.beams.forEach(function(bm) { stripedBeam(bm, ptsFor); });
     expanded.rainbows.forEach(function(rb) { rainbowLightning(rb.from, rb.cells, ptsFor); });
-    /* Whole-screen shake scaled by the biggest match this step; thunder strikes
-       (beams and rainbow lightning) shake hardest and are not overridden below */
-    if (expanded.rainbows.length || expanded.beams.length) shakeScreen("xl");
-    else if (biggest >= 5 || expanded.effects.length) shakeScreen("lg");
-    else if (biggest === 4) shakeScreen("md");
-    else shakeScreen("sm");
+    /* Screen shake removed: it gave An eye strain and headaches. No shake
+       anywhere in the game now; flashes, confetti and sounds stay. */
     /* Special activations strike lightning at the special tiles (at least 2 bolts) */
     if (expanded.strikes && expanded.strikes.length) {
       var boltCells = expanded.strikes.slice();
@@ -1519,7 +1544,6 @@ async function detonateBomb(target, from) {
   updateHUD();
   showFloatScore(pts, list);
   explosionAt(list, "fox", { count: 80, max: 650, text: true });
-  shakeScreen("xl");
   flashBoard();
   flashScreen();
   list.forEach(function(cell) { var el = tileEl(cell[0], cell[1]); if (el) el.classList.add("pop"); });
@@ -1835,12 +1859,9 @@ function showBoomText(xPct, yPct) {
   setTimeout(function() { if (div.parentNode) div.parentNode.removeChild(div); }, 1250);
 }
 function shakeBoard() {
-  var b = document.getElementById("board");
-  if (!b) return;
-  b.classList.remove("shake");
-  void b.offsetWidth;
-  b.classList.add("shake");
-  setTimeout(function() { b.classList.remove("shake"); }, 560);
+  /* Screen shake removed: it gave An eye strain and headaches. Kept as a
+     no-op so any leftover call site is harmless. */
+  return;
 }
 function flashBoard() {
   var layer = fxLayer(); if (!layer) return;
@@ -1877,12 +1898,9 @@ function smallMatchFx(cells, type) {
   lightningTo(cells);
 }
 function shakeScreen(size) {
-  var s = document.getElementById("gameScreen");
-  if (!s) return;
-  s.classList.remove("shake-sm", "shake-md", "shake-lg", "shake-xl");
-  void s.offsetWidth;
-  s.classList.add("shake-" + (size || "sm"));
-  setTimeout(function() { s.classList.remove("shake-sm", "shake-md", "shake-lg", "shake-xl"); }, 900);
+  /* Screen shake removed: it gave An eye strain and headaches. Kept as a
+     no-op so any leftover call site is harmless. */
+  return;
 }
 function explosionAt(cells, type, opts) {
   opts = opts || {};
@@ -1906,7 +1924,6 @@ function explosionAt(cells, type, opts) {
     cells.forEach(function(cell) { sr += cell[0]; sc += cell[1]; });
     showBoomText((sc / cells.length + 0.5) * 12.5, (sr / cells.length + 0.5) * 12.5);
   }
-  if (opts.shake !== false) shakeBoard();
   flashScreen();
   AudioEng.sfx("boom");
 }
@@ -1991,7 +2008,7 @@ function stripedBeam(beam, ptsFor) {
     div.style.transformOrigin = "50% " + ((beam.from[0] + 0.5) * 12.5) + "%";
   }
   layer.appendChild(div);
-  flashScreen(); shakeScreen("xl");
+  flashScreen();
   setTimeout(function() { if (div.parentNode) div.parentNode.removeChild(div); }, 420);
   for (var i = 0; i < 5; i++) {
     var cell = cells[Math.floor(Math.random() * cells.length)];
@@ -2067,7 +2084,7 @@ function rainbowLightning(fromCell, cells, ptsFor) {
     }
   });
   layer.appendChild(svg);
-  flashScreen(); flashBoard(); shakeScreen("xl");
+  flashScreen(); flashBoard();
   AudioEng.sfx("thunder");
   var anim = svg.animate([
     { opacity: 1 }, { opacity: 0.3, offset: 0.25 }, { opacity: 1, offset: 0.45 }, { opacity: 0.4, offset: 0.7 }, { opacity: 0 }
@@ -2102,6 +2119,108 @@ function giantBoomText(xPct, yPct) {
   ], { duration: 900, easing: "ease-out" });
   anim.onfinish = function() { if (div.parentNode) div.parentNode.removeChild(div); };
   setTimeout(function() { if (div.parentNode) div.parentNode.removeChild(div); }, 1050);
+}
+/* Water-bubble burst: every matched tile pops like a water bubble - a
+   translucent shiny bubble wobbles over the tile, pops, sprays a few water
+   droplets and leaves a small ripple ring. Added on top of the existing
+   explosion (confetti + tile-colored droplets). Fires on every 3+ match,
+   including cascades. Fast: ~230ms per bubble, staggered ~40ms apart. */
+function bubbleBurst(cells) {
+  var layer = fxLayer(); if (!layer || !cells || !cells.length) return;
+  cells.forEach(function(cell, i) {
+    var cx = (cell[1] + 0.5) * 12.5, cy = (cell[0] + 0.5) * 12.5;
+    var delay = Math.min(i * 40, 400); /* stagger pops ~40ms apart, cap 400ms */
+    /* bubble: shiny translucent sphere with a bright highlight arc */
+    var b = document.createElement("div");
+    b.className = "fx-bubble";
+    b.style.left = cx + "%"; b.style.top = cy + "%";
+    layer.appendChild(b);
+    var pop = b.animate([
+      { transform: "translate(-50%,-50%) scale(0.5)", opacity: 0 },
+      { transform: "translate(-50%,-50%) scale(1.08) rotate(-4deg)", opacity: 0.95, offset: 0.45 },
+      { transform: "translate(-50%,-50%) scale(1.15) rotate(3deg)", opacity: 1, offset: 0.65 },
+      { transform: "translate(-50%,-50%) scale(1.5)", opacity: 0 }
+    ], { duration: 230, delay: delay, easing: "ease-out", fill: "backwards" });
+    pop.onfinish = function() { if (b.parentNode) b.parentNode.removeChild(b); };
+    setTimeout(function() { if (b.parentNode) b.parentNode.removeChild(b); }, delay + 400);
+    /* ripple ring left behind as the bubble pops */
+    var r = document.createElement("div");
+    r.className = "fx-ripple";
+    r.style.left = cx + "%"; r.style.top = cy + "%";
+    layer.appendChild(r);
+    var rip = r.animate([
+      { transform: "translate(-50%,-50%) scale(0.6)", opacity: 0.7 },
+      { transform: "translate(-50%,-50%) scale(1.9)", opacity: 0 }
+    ], { duration: 320, delay: delay + 90, easing: "ease-out", fill: "backwards" });
+    rip.onfinish = function() { if (r.parentNode) r.parentNode.removeChild(r); };
+    setTimeout(function() { if (r.parentNode) r.parentNode.removeChild(r); }, delay + 550);
+    /* a few water droplets spray out as the bubble bursts */
+    for (var d = 0; d < 3; d++) spawnDroplet(layer, cx, cy, "#7dd3fc", "#ffffff");
+    /* soft bubble "plop", staggered with the visuals */
+    AudioEng.sfx("bubble", { delay: delay / 1000 });
+  });
+}
+/* Thunder strikes from the sky: 4-5 thick blue-white jagged bolts crashing
+   straight down from the top of the board onto the matched tiles, for every
+   4+ match (4-match, 5-match, L/T, cascades). Fires together with the giant
+   head moment, in addition to it. Distinct from rainbow lightning (which
+   arcs sideways from a rainbow candy) and from the thin gold lightningTo
+   bolts. Plain 3-matches never trigger it. No screen shake anywhere. */
+function thunderStrikes(cells) {
+  var layer = fxLayer(); if (!layer || !cells || !cells.length) return;
+  /* One bolt per matched tile, up to 5; spread evenly if there are more. */
+  var targets = cells.slice();
+  if (targets.length > 5) {
+    var picked = [];
+    for (var i = 0; i < 5; i++) picked.push(targets[Math.floor(i * targets.length / 5)]);
+    targets = picked;
+  }
+  var svgNS = "http://www.w3.org/2000/svg";
+  var svg = document.createElementNS(svgNS, "svg");
+  svg.setAttribute("class", "fx-bolt-blue");
+  svg.setAttribute("viewBox", "0 0 100 100");
+  svg.setAttribute("preserveAspectRatio", "none");
+  targets.forEach(function(cell) {
+    var tx = (cell[1] + 0.5) * 12.5, ty = (cell[0] + 0.5) * 12.5;
+    /* Vertical strike from the top edge of the board down onto the tile. */
+    var sx = tx + (Math.random() * 6 - 3), sy = 0;
+    var dx = tx - sx, dy = ty - sy;
+    var len = Math.sqrt(dx * dx + dy * dy); if (len < 1) return;
+    var nx = dx / len, ny = dy / len;
+    var px = -ny, py = nx; /* perpendicular, for the zigzag jitter */
+    var segs = 6 + Math.floor(Math.random() * 3);
+    var pts = [];
+    for (var i = 0; i <= segs; i++) {
+      var t = i / segs;
+      var off = (i === 0 || i === segs) ? 0 : (Math.random() * 6 - 3);
+      pts.push([sx + dx * t + px * off, sy + dy * t + py * off]);
+    }
+    var d = "M" + pts.map(function(p) { return p[0].toFixed(1) + "," + p[1].toFixed(1); }).join(" L");
+    var mid = pts[Math.floor(segs / 2)];
+    /* THUNDER main bolt: thick, white-hot core, blue glow. */
+    addBoltPath(svg, d, "#38bdf8", 4.2, 0.85);
+    addBoltPath(svg, d, "#bae6fd", 2.2, 0.95);
+    addBoltPath(svg, d, "#ffffff", 1.1, 1);
+    /* Branch offshoot from the middle of the bolt, most of the time. */
+    if (Math.random() < 0.7) {
+      var ang = Math.random() * Math.PI * 2;
+      var bl = 4 + Math.random() * 6;
+      var ex = mid[0] + Math.cos(ang) * bl, ey = mid[1] + Math.sin(ang) * bl;
+      var mx = (mid[0] + ex) / 2 + (Math.random() * 3 - 1.5), my = (mid[1] + ey) / 2 + (Math.random() * 3 - 1.5);
+      var bd = "M" + mid[0].toFixed(1) + "," + mid[1].toFixed(1) + " L" + mx.toFixed(1) + "," + my.toFixed(1) + " L" + ex.toFixed(1) + "," + ey.toFixed(1);
+      addBoltPath(svg, bd, "#7dd3fc", 1.4, 0.8);
+      addBoltPath(svg, bd, "#ffffff", 0.6, 0.9);
+    }
+  });
+  layer.appendChild(svg);
+  flashScreen(); flashBoard(); flashThunder();
+  AudioEng.sfx("thunder");
+  var anim = svg.animate([
+    { opacity: 1 }, { opacity: 0.3, offset: 0.25 }, { opacity: 1, offset: 0.45 }, { opacity: 0.4, offset: 0.7 }, { opacity: 0 }
+  ], { duration: 480, easing: "ease-out" });
+  anim.onfinish = function() { if (svg.parentNode) svg.parentNode.removeChild(svg); };
+  setTimeout(function() { if (svg.parentNode) svg.parentNode.removeChild(svg); }, 500);
+  flashTiles(targets);
 }
 /* Giant head zoom: for a 4+ match (or L/T), that animal's head swells up and zooms
    straight out at the player, then explodes in a huge bang with confetti everywhere.
@@ -2176,7 +2295,6 @@ async function giantHeadBoom(type, cells) {
   }
   giantBoomText(cx, cy);
   flashScreen(); flashThunder();
-  shakeScreen("xl"); shakeBoard();
   AudioEng.sfx("thunder");
   AudioEng.sfx("boom");
   await sleep(300);
