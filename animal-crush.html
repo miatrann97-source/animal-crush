@@ -70,6 +70,7 @@ button:disabled { opacity:.55; cursor:default; }
 .howto b { color:#ff5c8a; }
 .visit-count { font-size:15px; color:#6b5a4a; }
 .best-line { font-size:16px; font-weight:bold; color:#7c4dff; }
+.level-info { font-size:16px; font-weight:bold; color:#ff5c8a; }
 
 /* ---------- HUD ---------- */
 #hud {
@@ -113,6 +114,37 @@ button:disabled { opacity:.55; cursor:default; }
 .tile.pop .inner { transform: scale(.1); opacity:0; }
 .tile.new .inner { animation: dropIn .25s ease; }
 @keyframes dropIn { from { transform: translateY(-30%) scale(.8); } to { transform: none; } }
+/* hint: pulsing yellow outline on the two swappable tiles */
+.tile.hint .inner { outline:3px solid #ffe45e; outline-offset:-1px; box-shadow: 0 0 0 3px #fff, 0 0 18px #ffe45e; animation: hintPulse .7s ease-in-out infinite; z-index:4; }
+@keyframes hintPulse { 0%,100% { transform: scale(1); filter: brightness(1); } 50% { transform: scale(1.12); filter: brightness(1.3); } }
+/* water ripple on tile touch (about 2s) */
+.tile .ripple { position:absolute; inset:0; pointer-events:none; z-index:4; overflow:hidden; border-radius:14%; }
+.tile .ripple::before { content:""; position:absolute; left:50%; top:50%; width:18%; height:18%; border:3px solid rgba(140,210,255,.95); border-radius:50%; transform: translate(-50%,-50%); animation: rippleRing 2s ease-out forwards; }
+.tile .ripple::after { content:""; position:absolute; inset:0; background: radial-gradient(circle at 50% 50%, rgba(120,200,255,.45), rgba(120,200,255,0) 65%); animation: rippleWash 2s ease-out forwards; }
+@keyframes rippleRing { 0% { width:18%; height:18%; opacity:.95; } 100% { width:150%; height:150%; opacity:0; } }
+@keyframes rippleWash { 0% { opacity:1; } 100% { opacity:0; } }
+/* bomb tile: clearly a bomb, not an animal */
+.tile.bomb .inner { background: radial-gradient(circle at 35% 30%, #555, #161616 70%); box-shadow: 0 0 0 2px #ffe45e, 0 0 16px #ff9500, 0 2px 5px rgba(0,0,0,.22); animation: bombPulse 1s ease-in-out infinite; }
+@keyframes bombPulse { 0%,100% { filter: brightness(1); } 50% { filter: brightness(1.35); } }
+.bomb-emoji { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size: clamp(26px, 8vw, 42px); pointer-events:none; }
+.bomb-spark { position:absolute; right:4px; top:0; font-size: clamp(12px, 3.5vw, 18px); color:#ffe45e; text-shadow: 0 0 8px #ff9500; animation: sparkBlink .3s ease-in-out infinite alternate; pointer-events:none; }
+@keyframes sparkBlink { from { opacity:.4; transform: scale(.8) rotate(-10deg); } to { opacity:1; transform: scale(1.2) rotate(10deg); } }
+#bombDragEl { position:fixed; z-index:100; pointer-events:none; font-size:52px; transform: translate(-50%,-50%); filter: drop-shadow(0 6px 10px rgba(0,0,0,.4)); }
+.tile.bomb-target .inner { outline:3px solid #ff5c5c; outline-offset:-1px; box-shadow: 0 0 0 3px #fff, 0 0 18px #ff5c5c; }
+/* low time warning */
+.hud-stat.low b { color:#ff2d55; animation: timeBlink 1s ease-in-out infinite; }
+@keyframes timeBlink { 0%,100% { opacity:1; } 50% { opacity:.45; } }
+/* level transition / waiting screen with the walking shark girl */
+#transitionScreen { position:fixed; inset:0; z-index:55; display:flex; align-items:center; justify-content:center; background: linear-gradient(135deg, rgba(255,45,120,.88), rgba(255,149,0,.88), rgba(0,210,255,.88)); padding:16px; }
+#transitionScreen.hidden { display:none !important; }
+.trans-card { background: rgba(255,255,255,.94); border-radius:24px; padding:22px 18px; width:100%; max-width:440px; text-align:center; display:flex; flex-direction:column; gap:10px; align-items:center; box-shadow: 0 12px 40px rgba(0,0,0,.3); }
+.trans-card h2 { font-size: clamp(22px, 6vw, 30px); }
+.trans-card p { font-size:17px; }
+.trans-track { width:100%; height:170px; position:relative; overflow:hidden; border-radius:16px; background: linear-gradient(180deg, #bfe9ff, #e8f9ff 60%, #cdeed9); }
+.trans-walker { position:absolute; left:0; bottom:6px; animation: walkAcross 3.6s linear forwards; will-change: transform; }
+.trans-walker img { height:150px; width:auto; animation: walkBob .45s ease-in-out infinite alternate; filter: drop-shadow(0 6px 8px rgba(0,0,0,.25)); }
+@keyframes walkAcross { from { transform: translateX(-120%); } to { transform: translateX(560%); } }
+@keyframes walkBob { from { transform: translateY(0) rotate(-4deg); } to { transform: translateY(-14px) rotate(4deg); } }
 /* special overlays */
 .tile .badge {
   position:absolute; right:1px; top:1px; font-size: clamp(11px, 3vw, 17px); line-height:1;
@@ -147,18 +179,18 @@ button:disabled { opacity:.55; cursor:default; }
 #board.shake { animation: boardShake .38s ease; }
 @keyframes boardShake {
   0%, 100% { transform: translate(0,0); }
-  20% { transform: translate(-9px, 5px); }
-  40% { transform: translate(9px, -5px); }
-  60% { transform: translate(-7px, -4px); }
-  80% { transform: translate(6px, 4px); }
+  20% { transform: translate(-14px, 8px); }
+  40% { transform: translate(14px, -8px); }
+  60% { transform: translate(-11px, -7px); }
+  80% { transform: translate(10px, 7px); }
 }
 /* ---------- Whole-screen shake (scaled by match size) ---------- */
 #gameScreen.shake-sm { animation: shakeSm .35s ease; }
 #gameScreen.shake-md { animation: shakeMd .4s ease; }
 #gameScreen.shake-lg { animation: shakeLg .45s ease; }
-@keyframes shakeSm { 0%,100% { transform: translate(0,0); } 25% { transform: translate(-4px,2px); } 50% { transform: translate(4px,-2px); } 75% { transform: translate(-2px,-2px); } }
-@keyframes shakeMd { 0%,100% { transform: translate(0,0); } 20% { transform: translate(-7px,4px); } 40% { transform: translate(7px,-4px); } 60% { transform: translate(-6px,-4px); } 80% { transform: translate(6px,4px); } }
-@keyframes shakeLg { 0%,100% { transform: translate(0,0); } 15% { transform: translate(-12px,7px) rotate(-.8deg); } 30% { transform: translate(12px,-7px) rotate(.8deg); } 45% { transform: translate(-10px,-6px) rotate(-.6deg); } 60% { transform: translate(10px,6px) rotate(.6deg); } 75% { transform: translate(-7px,4px); } 90% { transform: translate(6px,-4px); } }
+@keyframes shakeSm { 0%,100% { transform: translate(0,0); } 25% { transform: translate(-6px,3px); } 50% { transform: translate(6px,-3px); } 75% { transform: translate(-4px,-3px); } }
+@keyframes shakeMd { 0%,100% { transform: translate(0,0); } 20% { transform: translate(-11px,6px); } 40% { transform: translate(11px,-6px); } 60% { transform: translate(-9px,-6px); } 80% { transform: translate(9px,6px); } }
+@keyframes shakeLg { 0%,100% { transform: translate(0,0); } 15% { transform: translate(-18px,10px) rotate(-1.2deg); } 30% { transform: translate(18px,-10px) rotate(1.2deg); } 45% { transform: translate(-15px,-9px) rotate(-.9deg); } 60% { transform: translate(15px,9px) rotate(.9deg); } 75% { transform: translate(-10px,6px); } 90% { transform: translate(9px,-6px); } }
 /* ---------- Win celebration ---------- */
 #celebrate { position:fixed; inset:0; z-index:60; pointer-events:none; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; overflow:hidden; }
 #celebrate.hidden { display:none !important; }
@@ -175,7 +207,7 @@ button:disabled { opacity:.55; cursor:default; }
 #fxLayer { position:absolute; inset:0; z-index:25; pointer-events:none; overflow:hidden; border-radius:18px; }
 .particle { position:absolute; border-radius:50%; pointer-events:none; will-change: transform, opacity; }
 .boom-text {
-  position:absolute; z-index:26; font-weight:900; font-size:52px; color:#ffcf3f;
+  position:absolute; z-index:26; font-weight:900; font-size:84px; color:#ffcf3f;
   text-shadow: 3px 3px 0 #fff, 0 0 26px #ff9d00, 0 6px 12px rgba(0,0,0,.35);
   pointer-events:none; white-space:nowrap; transform: translate(-50%,-50%);
 }
@@ -229,6 +261,7 @@ input[type=text]:focus { border-color:#ff5c8a; }
   <div class="card howto" id="howto"></div>
   <p class="visit-count" id="visitCount"></p>
   <p class="best-line" id="bestLine"></p>
+  <p class="level-info" id="levelInfo"></p>
   <button id="playBtn" class="green"></button>
   <div class="card" id="startLb"></div>
   <div class="hud-btns">
@@ -252,6 +285,7 @@ input[type=text]:focus { border-color:#ff5c8a; }
     <div class="hud-row">
       <div class="hud-stat"><span id="lblTarget"></span> <b class="target" id="targetNum">4000</b></div>
       <div class="hud-stat"><span id="lblMoves"></span> <b id="movesNum">90</b></div>
+      <div class="hud-stat"><span id="lblTime"></span> <b id="timeNum">5:00</b></div>
     </div>
     <div class="progress"><div id="progressFill"></div></div>
   </div>
@@ -280,6 +314,15 @@ input[type=text]:focus { border-color:#ff5c8a; }
       <button id="retryBtn" class="hidden"></button>
       <button id="endHomeBtn" class="ghost"></button>
     </div>
+  </div>
+</div>
+
+<div id="transitionScreen" class="hidden">
+  <div class="trans-card">
+    <h2 id="transTitle"></h2>
+    <p id="transMsg"></p>
+    <div class="trans-track"><div class="trans-walker"><img id="transShark" src="walk-shark.png" alt="Bé cá"></div></div>
+    <p id="transNext"></p>
   </div>
 </div>
 
@@ -317,6 +360,10 @@ var STR = {
     target: "Mục tiêu",
     moves: "Lượt",
     movesLeft: "lượt",
+    time: "Thời gian",
+    transDone: "Màn {n} hoàn thành!",
+    transWalk: "Bé cá đang đi đến Màn {n}...",
+    transNext: "Màn {n} sắp mở ra!",
     leaderboard: "Bảng thành tích",
     top10: "Top 10 chung",
     champion: "Nhà vô địch Animal Crush",
@@ -353,6 +400,10 @@ var STR = {
     target: "Target",
     moves: "Moves",
     movesLeft: "moves",
+    time: "Time",
+    transDone: "Level {n} cleared!",
+    transWalk: "Little fish is walking to Level {n}...",
+    transNext: "Level {n} is about to open!",
     leaderboard: "Leaderboard",
     top10: "Shared top 10",
     champion: "Animal Crush Champion",
@@ -504,10 +555,12 @@ var AudioEng = (function() {
         noiseBurst(now, 0.18, 0.35, "bandpass", 3000);
         tone(1800, 0.12, "square", 0.12, now, 300);
       }
-      else if (name === "water") { /* clear water droplet plip on tile touch */
-        var f = 900 * (0.9 + Math.random() * 0.2);
-        tone(f, 0.18, "sine", 0.3, now, f * 0.55);
-        noiseBurst(now, 0.08, 0.12, "highpass", 4200);
+      else if (name === "water") { /* water droplet "tí tách": fast pitch drop + tick + faint resonance tail */
+        var base = 1000 * (0.9 + Math.random() * 0.2); /* 900-1100Hz, ±10% per tap */
+        tone(3600, 0.03, "sine", 0.08, now); /* tiny high tick at the very start */
+        tone(base, 0.09, "sine", 0.35, now, 320); /* droplet plink: fast drop to ~320Hz in 0.09s */
+        tone(base * 2.2, 0.05, "triangle", 0.06, now, base * 1.6); /* bright tink */
+        tone(320, 0.18, "sine", 0.12, now + 0.08, 240); /* faint resonance tail */
       }
     }
   };
@@ -517,16 +570,17 @@ var AudioEng = (function() {
 "use strict";
 /* ================= Game state ================= */
 var ROWS = 8, COLS = 8;
-var LEVELS = [
-  { target: 4000, moves: 90 },
-  { target: 8000, moves: 88 },
-  { target: 13000, moves: 85 },
-  { target: 18000, moves: 82 },
-  { target: 24000, moves: 80 }
-];
+/* Random target per level: deterministic per level number, so a retry keeps the same target.
+   L1 ~3500-5000, then about +3500 per level with randomness. Moves shrink slowly, min 55. */
+function seededRand(seed) {
+  var x = (seed * 2654435761) >>> 0;
+  x ^= x >>> 15; x = Math.imul(x, 2246822519) >>> 0; x ^= x >>> 13;
+  return (((x >>> 0) % 10000) / 10000);
+}
 function levelConfig(level) {
-  if (level <= LEVELS.length) return LEVELS[level - 1];
-  return { target: 24000 + (level - 5) * 5000, moves: Math.max(70, 82 - (level - 5)) };
+  var r = seededRand(level * 7 + 13);
+  var target = Math.round((3500 + (level - 1) * 3500 + r * 1500) / 100) * 100;
+  return { target: target, moves: Math.max(55, 90 - (level - 1) * 3) };
 }
 var state = {
   board: [],       /* board[r][c] = tile {id, type, special} or null */
@@ -535,6 +589,7 @@ var state = {
   score: 0,
   moves: 0,
   target: 1000,
+  timeLeft: 300,   /* 5 minutes per level, always */
   best: parseInt(localStorage.getItem("animalCrushBest") || "0", 10) || 0,
   busy: false,
   over: false,
@@ -578,7 +633,7 @@ function findMatches(b) {
     c = 0;
     while (c < COLS) {
       var t0 = b[r][c];
-      if (!t0 || t0.type === "rainbow") { c++; continue; }
+      if (!t0 || t0.type === "rainbow" || t0.type === "bomb") { c++; continue; }
       len = 1;
       while (c + len < COLS && b[r][c+len] && b[r][c+len].type === t0.type) len++;
       if (len >= 3) {
@@ -593,7 +648,7 @@ function findMatches(b) {
     r = 0;
     while (r < ROWS) {
       var t1 = b[r][c];
-      if (!t1 || t1.type === "rainbow") { r++; continue; }
+      if (!t1 || t1.type === "rainbow" || t1.type === "bomb") { r++; continue; }
       len = 1;
       while (r + len < ROWS && b[r+len][c] && b[r+len][c].type === t1.type) len++;
       if (len >= 3) {
@@ -629,6 +684,7 @@ function hasValidMove(b) {
       var r2 = r + dirs[d][0], c2 = c + dirs[d][1];
       if (!inBoard(r2, c2)) continue;
       var a = b[r][c], bb = b[r2][c2];
+      if (!a || !bb || a.type === "bomb" || bb.type === "bomb") continue;
       b[r][c] = bb; b[r2][c2] = a;
       var m = findMatches(b).runs.length > 0;
       b[r][c] = a; b[r2][c2] = bb;
@@ -639,7 +695,7 @@ function hasValidMove(b) {
 }
 function shuffleBoard() {
   var types = [];
-  state.board.forEach(function(row) { row.forEach(function(tl) { if (tl) types.push(tl.type === "rainbow" ? randType() : tl.type); }); });
+  state.board.forEach(function(row) { row.forEach(function(tl) { if (tl) types.push((tl.type === "rainbow" || tl.type === "bomb") ? randType() : tl.type); }); });
   var tries = 0;
   do {
     for (var i = types.length - 1; i > 0; i--) {
@@ -654,6 +710,55 @@ function shuffleBoard() {
   } while ((findMatches(state.board).runs.length > 0 || !hasValidMove(state.board)) && tries < 60);
   renderBoard(true);
 }
+
+/* ---------- Hint: highlight one possible swap after 10s with no move ---------- */
+function findHintMove(b) {
+  var dirs = [[0,1],[1,0]];
+  for (var r = 0; r < ROWS; r++) for (var c = 0; c < COLS; c++) {
+    var t0 = b[r][c];
+    if (!t0 || t0.type === "bomb" || t0.type === "rainbow") continue;
+    for (var d = 0; d < 2; d++) {
+      var r2 = r + dirs[d][0], c2 = c + dirs[d][1];
+      if (!inBoard(r2, c2)) continue;
+      var t1 = b[r2][c2];
+      if (!t1 || t1.type === "bomb" || t1.type === "rainbow") continue;
+      b[r][c] = t1; b[r2][c2] = t0;
+      var m = findMatches(b).runs.length > 0;
+      b[r][c] = t0; b[r2][c2] = t1;
+      if (m) return [[r, c], [r2, c2]];
+    }
+  }
+  return null;
+}
+var hintTimer = null;
+var hintCells = [];
+function clearHint() {
+  hintCells.forEach(function(cell) {
+    var el = tileEl(cell[0], cell[1]);
+    if (el) el.classList.remove("hint");
+  });
+  hintCells = [];
+}
+function showHint() {
+  hintTimer = null;
+  if (state.over) return;
+  if (document.getElementById("gameScreen").classList.contains("hidden")) return;
+  if (state.busy) { armHintTimer(1500); return; } /* board still settling: check again shortly */
+  clearHint();
+  var mv = findHintMove(state.board);
+  if (!mv) return; /* no move: the shuffle safety net handles it */
+  hintCells = mv;
+  mv.forEach(function(cell) {
+    var el = tileEl(cell[0], cell[1]);
+    if (el) el.classList.add("hint");
+  });
+}
+function armHintTimer(ms) {
+  clearTimeout(hintTimer);
+  hintTimer = setTimeout(showHint, ms == null ? 10000 : ms);
+}
+function resetHintTimer() { clearHint(); armHintTimer(10000); }
+function stopHintTimer() { clearTimeout(hintTimer); hintTimer = null; clearHint(); }
 </script>
 <script>
 "use strict";
@@ -849,6 +954,58 @@ async function resolveBoard(swapPos) {
   return total;
 }
 
+/* Would placing `type` at (r,c) instantly complete a 3-match? (spawn must never do that) */
+function makesInstantMatch(r, c, type) {
+  var b = state.board;
+  function isT(rr, cc) { return inBoard(rr, cc) && b[rr][cc] && b[rr][cc].type === type; }
+  if (isT(r, c-1) && isT(r, c-2)) return true;
+  if (isT(r, c+1) && isT(r, c+2)) return true;
+  if (isT(r, c-1) && isT(r, c+1)) return true;
+  if (isT(r-1, c) && isT(r-2, c)) return true;
+  if (isT(r+1, c) && isT(r+2, c)) return true;
+  if (isT(r-1, c) && isT(r+1, c)) return true;
+  return false;
+}
+/* Pick a refill type biased toward matching an already-placed orthogonal neighbour,
+   so new tiles often land next to a friend and matches keep forming. Never an instant match. */
+function pickRefillType(r, c) {
+  var b = state.board;
+  if (Math.random() < 0.5) {
+    var opts = [];
+    [[r+1,c],[r+2,c],[r,c-1],[r,c-2]].forEach(function(p) {
+      var tl = inBoard(p[0], p[1]) && b[p[0]][p[1]];
+      if (tl && tl.type !== "rainbow" && tl.type !== "bomb") opts.push(tl.type);
+    });
+    for (var i = opts.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var tmp = opts[i]; opts[i] = opts[j]; opts[j] = tmp;
+    }
+    for (var k = 0; k < opts.length; k++) {
+      if (!makesInstantMatch(r, c, opts[k])) return opts[k];
+    }
+  }
+  var type;
+  do { type = randType(); } while (makesInstantMatch(r, c, type));
+  return type;
+}
+/* Bomb spawning: at most one bomb on the board, at least 25s after the last one,
+   and about a 12% chance per new tile that drops in. */
+var lastBombTime = 0;
+function bombOnBoard() {
+  for (var r = 0; r < ROWS; r++) for (var c = 0; c < COLS; c++) {
+    var tl = state.board[r] && state.board[r][c];
+    if (tl && tl.type === "bomb") return true;
+  }
+  return false;
+}
+function maybeBombTile(r, c) {
+  if (!bombOnBoard() && Date.now() - lastBombTime > 25000 && Math.random() < 0.12) {
+    lastBombTime = Date.now();
+    return makeTile("bomb");
+  }
+  return makeTile(pickRefillType(r, c));
+}
+
 function dropAndRefill() {
   for (var c = 0; c < COLS; c++) {
     var write = ROWS - 1;
@@ -859,7 +1016,7 @@ function dropAndRefill() {
       }
     }
     for (var r2 = write; r2 >= 0; r2--) {
-      state.board[r2][c] = makeTile(randType());
+      state.board[r2][c] = maybeBombTile(r2, c);
     }
   }
 }
@@ -907,6 +1064,7 @@ async function trySwap(r1, c1, r2, c2) {
   if (!inBoard(r2, c2)) return;
   var a = state.board[r1][c1], b = state.board[r2][c2];
   if (!a || !b) return;
+  if (a.type === "bomb" || b.type === "bomb") return; /* bombs are dragged to detonate, never swapped */
   state.busy = true;
   state.selected = null; renderSelection();
   /* animate the swap */
@@ -942,11 +1100,93 @@ async function trySwap(r1, c1, r2, c2) {
 function afterTurn() {
   updateHUD();
   if (state.score >= state.target) { endLevel(true); return; }
+  if (state.timeLeft <= 0) { endLevel(false); return; }
   if (state.moves <= 0) { endLevel(false); return; }
+  resetHintTimer();
   if (!hasValidMove(state.board)) {
     showToast(t("shuffle"));
     setTimeout(function() { if (!state.over) shuffleBoard(); }, 900);
   }
+}
+
+/* ---------- Bomb power-up: drag the bomb onto any tile to detonate a 5x5 blast ---------- */
+var bombDrag = null;
+function startBombDrag(e, pos) {
+  if (state.busy || state.over) return;
+  clearHint();
+  bombDrag = { from: pos };
+  var el = document.createElement("div");
+  el.id = "bombDragEl";
+  el.textContent = "💣";
+  document.body.appendChild(el);
+  moveBombDragEl(e);
+  window.addEventListener("pointermove", onBombDragMove);
+  window.addEventListener("pointerup", onBombDragEnd, { once: true });
+  window.addEventListener("pointercancel", onBombDragEnd, { once: true });
+}
+function moveBombDragEl(e) {
+  var el = document.getElementById("bombDragEl");
+  if (el) { el.style.left = e.clientX + "px"; el.style.top = e.clientY + "px"; }
+}
+function onBombDragMove(e) {
+  if (!bombDrag) return;
+  moveBombDragEl(e);
+  var cell = tileFromEvent(e);
+  var prev = document.querySelectorAll(".tile.bomb-target");
+  for (var i = 0; i < prev.length; i++) prev[i].classList.remove("bomb-target");
+  if (cell) {
+    var el = tileEl(cell[0], cell[1]);
+    if (el) el.classList.add("bomb-target");
+  }
+}
+function onBombDragEnd(e) {
+  window.removeEventListener("pointermove", onBombDragMove);
+  var dragEl = document.getElementById("bombDragEl");
+  if (dragEl && dragEl.parentNode) dragEl.parentNode.removeChild(dragEl);
+  var prev = document.querySelectorAll(".tile.bomb-target");
+  for (var i = 0; i < prev.length; i++) prev[i].classList.remove("bomb-target");
+  if (!bombDrag) return;
+  var from = bombDrag.from;
+  bombDrag = null;
+  if (state.busy || state.over) return;
+  var cell = tileFromEvent(e);
+  if (!cell) return; /* released outside the board: the bomb stays where it was */
+  if (cell[0] === from[0] && cell[1] === from[1]) return; /* dropped on itself: cancel */
+  detonateBomb(cell, from);
+}
+async function detonateBomb(target, from) {
+  if (state.busy || state.over) return;
+  state.busy = true;
+  clearHint();
+  resetHintTimer();
+  var cells = {}, list = [];
+  function addCell(r, c) {
+    if (!inBoard(r, c)) return;
+    var k = r + "," + c;
+    if (!cells[k]) { cells[k] = [r, c]; list.push([r, c]); }
+  }
+  for (var dr = -2; dr <= 2; dr++) for (var dc = -2; dc <= 2; dc++) addCell(target[0] + dr, target[1] + dc);
+  addCell(from[0], from[1]); /* the bomb itself is consumed */
+  var pts = list.length * 60 + 500; /* 60 per cleared tile + 500 bomb bonus */
+  state.score += pts;
+  updateHUD();
+  showFloatScore(pts, list);
+  explosionAt(list, "fox", { count: 55, max: 420, text: true });
+  shakeScreen("lg");
+  flashBoard();
+  list.forEach(function(cell) { var el = tileEl(cell[0], cell[1]); if (el) el.classList.add("pop"); });
+  await sleep(280);
+  list.forEach(function(cell) {
+    var tl = state.board[cell[0]][cell[1]];
+    if (tl) { removeTileEl(tl.id); state.board[cell[0]][cell[1]] = null; }
+  });
+  lastBombTime = Date.now(); /* next bomb at least 25s after this one */
+  dropAndRefill();
+  renderBoard(false);
+  await sleep(260);
+  await resolveBoard(null);
+  afterTurn();
+  state.busy = false;
 }
 </script>
 <script>
@@ -984,11 +1224,24 @@ function makeTileEl(tl) {
   div.dataset.id = tl.id;
   var inner = document.createElement("div");
   inner.className = "inner";
-  var img = document.createElement("img");
-  img.src = tl.type === "rainbow" ? IMG.fox : IMG[tl.type];
-  img.alt = tl.type;
-  img.draggable = false;
-  inner.appendChild(img);
+  if (tl.type === "bomb") {
+    /* bomb: cartoon black bomb with a sparking fuse, clearly not an animal */
+    div.classList.add("bomb");
+    var em = document.createElement("span");
+    em.className = "bomb-emoji";
+    em.textContent = "💣";
+    inner.appendChild(em);
+    var sp = document.createElement("span");
+    sp.className = "bomb-spark";
+    sp.textContent = "✦";
+    inner.appendChild(sp);
+  } else {
+    var img = document.createElement("img");
+    img.src = tl.type === "rainbow" ? IMG.fox : IMG[tl.type];
+    img.alt = tl.type;
+    img.draggable = false;
+    inner.appendChild(img);
+  }
   var badge = badgeFor(tl);
   if (badge) {
     var b = document.createElement("span");
@@ -1067,6 +1320,23 @@ function renderSelection() {
     if (el) el.classList.add("selected");
   }
 }
+/* Water ripple on tile touch: soft expanding ring, about 2s, never blocks taps */
+var rippleCount = 0;
+function spawnRipple(r, c) {
+  if (rippleCount >= 12) return;
+  var el = tileEl(r, c);
+  if (!el) return;
+  var inner = el.querySelector(".inner");
+  if (!inner) return;
+  var d = document.createElement("div");
+  d.className = "ripple";
+  inner.appendChild(d);
+  rippleCount++;
+  setTimeout(function() {
+    if (d.parentNode) d.parentNode.removeChild(d);
+    rippleCount = Math.max(0, rippleCount - 1);
+  }, 2000);
+}
 function showFloatScore(points, cells) {
   if (!cells || !cells.length) return;
   var sr = 0, sc = 0;
@@ -1090,11 +1360,11 @@ function spawnParticle(layer, xPct, yPct, color, star) {
     p.textContent = "★";
     p.style.background = "transparent";
     p.style.color = "#ffd23f";
-    p.style.fontSize = (15 + Math.random() * 11) + "px";
+    p.style.fontSize = (18 + Math.random() * 16) + "px";
     p.style.textShadow = "0 0 8px #fff";
     p.style.borderRadius = "0";
   } else {
-    var size = 7 + Math.random() * 9;
+    var size = 8 + Math.random() * 14;
     p.style.width = size + "px"; p.style.height = size + "px";
     p.style.background = color;
     p.style.boxShadow = "0 0 8px " + color;
@@ -1102,14 +1372,14 @@ function spawnParticle(layer, xPct, yPct, color, star) {
   p.style.left = xPct + "%"; p.style.top = yPct + "%";
   layer.appendChild(p);
   var ang = Math.random() * Math.PI * 2;
-  var dist = 55 + Math.random() * 75;
+  var dist = 90 + Math.random() * 170;
   var dx = Math.cos(ang) * dist, dy = Math.sin(ang) * dist - 20;
   var anim = p.animate([
     { transform: "translate(-50%,-50%) translate(0px,0px) scale(1)", opacity: 1 },
     { transform: "translate(-50%,-50%) translate(" + dx + "px," + dy + "px) scale(0.2)", opacity: 0 }
-  ], { duration: 650 + Math.random() * 200, easing: "cubic-bezier(.17,.67,.35,1)" });
+  ], { duration: 900 + Math.random() * 500, easing: "cubic-bezier(.17,.67,.35,1)" });
   anim.onfinish = function() { if (p.parentNode) p.parentNode.removeChild(p); };
-  setTimeout(function() { if (p.parentNode) p.parentNode.removeChild(p); }, 900);
+  setTimeout(function() { if (p.parentNode) p.parentNode.removeChild(p); }, 1500);
 }
 function showBoomText(xPct, yPct) {
   var layer = fxLayer(); if (!layer) return;
@@ -1120,12 +1390,12 @@ function showBoomText(xPct, yPct) {
   layer.appendChild(div);
   var anim = div.animate([
     { transform: "translate(-50%,-50%) scale(0.4) rotate(-8deg)", opacity: 0 },
-    { transform: "translate(-50%,-50%) scale(1.6) rotate(4deg)", opacity: 1, offset: 0.35 },
-    { transform: "translate(-50%,-50%) scale(1.2) rotate(0deg)", opacity: 1, offset: 0.6 },
-    { transform: "translate(-50%,-50%) scale(1.3) translateY(-26px)", opacity: 0 }
-  ], { duration: 900, easing: "ease-out" });
+    { transform: "translate(-50%,-50%) scale(2.1) rotate(4deg)", opacity: 1, offset: 0.35 },
+    { transform: "translate(-50%,-50%) scale(1.5) rotate(0deg)", opacity: 1, offset: 0.6 },
+    { transform: "translate(-50%,-50%) scale(1.6) translateY(-26px)", opacity: 0 }
+  ], { duration: 1000, easing: "ease-out" });
   anim.onfinish = function() { if (div.parentNode) div.parentNode.removeChild(div); };
-  setTimeout(function() { if (div.parentNode) div.parentNode.removeChild(div); }, 1050);
+  setTimeout(function() { if (div.parentNode) div.parentNode.removeChild(div); }, 1150);
 }
 function shakeBoard() {
   var b = document.getElementById("board");
@@ -1140,9 +1410,9 @@ function flashBoard() {
   var f = document.createElement("div");
   f.className = "fx-flash";
   layer.appendChild(f);
-  var anim = f.animate([{ opacity: 0.85 }, { opacity: 0 }], { duration: 320, easing: "ease-out" });
+  var anim = f.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 550, easing: "ease-out" });
   anim.onfinish = function() { if (f.parentNode) f.parentNode.removeChild(f); };
-  setTimeout(function() { if (f.parentNode) f.parentNode.removeChild(f); }, 500);
+  setTimeout(function() { if (f.parentNode) f.parentNode.removeChild(f); }, 700);
 }
 function smallMatchFx(cells, type) {
   var layer = fxLayer(); if (!layer || !cells || !cells.length) return;
@@ -1151,7 +1421,7 @@ function smallMatchFx(cells, type) {
   var total = 0;
   cells.forEach(function(cell) {
     var cx = (cell[1] + 0.5) * 12.5, cy = (cell[0] + 0.5) * 12.5;
-    for (var i = 0; i < 6 && total < 24; i++, total++) {
+    for (var i = 0; i < 16 && total < 70; i++, total++) {
       var col = colors[Math.floor(Math.random() * colors.length)];
       spawnParticle(layer, cx, cy, col, Math.random() < 0.3);
     }
@@ -1171,13 +1441,14 @@ function explosionAt(cells, type, opts) {
   var layer = fxLayer(); if (!layer || !cells || !cells.length) return;
   var base = opts.color || ANIMAL_COLORS[type] || "#ffd23f";
   var colors = [base, "#ffd23f", "#ffffff", base];
-  var perCell = opts.count || 14;
+  var perCell = opts.count || 40;
+  var cap = opts.max || 260;
   var total = 0;
   cells.forEach(function(cell) {
     var cx = (cell[1] + 0.5) * 12.5, cy = (cell[0] + 0.5) * 12.5;
-    for (var i = 0; i < perCell && total < 84; i++, total++) {
+    for (var i = 0; i < perCell && total < cap; i++, total++) {
       var col = colors[Math.floor(Math.random() * colors.length)];
-      if (Math.random() < 0.25) spawnParticle(layer, cx, cy, col, true);
+      if (Math.random() < 0.35) spawnParticle(layer, cx, cy, col, true);
       else spawnParticle(layer, cx, cy, col, false);
     }
   });
@@ -1354,8 +1625,11 @@ function onTilePointerDown(e, tl) {
     if (state.board[r][c] === tl) pos = [r, c];
   }
   if (!pos) return;
-  dragStart = { pos: pos, x: e.clientX, y: e.clientY, moved: false };
   AudioEng.sfx("water");
+  spawnRipple(pos[0], pos[1]);
+  resetHintTimer();
+  if (tl.type === "bomb") { startBombDrag(e, pos); return; } /* bomb: drag to detonate, never swap */
+  dragStart = { pos: pos, x: e.clientX, y: e.clientY, moved: false };
   if (state.selected && state.selected[0] === pos[0] && state.selected[1] === pos[1]) {
     state.selected = null; renderSelection(); dragStart = null; return;
   }
@@ -1389,7 +1663,47 @@ boardEl.addEventListener("contextmenu", function(e) { e.preventDefault(); });
 </script>
 <script>
 "use strict";
+/* ================= 5-minute timer (always 5:00 per level) ================= */
+var timerId = null;
+function updateTimerDisplay() {
+  var el = document.getElementById("timeNum");
+  if (!el) return;
+  var s = Math.max(0, state.timeLeft);
+  var m = Math.floor(s / 60), ss = s % 60;
+  el.textContent = m + ":" + (ss < 10 ? "0" : "") + ss;
+  var stat = el.parentNode;
+  if (stat) stat.classList.toggle("low", s <= 30 && s > 0);
+}
+function startTimer() {
+  stopTimer();
+  state.timeLeft = 300;
+  updateTimerDisplay();
+  timerId = setInterval(function() {
+    if (state.over) return;
+    if (document.getElementById("gameScreen").classList.contains("hidden")) return;
+    if (state.timeLeft > 0) { state.timeLeft--; updateTimerDisplay(); }
+    if (state.timeLeft <= 0 && !state.busy) endLevel(false);
+  }, 1000);
+}
+function stopTimer() { if (timerId) { clearInterval(timerId); timerId = null; } }
+
 /* ================= Levels & end screens ================= */
+var transTimer = null;
+function showTransition(fromLevel) {
+  var next = fromLevel + 1;
+  var ov = document.getElementById("transitionScreen");
+  document.getElementById("transTitle").textContent = t("transDone").replace("{n}", fromLevel);
+  document.getElementById("transMsg").textContent = t("transWalk").replace("{n}", next);
+  document.getElementById("transNext").textContent = t("transNext").replace("{n}", next);
+  ov.classList.remove("hidden");
+  var walker = ov.querySelector(".trans-walker");
+  if (walker) { walker.style.animation = "none"; void walker.offsetWidth; walker.style.animation = ""; }
+  clearTimeout(transTimer);
+  transTimer = setTimeout(function() {
+    ov.classList.add("hidden");
+    startLevel(next);
+  }, 3900);
+}
 function startLevel(level) {
   state.level = level;
   var cfg = levelConfig(level);
@@ -1406,13 +1720,19 @@ function startLevel(level) {
   updateHUD();
   document.getElementById("startScreen").classList.add("hidden");
   document.getElementById("endScreen").classList.add("hidden");
+  document.getElementById("transitionScreen").classList.add("hidden");
   document.getElementById("gameScreen").classList.remove("hidden");
   renderGameLb();
+  lastBombTime = Date.now();
+  resetHintTimer();
   AudioEng.unlock();
   AudioEng.startMusic();
+  startTimer();
 }
 function endLevel(won) {
   state.over = true;
+  stopTimer();
+  stopHintTimer();
   var isBest = state.score > state.best;
   if (isBest) {
     state.best = state.score;
@@ -1430,7 +1750,12 @@ function endLevel(won) {
     AudioEng.sfx("lose");
   }
   updateHUD();
-  setTimeout(function() { showEnd(won, isBest); }, 700);
+  if (won) {
+    /* win: celebrate, then the shark girl walks to the next level, which opens by itself */
+    setTimeout(function() { showTransition(state.level); }, 2700);
+  } else {
+    setTimeout(function() { showEnd(won, isBest); }, 700);
+  }
 }
 function showEnd(won, isBest) {
   var end = document.getElementById("endScreen");
@@ -1559,6 +1884,9 @@ function applyLang() {
   document.getElementById("lblBest").textContent = t("best") + ":";
   document.getElementById("lblTarget").textContent = t("target") + ":";
   document.getElementById("lblMoves").textContent = t("moves") + ":";
+  document.getElementById("lblTime").textContent = t("time") + ":";
+  var lc = levelConfig(state.level);
+  document.getElementById("levelInfo").textContent = t("level") + " " + state.level + " · " + t("target") + ": " + lc.target + " · " + lc.moves + " " + t("movesLeft") + " · ⏱ 5:00";
   document.getElementById("saveScoreBtn").textContent = t("save");
   document.getElementById("nextBtn").textContent = t("next");
   document.getElementById("retryBtn").textContent = t("retry");
@@ -1585,9 +1913,12 @@ document.getElementById("musicBtn").addEventListener("click", function() { Audio
 document.getElementById("musicBtnStart").addEventListener("click", function() { AudioEng.unlock(); AudioEng.toggleMusic(); syncMusicBtns(); });
 document.getElementById("homeBtn").addEventListener("click", function() {
   state.over = true;
+  stopTimer();
+  stopHintTimer();
   AudioEng.stopMusic();
   document.getElementById("gameScreen").classList.add("hidden");
   document.getElementById("endScreen").classList.add("hidden");
+  document.getElementById("transitionScreen").classList.add("hidden");
   document.getElementById("startScreen").classList.remove("hidden");
   applyLang();
 });
@@ -1601,9 +1932,12 @@ document.getElementById("nextBtn").addEventListener("click", function() {
 });
 document.getElementById("retryBtn").addEventListener("click", function() { startLevel(state.level); });
 document.getElementById("endHomeBtn").addEventListener("click", function() {
+  stopTimer();
+  stopHintTimer();
   AudioEng.stopMusic();
   document.getElementById("endScreen").classList.add("hidden");
   document.getElementById("gameScreen").classList.add("hidden");
+  document.getElementById("transitionScreen").classList.add("hidden");
   document.getElementById("startScreen").classList.remove("hidden");
   applyLang();
 });
