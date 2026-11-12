@@ -8,11 +8,18 @@
 * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
 body {
   font-family: "Comic Sans MS", "Chalkboard SE", "Segoe UI", sans-serif;
-  background: linear-gradient(180deg, #aee7ff 0%, #d9f7c4 45%, #fff3b0 100%);
+  background: linear-gradient(135deg, #ff6b9d, #ffa502, #2ed573, #1e90ff, #a55eea, #ff6b9d);
+  background-size: 300% 300%;
+  animation: bgShift 14s ease infinite;
   min-height: 100vh; min-height: 100dvh;
   display:flex; flex-direction:column; align-items:center;
   color:#3a2b1f; overflow-x:hidden;
   user-select:none; -webkit-user-select:none;
+}
+@keyframes bgShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 h1 { font-size: clamp(30px, 8vw, 46px); color:#ff6b9d; text-shadow: 2px 2px 0 #fff, 4px 4px 0 rgba(0,0,0,.12); letter-spacing:1px; }
 h2 { font-size: clamp(20px, 5.5vw, 28px); color:#7c4dff; }
@@ -70,8 +77,9 @@ button:disabled { opacity:.55; cursor:default; }
 #boardWrap { width:100%; max-width:480px; position:relative; }
 #board {
   position:relative; width:100%; aspect-ratio: 1 / 1;
-  background: rgba(255,255,255,.55); border-radius:18px;
-  box-shadow: inset 0 0 0 3px rgba(255,255,255,.8), 0 8px 20px rgba(0,0,0,.14);
+  background: linear-gradient(135deg, rgba(255,107,157,.85), rgba(255,165,2,.85), rgba(46,213,115,.85), rgba(30,144,255,.85));
+  border-radius:18px;
+  box-shadow: inset 0 0 0 3px rgba(255,255,255,.9), 0 8px 20px rgba(0,0,0,.25);
   overflow:hidden; touch-action:none;
 }
 .tile {
@@ -186,8 +194,8 @@ input[type=text]:focus { border-color:#ff5c8a; }
       </div>
     </div>
     <div class="hud-row">
-      <div class="hud-stat"><span id="lblTarget"></span> <b class="target" id="targetNum">1000</b></div>
-      <div class="hud-stat"><span id="lblMoves"></span> <b id="movesNum">30</b></div>
+      <div class="hud-stat"><span id="lblTarget"></span> <b class="target" id="targetNum">2000</b></div>
+      <div class="hud-stat"><span id="lblMoves"></span> <b id="movesNum">45</b></div>
     </div>
     <div class="progress"><div id="progressFill"></div></div>
   </div>
@@ -409,15 +417,15 @@ var AudioEng = (function() {
 /* ================= Game state ================= */
 var ROWS = 8, COLS = 8;
 var LEVELS = [
-  { target: 1000, moves: 30 },
-  { target: 2000, moves: 28 },
-  { target: 3500, moves: 25 },
-  { target: 5000, moves: 25 },
-  { target: 7000, moves: 22 }
+  { target: 2000, moves: 45 },
+  { target: 4000, moves: 42 },
+  { target: 6500, moves: 40 },
+  { target: 9000, moves: 38 },
+  { target: 12000, moves: 35 }
 ];
 function levelConfig(level) {
   if (level <= LEVELS.length) return LEVELS[level - 1];
-  return { target: 7000 + (level - 5) * 2000, moves: Math.max(18, 25 - level) };
+  return { target: 12000 + (level - 5) * 3000, moves: Math.max(30, 38 - (level - 5)) };
 }
 var state = {
   board: [],       /* board[r][c] = tile {id, type, special} or null */
