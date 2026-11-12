@@ -433,7 +433,7 @@ var state = {
   tileSeq: 1
 };
 var sleep = function(ms) { return new Promise(function(res){ setTimeout(res, ms); }); };
-function randType() { return Math.floor(Math.random() * ANIMALS.length); }
+function randType() { return ANIMALS[Math.floor(Math.random() * ANIMALS.length)]; }
 function makeTile(type, special) {
   return { id: state.tileSeq++, type: type, special: special || null };
 }
