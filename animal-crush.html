@@ -38,7 +38,9 @@ body {
   100% { transform: translateY(-125vh) rotate(300deg); opacity:0; }
 }
 @keyframes twinkle { from { opacity:.35; } to { opacity:1; } }
-h1 { font-size: clamp(30px, 8vw, 46px); color:#ff6b9d; text-shadow: 2px 2px 0 #fff, 4px 4px 0 rgba(0,0,0,.12); letter-spacing:1px; }
+h1 { font-family: 'Baloo 2', "Comic Sans MS", "Chalkboard SE", sans-serif; font-size: clamp(34px, 9vw, 50px); font-weight:800; line-height:1.1; letter-spacing:1px; background: linear-gradient(90deg, #ff2d55, #ff9500, #ffe600, #2ed573, #00d2ff, #7b5cff, #ff2d78); -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-stroke: 0.8px #000; filter: drop-shadow(0 3px 0 rgba(255,255,255,.85)) drop-shadow(0 6px 10px rgba(0,0,0,.25)); animation: titleBounce 2.4s ease-in-out infinite; }
+@keyframes titleBounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+.rainbow-arc { display:block; margin: 2px auto 0; }
 h2 { font-size: clamp(20px, 5.5vw, 28px); color:#7c4dff; }
 button {
   font-family: inherit; cursor:pointer; border:none; border-radius: 999px;
@@ -50,6 +52,8 @@ button {
 button:active { transform: translateY(3px); box-shadow: 0 1px 0 #d63d68; }
 button.small { padding: 8px 16px; font-size: 15px; }
 button.green { background: linear-gradient(180deg, #7ee081, #43b581); box-shadow: 0 4px 0 #2e8b57, 0 6px 12px rgba(0,0,0,.18); }
+button.rainbow { font-family: 'Baloo 2', "Comic Sans MS", "Chalkboard SE", sans-serif; font-size:22px; padding: 14px 44px; background: linear-gradient(90deg, #ff2d55, #ff9500, #ffe600, #2ed573, #00d2ff, #7b5cff); background-size: 200% 100%; box-shadow: 0 5px 0 rgba(0,0,0,.25), 0 8px 16px rgba(0,0,0,.25); text-shadow: 0 2px 3px rgba(0,0,0,.3); animation: playPulse 1.8s ease-in-out infinite; }
+@keyframes playPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
 button.green:active { box-shadow: 0 1px 0 #2e8b57; }
 button.blue { background: linear-gradient(180deg, #7cc4ff, #3f8cff); box-shadow: 0 4px 0 #2b62b8, 0 6px 12px rgba(0,0,0,.18); }
 button.blue:active { box-shadow: 0 1px 0 #2b62b8; }
@@ -61,17 +65,24 @@ button:disabled { opacity:.55; cursor:default; }
 /* ---------- Start screen ---------- */
 #startScreen { text-align:center; }
 .logo-row { display:flex; gap:6px; justify-content:center; flex-wrap:wrap; margin: 6px 0; }
-.logo-row img { width:56px; height:56px; border-radius:16px; box-shadow: 0 4px 10px rgba(0,0,0,.2); }
-.tagline { font-size:17px; color:#5a4632; }
+.logo-row img { width:56px; height:56px; border-radius:16px; box-shadow: 0 4px 10px rgba(0,0,0,.2); animation: logoBob 2s ease-in-out infinite; }
+@keyframes logoBob { 0%, 100% { transform: translateY(0) rotate(var(--rot, 0deg)); } 50% { transform: translateY(-5px) rotate(var(--rot, 0deg)); } }
+.tagline { font-family: 'Baloo 2', "Comic Sans MS", "Chalkboard SE", sans-serif; font-size:17px; font-weight:700; color:#fff; text-shadow: 0 2px 4px rgba(0,0,0,.35); }
+.tagline b { color:#ffe600; }
 .card {
   background: rgba(255,255,255,.92); border-radius: 20px; padding: 16px 18px;
   box-shadow: 0 6px 18px rgba(0,0,0,.12); width:100%;
 }
 .howto { text-align:left; font-size:16px; line-height:1.75; }
-.howto b { color:#ff5c8a; }
-.visit-count { font-size:15px; color:#6b5a4a; }
-.best-line { font-size:16px; font-weight:bold; color:#7c4dff; }
-.level-info { font-size:16px; font-weight:bold; color:#ff5c8a; }
+.card.howto, #startLb { background-color: #fffdf5; background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22150%22%20height%3D%22150%22%20viewBox%3D%220%200%20150%20150%22%3E%0A%3Cg%20opacity%3D%220.20%22%3E%0A%20%20%3Cg%20fill%3D%22%23ff9ecf%22%3E%3Cellipse%20cx%3D%2222%22%20cy%3D%2230%22%20rx%3D%224%22%20ry%3D%223.2%22%2F%3E%3Ccircle%20cx%3D%2216.5%22%20cy%3D%2224.5%22%20r%3D%221.8%22%2F%3E%3Ccircle%20cx%3D%2220%22%20cy%3D%2222.5%22%20r%3D%221.8%22%2F%3E%3Ccircle%20cx%3D%2223.5%22%20cy%3D%2222.5%22%20r%3D%221.8%22%2F%3E%3Ccircle%20cx%3D%2227%22%20cy%3D%2224.5%22%20r%3D%221.8%22%2F%3E%3C%2Fg%3E%0A%20%20%3Cg%20fill%3D%22%234db8ff%22%3E%3Cpath%20d%3D%22M102%2020%20Q110%2014%20118%2020%20Q110%2026%20102%2020%20Z%22%2F%3E%3Cpath%20d%3D%22M118%2020%20L124%2016%20L124%2024%20Z%22%2F%3E%3C%2Fg%3E%0A%20%20%3Cg%20fill%3D%22%23ffb347%22%3E%3Cpath%20d%3D%22M28%20108%20L30%20113%20L35%20113.5%20L31%20117%20L32.5%20122%20L28%20119.5%20L23.5%20122%20L25%20117%20L21%20113.5%20L26%20113%20Z%22%2F%3E%3C%2Fg%3E%0A%20%20%3Cg%20fill%3D%22%23b06bff%22%3E%3Cpath%20d%3D%22M108%20108%20A7%207%200%200%201%20122%20108%20Z%22%2F%3E%3Cpath%20d%3D%22M111%20108%20Q111%20113%20110%20115%20M115%20108%20Q115%20113%20115%20115%20M119%20108%20Q119%20113%20120%20115%22%20stroke%3D%22%23b06bff%22%20stroke-width%3D%221.6%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%2F%3E%3C%2Fg%3E%0A%3C%2Fg%3E%0A%3C%2Fsvg%3E"); background-size: 150px 150px; }
+.howto-title { font-family: 'Baloo 2', "Comic Sans MS", "Chalkboard SE", sans-serif; font-size:20px; font-weight:800; background: linear-gradient(90deg, #ff2d55, #ff9500, #ffe600, #2ed573, #00d2ff, #7b5cff); -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-stroke: 0.5px #000; margin-bottom: 8px; }
+.rule { display:flex; gap:10px; align-items:flex-start; font-size:16px; font-weight:600; color:#4a3527; line-height:1.5; margin-top:6px; }
+.rule .num { flex: 0 0 26px; width:26px; height:26px; border-radius:50%; color:#fff; font-weight:800; font-size:15px; display:flex; align-items:center; justify-content:center; border:2px solid #fff; box-shadow: 0 2px 4px rgba(0,0,0,.2); margin-top:1px; }
+.rule b { color:#ff2d55; }
+.visit-count { display:inline-block; background: rgba(255,255,255,.92); border-radius:999px; padding:4px 14px; font-size:15px; font-weight:700; color:#6b5a4a; box-shadow: 0 3px 8px rgba(0,0,0,.15); }
+.best-line { font-family: 'Baloo 2', "Comic Sans MS", "Chalkboard SE", sans-serif; font-size:17px; font-weight:800; color:#fff; text-shadow: 0 2px 4px rgba(0,0,0,.3); }
+.level-info { font-family: 'Baloo 2', "Comic Sans MS", "Chalkboard SE", sans-serif; font-size:16px; font-weight:800; color:#fff; text-shadow: 0 2px 4px rgba(0,0,0,.3); }
+.rb { background: linear-gradient(90deg, #ff2d55, #ff9500, #ffe600, #2ed573, #00d2ff, #7b5cff, #ff2d78); -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-stroke: 0.6px #000; font-size:1.15em; }
 
 /* ---------- HUD ---------- */
 #hud {
@@ -454,6 +465,12 @@ button:disabled { opacity:.55; cursor:default; }
 }
 #toast.show { opacity:1; }
 
+/* ---------- Bomb shark popup (bottom-left, shows when the wolf bomb explodes) ---------- */
+#bombShark { position:fixed; left:10px; bottom:10px; z-index:46; width: min(170px, 38vw); pointer-events:none; }
+#bombShark.hidden { display:none !important; }
+#bombShark img { width:100%; height:auto; display:block; filter: drop-shadow(0 8px 16px rgba(0,0,0,.3)); transform-origin: 50% 90%; animation: bombSharkPop 2.2s ease-in-out both; }
+@keyframes bombSharkPop { 0% { transform: translate(-30px, 10px) scale(.3) rotate(-16deg); opacity:0; } 15% { transform: translate(0, 0) scale(1.1) rotate(-3deg); opacity:1; } 25% { transform: translate(0, -8px) scale(1) rotate(-9deg); } 35% { transform: translate(0, 0) scale(1.04) rotate(-4deg); } 45% { transform: translate(0, -8px) scale(1) rotate(-8deg); } 55% { transform: translate(0, 0) scale(1) rotate(-6deg); } 80% { opacity:1; transform: translate(0, 0) scale(1) rotate(-6deg); } 100% { opacity:0; transform: translate(0, 0) scale(.9) rotate(-6deg); } }
+
 /* ---------- Leaderboard ---------- */
 #boardPanel { width:100%; }
 .lb-row { display:flex; justify-content:space-between; font-size:16px; padding:5px 4px; border-bottom:1px dashed #e8dccf; }
@@ -488,6 +505,7 @@ input[type=text]:focus { border-color:#ff5c8a; }
 <body>
 <div id="bgDecor" aria-hidden="true"></div>
 <div class="screen" id="startScreen">
+  <svg class="rainbow-arc" width="120" height="34" viewBox="0 0 120 34"><path d="M6 32 A54 54 0 0 1 114 32" fill="none" stroke="#ff2d55" stroke-width="5" stroke-linecap="round"/><path d="M14 32 A46 46 0 0 1 106 32" fill="none" stroke="#ff9500" stroke-width="5" stroke-linecap="round"/><path d="M22 32 A38 38 0 0 1 98 32" fill="none" stroke="#ffe600" stroke-width="5" stroke-linecap="round"/><path d="M30 32 A30 30 0 0 1 90 32" fill="none" stroke="#2ed573" stroke-width="5" stroke-linecap="round"/><path d="M38 32 A22 22 0 0 1 82 32" fill="none" stroke="#00b4ff" stroke-width="5" stroke-linecap="round"/></svg>
   <h1>Animal Crush</h1>
   <div class="logo-row" id="logoRow"></div>
   <p class="tagline" id="tagline"></p>
@@ -495,7 +513,7 @@ input[type=text]:focus { border-color:#ff5c8a; }
   <p class="visit-count" id="visitCount"></p>
   <p class="best-line" id="bestLine"></p>
   <p class="level-info" id="levelInfo"></p>
-  <button id="playBtn" class="green"></button>
+  <button id="playBtn" class="rainbow"></button>
   <div class="card" id="startLb"></div>
   <div class="hud-btns">
     <button class="icon-btn" id="langBtnStart">VI | EN</button>
@@ -574,6 +592,8 @@ input[type=text]:focus { border-color:#ff5c8a; }
     <p id="transNext"></p>
   </div>
 </div>
+
+<div id="bombShark" class="hidden"><img src="bomb-shark.png" alt="Bé cá thổi kèn ăn mừng"></div>
 
 <div id="celebrate" class="hidden">
   <img class="celeb-shark" src="win-shark.png" alt="Bé cá ăn mừng chiến thắng">
@@ -828,6 +848,13 @@ var AudioEng = (function() {
       }
       else if (name === "click") { tone(950, 0.05, "sine", 0.2, now, 1300); }
       else if (name === "winJingle") { [523,659,784,1047,784,1047,1319].forEach(function(f,i){ tone(f, 0.18, "triangle", 0.25, now + i*0.09); }); }
+      else if (name === "applause") { /* crowd clapping when a level is cleared: many short bandpass noise claps, staggered */
+        if (!musicOn) return; /* respects the mute toggle */
+        for (var i = 0; i < 26; i++) {
+          noiseBurst(now + i * 0.07 + Math.random() * 0.04, 0.06, 0.22 + Math.random() * 0.2, "bandpass", 1100 + Math.random() * 900);
+        }
+        noiseBurst(now, 1.8, 0.1, "bandpass", 900); /* soft crowd wash underneath */
+      }
       else if (name === "zap") {
         noiseBurst(now, 0.18, 0.35, "bandpass", 3000);
         tone(1800, 0.12, "square", 0.12, now, 300);
@@ -1560,6 +1587,19 @@ function onBombDragEnd(e) {
   if (cell[0] === from[0] && cell[1] === from[1]) return; /* dropped on itself: cancel */
   detonateBomb(cell, from);
 }
+var bombSharkTimer = null;
+function showBombShark() {
+  var el = document.getElementById("bombShark");
+  if (!el) return;
+  var img = el.querySelector("img");
+  el.classList.remove("hidden");
+  /* restart the pop animation */
+  img.style.animation = "none";
+  void img.offsetWidth;
+  img.style.animation = "";
+  if (bombSharkTimer) clearTimeout(bombSharkTimer);
+  bombSharkTimer = setTimeout(function() { el.classList.add("hidden"); }, 2300);
+}
 async function detonateBomb(target, from) {
   if (state.busy || state.over) return;
   state.busy = true;
@@ -1598,6 +1638,7 @@ async function detonateBomb(target, from) {
   /* Big bright beam when many tiles clear at once (bomb clears usually 10+) */
   bigBeam(list);
   explosionAt(list, type, { count: 80, max: 650, text: true });
+  showBombShark(); /* bé cá thổi kèn pops up bottom-left when the wolf bomb explodes */
   flashBoard();
   flashScreen();
   list.forEach(function(cell) { var el = tileEl(cell[0], cell[1]); if (el) el.classList.add("pop"); });
@@ -2669,6 +2710,7 @@ function endLevel(won) {
   }
   if (won) {
     celebrateWin();
+    AudioEng.sfx("applause"); /* clapping when a level is cleared */
     if (state.level >= state.maxLevel) {
       state.maxLevel = state.level + 1;
       localStorage.setItem("animalCrushMaxLevel", String(state.maxLevel));
@@ -2803,10 +2845,27 @@ function updateVisits() {
 }
 
 /* ================= Language & UI wiring ================= */
+/* How-to rules with a colored number badge each (title in rainbow) */
+function renderHowto() {
+  var raw = t("howto");
+  var parts = raw.split("<br>");
+  var title = parts.shift().replace(/<\/?b>/g, "");
+  var colors = ["#ff5c8a", "#ff9500", "#e6b800", "#2ed573", "#00b4ff", "#7b5cff", "#ff2d78"];
+  var out = '<div class="howto-title">' + title + "</div>";
+  parts.forEach(function(line, i) {
+    var m = line.match(/^\s*(\d+)\.\s*([\s\S]*)$/);
+    if (!m) { out += '<div class="rule"><span>' + line + "</span></div>"; return; }
+    out += '<div class="rule"><span class="num" style="background:' + colors[i % colors.length] + ';">' + m[1] + "</span><span>" + m[2] + "</span></div>";
+  });
+  document.getElementById("howto").innerHTML = out;
+}
 function applyLang() {
   document.documentElement.lang = LANG;
-  document.getElementById("tagline").textContent = t("tagline");
-  document.getElementById("howto").innerHTML = t("howto");
+  var tag = t("tagline");
+  if (LANG === "vi") tag = tag.replace("nổ tung!", "<b>nổ tung!</b>");
+  else tag = tag.replace("pop them!", "<b>pop them!</b>");
+  document.getElementById("tagline").innerHTML = tag;
+  renderHowto();
   document.getElementById("playBtn").textContent = t("play");
   document.getElementById("lblLevel").textContent = t("level") + ":";
   document.getElementById("lblScore").textContent = t("score") + ":";
@@ -2815,12 +2874,12 @@ function applyLang() {
   document.getElementById("lblMoves").textContent = t("moves") + ":";
   document.getElementById("lblTime").textContent = t("time") + ":";
   var lc = levelConfig(state.level);
-  document.getElementById("levelInfo").textContent = t("level") + " " + state.level + " · " + t("target") + ": " + lc.target + " · " + lc.moves + " " + t("movesLeft") + " · ⏱ 7:00";
+  document.getElementById("levelInfo").innerHTML = t("level") + ' <b class="rb">' + state.level + "</b> · " + t("target") + ': <b class="rb">' + lc.target + "</b> · " + '<b class="rb">' + lc.moves + "</b> " + t("movesLeft") + ' · ⏱ <b class="rb">7:00</b>';
   document.getElementById("saveScoreBtn").textContent = t("save");
   document.getElementById("nextBtn").textContent = t("next");
   document.getElementById("retryBtn").textContent = t("retry");
   document.getElementById("endHomeBtn").textContent = t("home");
-  document.getElementById("bestLine").textContent = t("best") + ": " + state.best;
+  document.getElementById("bestLine").innerHTML = t("best") + ': <b class="rb">' + state.best + "</b>";
   document.getElementById("nameInput").placeholder = t("yourName");
   var known = parseInt(localStorage.getItem("animalCrushVisits") || "0", 10);
   if (known) document.getElementById("visitCount").textContent = "🐠 " + t("visits").replace("{n}", known);
@@ -2889,11 +2948,32 @@ document.addEventListener("pointerdown", startMusicOnFirstTap);
 (function init() {
   buildBgDecor();
   var row = document.getElementById("logoRow");
-  ANIMALS.forEach(function(a) {
+  var LOGO_STYLE = {
+    shark: ["#d6ecff", "#1e90ff", "-4deg"],
+    otter: ["#f0e0cc", "#8b5a2b", "3deg"],
+    rabbit: ["#fff8ec", "#ff9ecf", "-3deg"],
+    mouse: ["#e8eaec", "#6e7378", "4deg"],
+    jellyfish: ["#e9defc", "#7c3fd4", "-3deg"],
+    fox: ["#ffe8cc", "#ff8c1a", "4deg"]
+  };
+  ANIMALS.forEach(function(a, i) {
     var img = document.createElement("img");
     img.src = IMG[a]; img.alt = a;
+    var st = LOGO_STYLE[a];
+    img.style.background = st[0];
+    img.style.boxShadow = "0 0 0 3px " + st[1] + ", 0 4px 10px rgba(0,0,0,.2)";
+    img.style.setProperty("--rot", st[2]);
+    img.style.animationDelay = (i * 0.08) + "s";
     row.appendChild(img);
   });
+  /* wolf bomb joins the logo row */
+  var wolfImg = document.createElement("img");
+  wolfImg.src = IMG.wolf; wolfImg.alt = "wolf bomb";
+  wolfImg.style.background = "linear-gradient(135deg,#1a2b6b,#0b1e4b)";
+  wolfImg.style.boxShadow = "0 0 0 3px #38bdf8, 0 0 14px rgba(56,189,248,.7), 0 4px 10px rgba(0,0,0,.2)";
+  wolfImg.style.setProperty("--rot", "-2deg");
+  wolfImg.style.animationDelay = "0.48s";
+  row.appendChild(wolfImg);
   applyLang();
   syncMusicBtns();
   updateVisits();
