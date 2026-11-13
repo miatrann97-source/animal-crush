@@ -63,5 +63,24 @@
   </div>
   <p class="foot">Made with 💙 by An &amp; Bom</p>
 </div>
+<script>
+/* ?reset=1 — An asked to start Animal Crush over from Level 1.
+   Clears her saved Animal Crush progress on THIS browser only
+   (level, best, story-seen flags), then strips the param from the
+   URL so reopening the page does not reset again. Keeps language,
+   music and visit-counter settings. */
+(function () {
+  try {
+    if (new URLSearchParams(location.search).get("reset") !== "1") return;
+    ["animalCrushLevel", "animalCrushBest", "animalCrushMaxLevel", "ac_story_seen"].forEach(function (k) { localStorage.removeItem(k); });
+    history.replaceState(null, "", location.pathname);
+    var n = document.createElement("p");
+    n.textContent = "Đã reset Animal Crush về Màn 1 — mở game chơi lại từ đầu nha! 💙";
+    n.style.cssText = "text-align:center;font-weight:800;margin:0 0 18px;color:#2b8fe3;";
+    var w = document.querySelector(".wrap");
+    if (w) w.insertBefore(n, w.children[1] || null);
+  } catch (e) {}
+})();
+</script>
 </body>
 </html>
