@@ -663,6 +663,29 @@ input[type=text]:focus { border-color:#ff5c8a; }
   .best-line { font-size:22px; }
   .level-info { font-size:20px; }
 }
+
+/* v19 phones fill the screen: no dead space above/below the game (An
+   2026-11-12). The board stretches to fill the height left by the HUD;
+   tiles get taller and images use contain so animals are never cropped. */
+@media (max-width: 599px) {
+  #gameScreen { justify-content:flex-start; padding-bottom:12px; }
+  #boardWrap { flex:1 1 0; min-height:200px; }
+  #board { aspect-ratio:auto; height:100%; }
+  .tile img { object-fit:contain; }
+}
+
+/* v21 tall phones get a bigger HUD to match the taller board (per-size
+   tuning: big/tall phones scale up, small/short phones stay compact). */
+@media (max-width: 599px) and (min-height: 800px) {
+  #gameScreen { gap:10px; }
+  #hud { padding:8px 10px 10px; gap:4px; border-radius:20px; }
+  .hud-stat { font-size:13px; } .hud-stat b { font-size:18px; }
+  .icon-btn { padding:3px 6px; font-size:12px; min-width:30px; border-radius:13px; }
+  #hubBtn { padding:9px 14px; font-size:22px; min-width:52px; }
+  .perk-line { font-size:.78rem; padding:3px 8px; }
+  .progress { height:7px; }
+  .back-btn-big { width:56px; height:56px; font-size:32px; }
+}
 </style>
 </head>
 <body>
