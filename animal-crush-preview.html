@@ -763,6 +763,7 @@ input[type=text]:focus { border-color:#ff5c8a; }
         <button class="icon-btn" id="langBtn">VI | EN</button>
         <button class="icon-btn blue" id="musicBtn">🔊</button>
         <button class="icon-btn green" id="homeBtn">🏠</button>
+        <button class="icon-btn" id="storyBtn" title="Đọc truyện">📖</button>
       </div>
     </div>
     <div class="hud-row">
@@ -3258,8 +3259,26 @@ function showStoryCard(level, onDone) {
   ov.classList.remove("hidden");
   play.onclick = function() { storyMarkSeen(level); ov.classList.add("hidden"); if (onDone) onDone(); };
 }
+/* v30.1: resume the 7-minute timer after reading the story mid-level.
+   Unlike startTimer() (new level: resets to 7:00), this keeps the
+   remaining time — reading the story must not cost play time. */
+function resumeTimer() {
+  stopTimer();
+  updateTimerDisplay();
+  timerId = setInterval(function() {
+    if (state.over) return;
+    if (document.getElementById("gameScreen").classList.contains("hidden")) return;
+    if (state.timeLeft > 0) { state.timeLeft--; updateTimerDisplay(); }
+    if (state.timeLeft <= 0 && !state.busy) endLevel(false);
+  }, 1000);
+}
 function showStoryViewer() {
   var ov = document.getElementById("storyScreen");
+  /* v30.1: opened mid-level (game screen visible) -> pause the timer
+     while reading, resume it on close. From the start screen there is
+     no running timer, so nothing to pause. */
+  var inGame = !document.getElementById("gameScreen").classList.contains("hidden");
+  if (inGame) stopTimer();
   var list = document.getElementById("storyList");
   var html = "";
   for (var i = 0; i < STORY_LEVELS.length; i++) {
@@ -3276,7 +3295,7 @@ function showStoryViewer() {
   close.textContent = t("storyClose");
   close.classList.remove("hidden");
   ov.classList.remove("hidden");
-  close.onclick = function() { ov.classList.add("hidden"); };
+  close.onclick = function() { ov.classList.add("hidden"); if (inGame) resumeTimer(); };
 }
 function storySeenAny() {
   try { var s = JSON.parse(__previewStore.getItem("ac_story_seen") || "[]"); return s.length > 0; } catch (e) { return false; }
@@ -3291,6 +3310,8 @@ function maybeShowStory(level, proceed) {
   showStoryCard(level, proceed);
 }
 document.getElementById("storyBtnStart").addEventListener("click", function() { AudioEng.unlock(); showStoryViewer(); });
+/* v30.1: 📖 button in the game HUD — read the story mid-level, too. */
+document.getElementById("storyBtn").addEventListener("click", function() { AudioEng.unlock(); showStoryViewer(); });
 
 function startLevel(level) {
   stopBoings();
