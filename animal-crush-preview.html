@@ -707,6 +707,8 @@ input[type=text]:focus { border-color:#ff5c8a; }
 .story-item img { width:48px; height:48px; flex:0 0 auto; object-fit:contain; }
 .story-item b { font-size:15px; color:#5b21b6; }
 .story-item p { font-size:14px; margin:2px 0 0; }
+/* v30.2: small replay-from-Level-1 button under the start-screen buttons. */
+.reset-btn { background:none; border:none; color:#8a7a9e; font:inherit; font-size:.85rem; text-decoration:underline; cursor:pointer; margin-top:10px; opacity:.85; }
 
 
 /* v21 tall phones get a bigger HUD to match the taller board (per-size
@@ -745,6 +747,7 @@ input[type=text]:focus { border-color:#ff5c8a; }
     <button class="icon-btn" id="musicBtnStart">🔊</button>
     <button class="icon-btn" id="storyBtnStart">📖</button>
   </div>
+  <button class="reset-btn" id="resetBtn">↺ Chơi lại từ Màn 1</button>
 </div>
 
 <div class="screen hidden" id="gameScreen">
@@ -853,8 +856,24 @@ var __previewStore = {
   setItem: function(k, v) {
     __memStore[k] = String(v);
     try { var ls = window["local" + "Storage"]; if (ls) ls.setItem(k, String(v)); } catch (e) {}
+  },
+  removeItem: function(k) {
+    delete __memStore[k];
+    try { var ls = window["local" + "Storage"]; if (ls) ls.removeItem(k); } catch (e) {}
   }
 };
+/* v30.2: ?reset=1 — An asked to start over from Level 1. Clears Animal
+   Crush progress on THIS browser only (level, best, story-seen flags),
+   then strips the param so reopening the page does not reset again.
+   Runs here, before the game reads its saved level. Keeps language,
+   music and visit-counter settings. */
+(function () {
+  try {
+    if (new URLSearchParams(location.search).get("reset") !== "1") return;
+    ["animalCrushLevel", "animalCrushBest", "animalCrushMaxLevel", "ac_story_seen"].forEach(function (k) { __previewStore.removeItem(k); });
+    history.replaceState(null, "", location.pathname);
+  } catch (e) {}
+})();
 
 
 "use strict";
@@ -3312,6 +3331,17 @@ function maybeShowStory(level, proceed) {
 document.getElementById("storyBtnStart").addEventListener("click", function() { AudioEng.unlock(); showStoryViewer(); });
 /* v30.1: 📖 button in the game HUD — read the story mid-level, too. */
 document.getElementById("storyBtn").addEventListener("click", function() { AudioEng.unlock(); showStoryViewer(); });
+/* v30.2: reset button on the start screen — An asked to replay from
+   Level 1. Confirm first: it erases the saved level + local best on
+   THIS device (the shared Firebase leaderboard stays). */
+document.getElementById("resetBtn").addEventListener("click", function() {
+  var lv = (typeof state !== "undefined" && state.level) || 1;
+  var best = parseInt(__previewStore.getItem("animalCrushBest") || "0", 10);
+  var msg = "Chơi lại từ Màn 1?\nSẽ mất Màn " + lv + " + kỷ lục " + best + " trên máy này (bảng chung còn nguyên).\n\nStart over from Level 1?\nYou will lose Level " + lv + " + best " + best + " on this device (shared leaderboard stays).";
+  if (!window.confirm(msg)) return;
+  ["animalCrushLevel", "animalCrushBest", "animalCrushMaxLevel", "ac_story_seen"].forEach(function(k) { __previewStore.removeItem(k); });
+  location.reload();
+});
 
 function startLevel(level) {
   stopBoings();
