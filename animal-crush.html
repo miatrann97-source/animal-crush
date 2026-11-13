@@ -14,7 +14,7 @@
    reach past the frame; (2) overflow-x:clip on html/body stops any horizontal
    scroll or shift at the page level. (clip is stronger than hidden: it
    removes the scrollable overflow entirely instead of just hiding the bar.) */
-html { overflow-x: clip; }
+html { overflow-x: clip; overscroll-behavior: none; }
 body {
   font-family: "Comic Sans MS", "Chalkboard SE", "Segoe UI", sans-serif;
   background: linear-gradient(135deg, #ff2d78, #ff9500, #ffe600, #2ed573, #00d2ff, #7c4dff, #ff2d78, #ff6b9d);
@@ -22,7 +22,7 @@ body {
   animation: bgShift 8s ease infinite;
   min-height: 100vh; min-height: 100dvh;
   display:flex; flex-direction:column; align-items:center;
-  color:#3a2b1f; overflow-x:clip;
+  color:#3a2b1f; overflow-x:clip; overscroll-behavior:none;
   user-select:none; -webkit-user-select:none;
 }
 @keyframes bgShift {
@@ -108,7 +108,7 @@ button:disabled { opacity:.55; cursor:default; }
   background-size: 120px 120px;
   border-radius: 24px; position:relative;
   padding: 16px 18px 18px; box-shadow: 0 8px 24px rgba(0,0,0,.18);
-  display:flex; flex-direction:column; gap:8px;
+  display:flex; flex-direction:column; gap:8px; touch-action:none;
 }
 .hud-doodle { position:absolute; pointer-events:none; line-height:0; z-index:1; }
 .hud-row { display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap; }
@@ -127,7 +127,7 @@ button:disabled { opacity:.55; cursor:default; }
 #progressFill { height:100%; width:0%; background: linear-gradient(90deg, #ff2d55, #ff9500, #ffe600, #2ed573, #00d2ff, #7b5cff); border-radius:999px; transition: width .3s ease; }
 
 /* ---------- Board ---------- */
-#boardWrap { width:100%; max-width:480px; position:relative; overflow:hidden; border-radius:18px; }
+#boardWrap { width:100%; max-width:480px; position:relative; overflow:hidden; border-radius:18px; touch-action:none; }
 #board {
   position:relative; width:100%; aspect-ratio: 1 / 1;
   background: linear-gradient(135deg, rgba(255,107,157,.85), rgba(255,165,2,.85), rgba(46,213,115,.85), rgba(30,144,255,.85));
@@ -139,6 +139,7 @@ button:disabled { opacity:.55; cursor:default; }
   position:absolute; left:0; top:0; width:12.5%; height:12.5%; padding:2px;
   transition: transform .22s ease;
   will-change: transform;
+  touch-action:none;
 }
 .tile .inner {
   width:100%; height:100%; border-radius:14%; overflow:hidden; position:relative;
