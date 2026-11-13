@@ -601,7 +601,7 @@ input[type=text]:focus { border-color:#ff5c8a; }
       </div>
     </div>
     <div class="hud-row">
-      <div class="hud-stat"><span id="lblTarget"></span> <b class="target" id="targetNum">4000</b></div>
+      <div class="hud-stat"><span id="lblTarget"></span> <b class="target" id="targetNum">12000</b></div>
       <div class="hud-stat"><span id="lblMoves"></span> <b id="movesNum">90</b></div>
       <div class="hud-stat"><span id="lblTime"></span> <b id="timeNum">7:00</b></div>
     </div>
@@ -1073,7 +1073,7 @@ var AudioEng = (function() {
 /* ================= Game state ================= */
 var ROWS = 8, COLS = 8;
 /* Random target per level: deterministic per level number, so a retry keeps the same target.
-   L1 ~3500-5000, then about +3500 per level with randomness. Moves shrink slowly, min 55. */
+   L1 ~12000-14000, then about +4000 per level with randomness. Moves shrink slowly, min 55. */
 function seededRand(seed) {
   var x = (seed * 2654435761) >>> 0;
   x ^= x >>> 15; x = Math.imul(x, 2246822519) >>> 0; x ^= x >>> 13;
@@ -1081,7 +1081,7 @@ function seededRand(seed) {
 }
 function levelConfig(level) {
   var r = seededRand(level * 7 + 13);
-  var target = Math.round((3500 + (level - 1) * 3500 + r * 1500) / 100) * 100;
+  var target = Math.round((12000 + (level - 1) * 4000 + r * 2000) / 100) * 100;
   return { target: target, moves: Math.max(55, 90 - (level - 1) * 3) };
 }
 var state = {
@@ -1575,7 +1575,7 @@ function bombOnBoard() {
   return false;
 }
 function maybeBombTile(r, c) {
-  if (!bombOnBoard() && Date.now() - lastBombTime > 25000 && Math.random() < 0.12) {
+  if (!bombOnBoard() && Date.now() - lastBombTime > 15000 && Math.random() < 0.25) {
     lastBombTime = Date.now();
     return makeTile("bomb");
   }
