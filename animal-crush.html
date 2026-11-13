@@ -674,11 +674,15 @@ input[type=text]:focus { border-color:#ff5c8a; }
    tiles get taller and images use contain so animals are never cropped.
    v27 (An 2026-11-13): stretch REVERTED — the tall board spilled past
    the bottom (100dvh > visible area with Safari toolbar up). Board is
-   square again, game centered, sized to svh so it always fits. */
+   square again, game centered, sized to svh so it always fits.
+   v28 (An 2026-11-13): square board left TOO much empty space (~230px
+   top/bottom). Stretch is BACK, but the game screen now has exactly
+   1cm padding top + bottom, so the board fills the screen with only
+   1cm margins and can never spill past the edge. Sizing stays svh. */
 @media (max-width: 599px) {
-  #gameScreen { justify-content:safe center; padding-bottom:12px; }
-  #boardWrap { flex:0 1 auto; min-height:0; }
-  #board { aspect-ratio:1 / 1; height:auto; }
+  #gameScreen { justify-content:safe center; padding-top:1cm; padding-bottom:1cm; } /* v28: 1cm margins top + bottom */
+  #boardWrap { flex:1 1 0; min-height:0; }
+  #board { aspect-ratio:auto; height:100%; }
   .tile img { object-fit:contain; }
 }
 
