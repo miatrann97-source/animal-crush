@@ -78,19 +78,19 @@ button:disabled { opacity:.55; cursor:default; }
 
 /* ---------- Start screen ---------- */
 #startScreen { text-align:center; }
-/* v31.7: cá heo cute bơi như video trên màn hình mở đầu (đầu/thân/đuôi xoay lệch pha thành sóng nhẹ, đuôi vẫy mạnh nhất; cách bơi giữ nguyên như v31.6 đã duyệt).
+/* v31.8: cá heo cute v2 — đúng cá heo (mỏ ngắn, miệng cười rõ, vây lưng cong, đuôi ngang có khía; đầu/thân/đuôi xoay lệch pha thành sóng, đuôi vẫy mạnh nhất).
    CSS-only: 1 phần tử chạy left + bob bằng transform, bong bóng bay lên.
    Lane nằm trong #startScreen nên tự ẩn khi vào game. */
 #swimLane { position:relative; width:100%; height:100px; overflow:hidden; }
 #swimShark { position:absolute; top:2px; left:-30%; width:132px; animation: swimX 11s linear infinite; will-change:left, transform; }
 .swimChar { position:relative; width:132px; height:94px; animation: swimBob 2.4s ease-in-out infinite alternate; }
 .swimChar img { position:absolute; left:0; top:0; width:132px; height:auto; display:block; }
-.swimHead { transform-origin:63% 50%; animation: waveHead 2s ease-in-out infinite; }
-.swimTorso { transform-origin:44% 52%; animation: waveTorso 2s ease-in-out infinite; }
-.swimTail { transform-origin:28% 51%; animation: waveTail 2s ease-in-out infinite; }
-@keyframes waveHead { 0% { transform:rotate(0deg); } 25% { transform:rotate(4deg); } 50% { transform:rotate(0deg); } 75% { transform:rotate(-4deg); } 100% { transform:rotate(0deg); } }
+.swimHead { transform-origin:64% 50%; animation: waveHead 2s ease-in-out infinite; }
+.swimTorso { transform-origin:46% 52%; animation: waveTorso 2s ease-in-out infinite; }
+.swimTail { transform-origin:30% 51%; animation: waveTail 2s ease-in-out infinite; }
+@keyframes waveHead { 0% { transform:rotate(0deg); } 25% { transform:rotate(6deg); } 50% { transform:rotate(0deg); } 75% { transform:rotate(-6deg); } 100% { transform:rotate(0deg); } }
 @keyframes waveTorso { 0% { transform:rotate(-2.5deg); } 25% { transform:rotate(1.5deg); } 50% { transform:rotate(2.5deg); } 75% { transform:rotate(-1.5deg); } 100% { transform:rotate(-2.5deg); } }
-@keyframes waveTail { 0% { transform:rotate(-9deg); } 25% { transform:rotate(-5deg); } 50% { transform:rotate(9deg); } 75% { transform:rotate(5deg); } 100% { transform:rotate(-9deg); } }
+@keyframes waveTail { 0% { transform:rotate(-12deg); } 25% { transform:rotate(-7deg); } 50% { transform:rotate(12deg); } 75% { transform:rotate(7deg); } 100% { transform:rotate(-12deg); } }
 @keyframes swimX { 0% { left:-30%; transform: scaleX(1); } 46% { left:100%; transform: scaleX(1); } 50% { left:100%; transform: scaleX(-1); } 96% { left:-30%; transform: scaleX(-1); } 100% { left:-30%; transform: scaleX(1); } }
 @keyframes swimBob { from { transform: translateY(-3px) rotate(-4deg); } to { transform: translateY(4px) rotate(4deg); } }
 .swim-bubble { position:absolute; bottom:4px; width:12px; height:12px; border-radius:50%; background: radial-gradient(circle at 35% 35%, rgba(255,255,255,.95), rgba(170,215,255,.55)); border:1px solid rgba(255,255,255,.8); opacity:0; animation: bubbleRise 3.4s ease-in infinite; }
