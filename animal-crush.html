@@ -129,14 +129,26 @@ button:disabled { opacity:.55; cursor:default; }
 /* ---------- Board ---------- */
 #boardWrap { width:100%; max-width:480px; position:relative; overflow:hidden; border-radius:18px; touch-action:none; }
 
-/* Stronger wobble fix for short screens (iPhone 16 Pro): the game page is
-   taller than the viewport there, so a drag starting on a gap or the
-   leaderboard card could still slide the whole page up/down. Lock the entire
-   game screen against page scroll, let the leaderboard scroll inside its own
-   card, and shrink the board a little on short screens so everything fits. */
+/* Small-screen fix (mom's iPhone 16 Pro): the game page is taller than the
+   viewport there, so a drag starting on a gap or the leaderboard card could
+   still slide the whole page up/down. Lock the entire game screen against
+   page scroll and let the leaderboard scroll inside its own card. The board
+   stays FULL width (big tiles for mom) — instead the HUD is made compact on
+   narrow screens (below), which frees the vertical room the page needs. */
 #gameScreen { touch-action:none; }
 #gameLb { max-height:170px; overflow-y:auto; touch-action:pan-y; overscroll-behavior:contain; }
-@media (max-height:850px) { #boardWrap { max-width:340px; margin:0 auto; } }
+
+/* Compact HUD on narrow phones (iPhone 16 Pro): smaller padding/fonts/buttons
+   so the HUD fits fully and leaves room for the full-size board. */
+@media (max-width:430px) {
+  #hud { padding:10px 12px 12px; gap:5px; border-radius:18px; }
+  .hud-stat { font-size:14px; }
+  .hud-stat b { font-size:19px; }
+  .hud-row { gap:6px; }
+  .icon-btn { padding:4px 8px; font-size:13px; min-width:34px; }
+  .progress { height:11px; }
+  .perk-line { font-size:.85rem; padding:3px 10px; margin-top:4px; }
+}
 #board {
   position:relative; width:100%; aspect-ratio: 1 / 1;
   background: linear-gradient(135deg, rgba(255,107,157,.85), rgba(255,165,2,.85), rgba(46,213,115,.85), rgba(30,144,255,.85));
