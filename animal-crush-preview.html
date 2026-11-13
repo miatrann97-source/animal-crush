@@ -3278,7 +3278,15 @@ function showStoryViewer() {
   ov.classList.remove("hidden");
   close.onclick = function() { ov.classList.add("hidden"); };
 }
+function storySeenAny() {
+  try { var s = JSON.parse(__previewStore.getItem("ac_story_seen") || "[]"); return s.length > 0; } catch (e) { return false; }
+}
 function maybeShowStory(level, proceed) {
+  /* First time ever (no chapter seen yet): start at the beginning —
+     Chapter 1 — no matter which level the player is on, so the story
+     is never skipped by old save progress. After that, chapters show
+     at their own levels; missed ones stay readable via the 📖 button. */
+  if (!storySeenAny()) { showStoryCard(1, proceed); return; }
   if (!STORY[level] || storySeen(level)) { proceed(); return; }
   showStoryCard(level, proceed);
 }
