@@ -598,6 +598,7 @@ input[type=text]:focus { border-color:#ff5c8a; }
 </head>
 <body>
 <audio id="applauseAudio" src="applause.mp3" preload="auto"></audio>
+<audio id="glassAudio" src="glass-break.mp3" preload="auto"></audio>
 <div id="bgDecor" aria-hidden="true"></div>
 <div class="screen" id="startScreen">
   <svg class="rainbow-arc" width="120" height="34" viewBox="0 0 120 34"><path d="M6 32 A54 54 0 0 1 114 32" fill="none" stroke="#ff2d55" stroke-width="5" stroke-linecap="round"/><path d="M14 32 A46 46 0 0 1 106 32" fill="none" stroke="#ff9500" stroke-width="5" stroke-linecap="round"/><path d="M22 32 A38 38 0 0 1 98 32" fill="none" stroke="#ffe600" stroke-width="5" stroke-linecap="round"/><path d="M30 32 A30 30 0 0 1 90 32" fill="none" stroke="#2ed573" stroke-width="5" stroke-linecap="round"/><path d="M38 32 A22 22 0 0 1 82 32" fill="none" stroke="#00b4ff" stroke-width="5" stroke-linecap="round"/></svg>
@@ -814,6 +815,7 @@ var AudioEng = (function() {
   var ctx = null, master = null, musicGain = null, sfxGain = null;
   var applauseBuf = null, applauseArrayBuf = null, applauseLoading = false;
   var applauseSrc = null, applauseGainNode = null;
+  var glassBuf = null, glassArrayBuf = null, glassLoading = false;
   var musicOn = localStorage.getItem("animalCrushMusic") !== "off";
   var musicTimer = null, step = 0, nextTime = 0;
   var lastThunder = -10; /* time of the last thunder strike: rapid re-fires only crack, no rumble pile-up */
@@ -874,6 +876,19 @@ var AudioEng = (function() {
   function decodeApplause() {
     if (!ctx || !applauseArrayBuf || applauseBuf) return;
     ctx.decodeAudioData(applauseArrayBuf, function(buf){ applauseBuf = buf; }, function(){});
+  }
+  /* Minecraft glass break (cut from An's TikTok video): fetch + decode like
+     applause, so it plays reliably on iOS through sfxGain. */
+  function fetchGlass() {
+    if (glassLoading || glassBuf || glassArrayBuf) return;
+    glassLoading = true;
+    fetch("glass-break.mp3").then(function(r){ if (!r.ok) throw new Error("glass fetch failed"); return r.arrayBuffer(); })
+      .then(function(ab){ glassArrayBuf = ab; decodeGlass(); })
+      .catch(function(){ glassLoading = false; });
+  }
+  function decodeGlass() {
+    if (!ctx || !glassArrayBuf || glassBuf) return;
+    ctx.decodeAudioData(glassArrayBuf, function(buf){ glassBuf = buf; }, function(){});
   }
   function stopApplauseImmediate() {
     if (applauseSrc) { try { applauseSrc.stop(); } catch (e) {} applauseSrc = null; }
@@ -940,6 +955,7 @@ var AudioEng = (function() {
     }
   }
   fetchApplause(); /* start downloading the applause recording on page load */
+  fetchGlass(); /* start downloading the glass break sound on page load */
   return {
     unlock: function() { ensure(); },
     startMusic: function() {
@@ -1042,6 +1058,19 @@ var AudioEng = (function() {
           /* buffer not ready yet: fall back to the audio element */
           var a = document.getElementById("applauseAudio");
           if (a) { a.currentTime = 0; a.volume = 0.9; a.play().catch(function(){}); }
+        }
+      }
+      else if (name === "glass") { /* Minecraft glass break (cut from An's TikTok video): one shatter as the tiles fall out */
+        if (!musicOn) return; /* respects the mute toggle */
+        if (glassBuf) {
+          var gsrc = ctx.createBufferSource(); gsrc.buffer = glassBuf;
+          var gg = ctx.createGain(); gg.gain.value = 1.0;
+          gsrc.connect(gg); gg.connect(sfxGain);
+          gsrc.start(now);
+        } else {
+          /* buffer not ready yet: fall back to the audio element */
+          var ga = document.getElementById("glassAudio");
+          if (ga) { ga.currentTime = 0; ga.volume = 0.9; ga.play().catch(function(){}); }
         }
       }
       else if (name === "icePour") { /* ice cubes pouring into a glass at level start (Mẫu A approved): bright ringing clinks, one per tile, + trickling water underneath */
@@ -3075,6 +3104,27 @@ function startLevel(level) {
   updateTimerDisplay();
   playIceDrop();
 }
+/* Win drop: when a level is cleared, EVERY tile falls all the way down
+   and out of the board (to row ROWS+2, fully below the frame, clipped away
+   by overflow:hidden), so the board ends up empty. Delay grows upward
+   (bottom row first, top last) plus a tiny random jitter, so it drains
+   like a wave. Ease-in (accelerating, like real gravity). One Minecraft
+   glass break shatter as everything falls. The next level rebuilds the
+   board, so nothing persists. */
+function dropTilesAtWin() {
+  AudioEng.sfx("glass"); /* one shatter as the tiles fall out */
+  for (var r = 0; r < ROWS; r++) {
+    for (var c = 0; c < COLS; c++) {
+      var el = tileEl(r, c);
+      if (!el) continue;
+      var dist = (ROWS + 2) - r; /* fall all the way out below the board */
+      var dur = 0.4 + dist * 0.05;
+      var delay = (ROWS - 1 - r) * 0.06 + Math.random() * 0.05;
+      el.style.transition = "transform " + dur + "s cubic-bezier(.45,.05,.75,.4) " + delay + "s";
+      positionEl(el, ROWS + 2, c);
+    }
+  }
+}
 function endLevel(won) {
   state.over = true;
   stopTimer();
@@ -3085,6 +3135,7 @@ function endLevel(won) {
     localStorage.setItem("animalCrushBest", String(state.best));
   }
   if (won) {
+    dropTilesAtWin(); /* tiles fall all the way out + glass shatter */
     celebrateWin();
     AudioEng.sfx("applause"); /* clapping when a level is cleared */
     if (state.level >= state.maxLevel) {
