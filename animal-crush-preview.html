@@ -78,7 +78,7 @@ button:disabled { opacity:.55; cursor:default; }
 
 /* ---------- Start screen ---------- */
 #startScreen { text-align:center; }
-/* v31.4: tay bé vung như bơi thật trên màn hình mở đầu (tay tách lớp riêng, quay quanh vai 0->30->-6deg; thân + tay giữ nguyên nét vẽ Flappy).
+/* v31.5: thân uốn sóng kiểu puppet-pin trên màn hình mở đầu (đầu/thân/đuôi xoay lệch pha thành sóng, đuôi vẫy mạnh nhất; tay vẫn quạt như v31.4).
    CSS-only: 1 phần tử chạy left + bob bằng transform, bong bóng bay lên.
    Lane nằm trong #startScreen nên tự ẩn khi vào game. */
 #swimLane { position:relative; width:100%; height:96px; overflow:hidden; }
@@ -87,6 +87,12 @@ button:disabled { opacity:.55; cursor:default; }
 .swimChar img { position:absolute; left:0; top:0; width:116px; height:auto; display:block; }
 .swimArm { transform-origin:44.3% 67.5%; animation: armStroke 1.5s ease-in-out infinite; }
 @keyframes armStroke { 0% { transform:rotate(0deg); } 45% { transform:rotate(30deg); } 70% { transform:rotate(-6deg); } 100% { transform:rotate(0deg); } }
+.swimHead { transform-origin:61% 62%; animation: waveHead 1.5s ease-in-out infinite; }
+.swimTorso { transform-origin:44% 72%; animation: waveTorso 1.5s ease-in-out infinite; }
+.swimTail { transform-origin:26% 58%; animation: waveTail 1.5s ease-in-out infinite; }
+@keyframes waveHead { 0% { transform:rotate(0deg); } 25% { transform:rotate(3deg); } 50% { transform:rotate(0deg); } 75% { transform:rotate(-3deg); } 100% { transform:rotate(0deg); } }
+@keyframes waveTorso { 0% { transform:rotate(-1.7deg); } 25% { transform:rotate(1deg); } 50% { transform:rotate(1.7deg); } 75% { transform:rotate(-1deg); } 100% { transform:rotate(-1.7deg); } }
+@keyframes waveTail { 0% { transform:rotate(-6deg); } 25% { transform:rotate(-3.5deg); } 50% { transform:rotate(6deg); } 75% { transform:rotate(3.5deg); } 100% { transform:rotate(-6deg); } }
 @keyframes swimX { 0% { left:-30%; transform: scaleX(1); } 46% { left:100%; transform: scaleX(1); } 50% { left:100%; transform: scaleX(-1); } 96% { left:-30%; transform: scaleX(-1); } 100% { left:-30%; transform: scaleX(1); } }
 @keyframes swimBob { from { transform: translateY(-3px) rotate(-4deg); } to { transform: translateY(4px) rotate(4deg); } }
 .swim-bubble { position:absolute; bottom:4px; width:12px; height:12px; border-radius:50%; background: radial-gradient(circle at 35% 35%, rgba(255,255,255,.95), rgba(170,215,255,.55)); border:1px solid rgba(255,255,255,.8); opacity:0; animation: bubbleRise 3.4s ease-in infinite; }
@@ -761,7 +767,7 @@ input[type=text]:focus { border-color:#ff5c8a; }
   <svg class="rainbow-arc" width="120" height="34" viewBox="0 0 120 34"><path d="M6 32 A54 54 0 0 1 114 32" fill="none" stroke="#ff2d55" stroke-width="5" stroke-linecap="round"/><path d="M14 32 A46 46 0 0 1 106 32" fill="none" stroke="#ff9500" stroke-width="5" stroke-linecap="round"/><path d="M22 32 A38 38 0 0 1 98 32" fill="none" stroke="#ffe600" stroke-width="5" stroke-linecap="round"/><path d="M30 32 A30 30 0 0 1 90 32" fill="none" stroke="#2ed573" stroke-width="5" stroke-linecap="round"/><path d="M38 32 A22 22 0 0 1 82 32" fill="none" stroke="#00b4ff" stroke-width="5" stroke-linecap="round"/></svg>
   <h1>Animal Crush</h1>
   <div id="swimLane" aria-hidden="true">
-    <div id="swimShark"><div class="swimChar"><img class="swimBody" src="https://miatrann97-source.github.io/animal-crush/tiles/shark-girl-swim-body.png" alt=""><img class="swimArm" src="https://miatrann97-source.github.io/animal-crush/tiles/shark-girl-swim-arm.png" alt=""></div></div>
+    <div id="swimShark"><div class="swimChar"><img class="swimTail" src="https://miatrann97-source.github.io/animal-crush/tiles/shark-girl-swim-tail.png" alt=""><img class="swimTorso" src="https://miatrann97-source.github.io/animal-crush/tiles/shark-girl-swim-torso.png" alt=""><img class="swimHead" src="https://miatrann97-source.github.io/animal-crush/tiles/shark-girl-swim-head.png" alt=""><img class="swimArm" src="https://miatrann97-source.github.io/animal-crush/tiles/shark-girl-swim-arm.png" alt=""></div></div>
     <span class="swim-bubble sb1"></span>
     <span class="swim-bubble sb2"></span>
     <span class="swim-bubble sb3"></span>
