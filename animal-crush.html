@@ -3116,8 +3116,27 @@ function syncMusicBtns() {
   document.getElementById("musicBtn").textContent = icon;
   document.getElementById("musicBtnStart").textContent = icon;
 }
-document.getElementById("musicBtn").addEventListener("click", function() { AudioEng.unlock(); AudioEng.toggleMusic(); syncMusicBtns(); });
-document.getElementById("musicBtnStart").addEventListener("click", function() { AudioEng.unlock(); AudioEng.toggleMusic(); syncMusicBtns(); });
+/* The speaker button should START the music when tapped on the start screen,
+   not mute it: on a fresh page the first tap anywhere starts the music via the
+   document pointerdown listener, so a plain toggle here would instantly mute
+   the song An just started. Record whether music was already playing before
+   this tap (the button's pointerdown fires before the document one). */
+var musicWasStartedBeforeTap = false;
+function recordMusicStateBeforeTap() { musicWasStartedBeforeTap = musicStarted; }
+function speakerClick() {
+  AudioEng.unlock();
+  if (!musicWasStartedBeforeTap) {
+    /* This tap just started the music: keep it ON. */
+    if (!AudioEng.isMusicOn()) AudioEng.toggleMusic();
+  } else {
+    AudioEng.toggleMusic();
+  }
+  syncMusicBtns();
+}
+document.getElementById("musicBtn").addEventListener("pointerdown", recordMusicStateBeforeTap);
+document.getElementById("musicBtn").addEventListener("click", speakerClick);
+document.getElementById("musicBtnStart").addEventListener("pointerdown", recordMusicStateBeforeTap);
+document.getElementById("musicBtnStart").addEventListener("click", speakerClick);
 document.getElementById("homeBtn").addEventListener("click", function() {
   state.over = true;
   stopTimer();
