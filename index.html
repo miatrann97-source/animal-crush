@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Game của An 🦈</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: "Baloo 2", "Segoe UI", system-ui, -apple-system, sans-serif;
+    background: linear-gradient(180deg, #bfe8ff 0%, #e6f7ff 45%, #fff6e0 100%);
+    min-height: 100vh; padding: 32px 16px 48px; color: #22405a;
+  }
+  .wrap { max-width: 720px; margin: 0 auto; text-align: center; }
+  h1 { font-size: 2.2rem; margin-bottom: 6px; }
+  h1 span { display: inline-block; animation: bob 2.4s ease-in-out infinite; }
+  @keyframes bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+  .sub { font-size: 1.05rem; opacity: .85; margin-bottom: 28px; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 560px) { .grid { grid-template-columns: 1fr; } h1 { font-size: 1.8rem; } }
+  .card {
+    display: block; text-decoration: none; color: #22405a;
+    background: #fff; border-radius: 22px; padding: 26px 18px 22px;
+    box-shadow: 0 8px 24px rgba(34, 64, 90, .14);
+    border: 3px solid transparent;
+    transition: transform .15s ease, border-color .15s ease, box-shadow .15s ease;
+  }
+  .card:hover, .card:active { transform: translateY(-4px) scale(1.02); border-color: #7ec8f7; box-shadow: 0 14px 30px rgba(34, 64, 90, .2); }
+  .emoji { font-size: 3rem; display: block; margin-bottom: 10px; }
+  .name { font-size: 1.25rem; font-weight: 800; margin-bottom: 6px; }
+  .desc { font-size: .95rem; opacity: .8; line-height: 1.45; margin-bottom: 14px; }
+  .play {
+    display: inline-block; background: linear-gradient(135deg, #4db2ff, #2b8fe3);
+    color: #fff; font-weight: 800; padding: 10px 26px; border-radius: 999px;
+    font-size: 1rem; box-shadow: 0 4px 12px rgba(43, 143, 227, .4);
+  }
+  .foot { margin-top: 30px; font-size: .9rem; opacity: .7; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1><span>🦈</span> Game của An <span>🦈</span></h1>
+  <p class="sub">Bấm vào game nào là chơi game đó liền nha!</p>
+  <div class="grid">
+    <a class="card" href="https://miatrann97-source.github.io/animal-crush/animal-crush.html?v=dc59dea" target="_blank" rel="noopener">
+      <span class="emoji">🦈</span>
+      <div class="name">Animal Crush</div>
+      <div class="desc">Xếp 3 bạn thú giống nhau để nổ tung! Càng xếp càng nhiều điểm.</div>
+      <span class="play">Chơi ngay ▶</span>
+    </a>
+    <a class="card" href="https://miatrann97-source.github.io/flappy-fish/flappy-fish.html" target="_blank" rel="noopener">
+      <span class="emoji">🐟</span>
+      <div class="name">Flappy Fish</div>
+      <div class="desc">Bé cá né cột chai nhựa, bay càng xa càng cao điểm!</div>
+      <span class="play">Chơi ngay ▶</span>
+    </a>
+    <a class="card" href="https://miatrann97-source.github.io/jumpingfish/be-ca-leo-thap.html" target="_blank" rel="noopener">
+      <span class="emoji">🗼</span>
+      <div class="name">Bé Cá Leo Tháp</div>
+      <div class="desc">Bé cá leo tháp cầu vồng lên cao mãi, đừng để rơi nha!</div>
+      <span class="play">Chơi ngay ▶</span>
+    </a>
+    <a class="card" href="https://miatrann97-source.github.io/quan-an-viet-nam/game-ban-do-an-viet-nam.html" target="_blank" rel="noopener">
+      <span class="emoji">🍜</span>
+      <div class="name">Quán Ăn Việt Nam</div>
+      <div class="desc">Quản lý quán ăn Việt, nấu món ngon phục vụ khách!</div>
+      <span class="play">Chơi ngay ▶</span>
+    </a>
+  </div>
+  <p class="foot">Made with 💙 by An &amp; Bom</p>
+</div>
+</body>
+</html>
