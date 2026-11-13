@@ -128,6 +128,15 @@ button:disabled { opacity:.55; cursor:default; }
 
 /* ---------- Board ---------- */
 #boardWrap { width:100%; max-width:480px; position:relative; overflow:hidden; border-radius:18px; touch-action:none; }
+
+/* Stronger wobble fix for short screens (iPhone 16 Pro): the game page is
+   taller than the viewport there, so a drag starting on a gap or the
+   leaderboard card could still slide the whole page up/down. Lock the entire
+   game screen against page scroll, let the leaderboard scroll inside its own
+   card, and shrink the board a little on short screens so everything fits. */
+#gameScreen { touch-action:none; }
+#gameLb { max-height:170px; overflow-y:auto; touch-action:pan-y; overscroll-behavior:contain; }
+@media (max-height:850px) { #boardWrap { max-width:340px; margin:0 auto; } }
 #board {
   position:relative; width:100%; aspect-ratio: 1 / 1;
   background: linear-gradient(135deg, rgba(255,107,157,.85), rgba(255,165,2,.85), rgba(46,213,115,.85), rgba(30,144,255,.85));
