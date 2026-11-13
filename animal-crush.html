@@ -123,6 +123,7 @@ button:disabled { opacity:.55; cursor:default; }
 #hud .icon-btn.blue { border-color: #00b4ff; }
 #hud .icon-btn.green { border-color: #2ed573; }
 .progress { height:14px; background:#f0e6da; border-radius:999px; overflow:hidden; border: 2px solid #ffd23f; }
+.perk-line { margin-top:6px; font-size:.92rem; font-weight:700; color:#b3541e; background:#fff3d6; border:2px dashed #ffbf47; border-radius:999px; padding:4px 12px; display:inline-block; }
 #progressFill { height:100%; width:0%; background: linear-gradient(90deg, #ff2d55, #ff9500, #ffe600, #2ed573, #00d2ff, #7b5cff); border-radius:999px; transition: width .3s ease; }
 
 /* ---------- Board ---------- */
@@ -639,6 +640,7 @@ input[type=text]:focus { border-color:#ff5c8a; }
       <div class="hud-stat"><span id="lblTime"></span> <b id="timeNum">7:00</b></div>
     </div>
     <div class="progress"><div id="progressFill"></div></div>
+    <div class="perk-line" id="perkLine"></div>
   </div>
   <div id="boardWrap">
     <div id="board"></div>
@@ -752,6 +754,8 @@ var STR = {
     praise2: "Siêu quá!", praise3: "Đỉnh quá!", praise4: "Tuyệt vời!", praise5: "Thần thánh!",
     great: "Tuyệt vời!",
     amazing: "Siêu đỉnh!",
+    perkGift: "🎁 Quà màn", perkMoves: "+10 lượt", perkBomb: "1 bom sói", perkDouble: "Điểm x2",
+    perkNext3: "Lên màn 3 nhận +10 lượt!", perkNext5: "Lên màn 5 nhận 1 bom sói!", perkNext8: "Lên màn 8 nhận Điểm x2!",
     levelUp: "Lên màn mới, khó hơn rồi đó!",
     visits: "Đã có {n} người chơi",
     scoreSaved: "Đã lưu",
@@ -795,6 +799,8 @@ var STR = {
     praise2: "Super!", praise3: "Awesome!", praise4: "Delicious!", praise5: "Divine!",
     great: "Great!",
     amazing: "Amazing!",
+    perkGift: "🎁 Level gifts", perkMoves: "+10 moves", perkBomb: "1 wolf bomb", perkDouble: "2x points",
+    perkNext3: "Reach level 3 for +10 moves!", perkNext5: "Reach level 5 for 1 wolf bomb!", perkNext8: "Reach level 8 for 2x points!",
     levelUp: "New level, harder now!",
     visits: "{n} players so far",
     scoreSaved: "Saved",
@@ -1141,6 +1147,17 @@ function levelConfig(level) {
   var target = Math.round((12000 + (level - 1) * 4000 + r * 2000) / 100) * 100;
   return { target: target, moves: Math.max(55, 90 - (level - 1) * 3) };
 }
+/* Level perks (qua theo man): the higher the level, the more help you get,
+   so older players and kids can keep playing as the game gets harder.
+   L3+: +10 moves. L5+: 1 free wolf bomb at level start. L8+: 2x points. */
+function levelPerks(level) {
+  return {
+    movesBonus: level >= 3 ? 10 : 0,
+    freeBomb: level >= 5,
+    scoreMult: level >= 8 ? 2 : 1
+  };
+}
+
 var state = {
   board: [],       /* board[r][c] = tile {id, type, special} or null */
   level: parseInt(localStorage.getItem("animalCrushLevel") || "1", 10) || 1,
@@ -1148,6 +1165,7 @@ var state = {
   score: 0,
   moves: 0,
   target: 1000,
+  scoreMult: 1, /* level perk: 2x points from level 8 */
   timeLeft: 420,   /* 7 minutes per level, always */
   best: parseInt(localStorage.getItem("animalCrushBest") || "0", 10) || 0,
   busy: false,
@@ -1435,6 +1453,7 @@ async function resolveBoard(swapPos) {
     var extraCells = Object.keys(expanded.cells).filter(function(k) { return !clearCells.some(function(cc){ return cc[0] + "," + cc[1] === k; }); });
     stepScore += extraCells.length * 60;
     stepScore *= mult;
+    stepScore *= state.scoreMult; /* L8+: 2x points */
     total += stepScore;
     state.score += stepScore;
     updateHUD();
@@ -1568,7 +1587,7 @@ async function resolveBoard(swapPos) {
         }
       });
       if (second.length) {
-        var s2 = second.length * 60 * mult;
+        var s2 = second.length * 60 * mult * state.scoreMult; /* L8+: 2x points */
         total += s2; state.score += s2; updateHUD();
         showFloatScore(s2, second);
         AudioEng.sfx("wrapped");
@@ -1679,7 +1698,7 @@ async function doRainbowSwap(r1, c1, r2, c2) {
   }
   var uniq = {}, list = [];
   clearCells.forEach(function(cell) { var k = cell[0] + "," + cell[1]; if (!uniq[k]) { uniq[k] = true; list.push(cell); } });
-  var pts = list.length * 60;
+  var pts = list.length * 60 * state.scoreMult; /* L8+: 2x points */
   state.score += pts; updateHUD();
   showFloatScore(pts, list);
   AudioEng.sfx("rainbow");
@@ -1842,7 +1861,7 @@ async function detonateBomb(target, from) {
     if (tl && tl.type === type) addCell(r, c);
   }
   addCell(from[0], from[1]); /* the bomb itself is consumed */
-  var pts = list.length * 60; /* 60 per cleared tile, no flat bonus */
+  var pts = list.length * 60 * state.scoreMult; /* L8+: 2x points, 60 per cleared tile, no flat bonus */
   state.score += pts;
   updateHUD();
   showFloatScore(pts, list);
@@ -2817,6 +2836,26 @@ function showToast(msg) {
   clearTimeout(toastTimer);
   toastTimer = setTimeout(function() { toast.classList.remove("show"); }, 1600);
 }
+/* Perk line: shows the active level gifts under the HUD, or the next
+   unlock to look forward to. */
+function updatePerkLine() {
+  var el = document.getElementById("perkLine");
+  if (!el) return;
+  var perks = levelPerks(state.level);
+  var parts = [];
+  if (perks.movesBonus) parts.push(t("perkMoves"));
+  if (perks.freeBomb) parts.push(t("perkBomb"));
+  if (perks.scoreMult > 1) parts.push(t("perkDouble"));
+  if (parts.length) {
+    el.textContent = t("perkGift") + " " + state.level + ": " + parts.join(" • ");
+  } else if (state.level < 3) {
+    el.textContent = t("perkNext3");
+  } else if (state.level < 5) {
+    el.textContent = t("perkNext5");
+  } else {
+    el.textContent = t("perkNext8");
+  }
+}
 function updateHUD() {
   document.getElementById("levelNum").textContent = state.level;
   document.getElementById("scoreNum").textContent = state.score;
@@ -3005,16 +3044,23 @@ function startLevel(level) {
   state.level = level;
   var cfg = levelConfig(level);
   state.target = cfg.target;
-  state.moves = cfg.moves;
+  var perks = levelPerks(level);
+  state.moves = cfg.moves + perks.movesBonus; /* L3+: +10 moves */
+  state.scoreMult = perks.scoreMult; /* L8+: 2x points */
   state.score = 0;
   state.over = false;
   state.busy = false;
   state.selected = null;
   state.board = createBoard();
+  if (perks.freeBomb) { /* L5+: 1 free wolf bomb at level start */
+    var br = Math.floor(Math.random() * ROWS), bc = Math.floor(Math.random() * COLS);
+    state.board[br][bc] = makeTile("bomb");
+  }
   boardEl.innerHTML = "";
   elsById = {};
   renderBoard(true);
   updateHUD();
+  updatePerkLine();
   document.getElementById("startScreen").classList.add("hidden");
   document.getElementById("endScreen").classList.add("hidden");
   stopBoings();
@@ -3230,8 +3276,8 @@ function setLang(l) {
   localStorage.setItem("animalCrushLang", l);
   applyLang();
 }
-document.getElementById("langBtn").addEventListener("click", function() { setLang(LANG === "vi" ? "en" : "vi"); });
-document.getElementById("langBtnStart").addEventListener("click", function() { setLang(LANG === "vi" ? "en" : "vi"); });
+document.getElementById("langBtn").addEventListener("click", function() { setLang(LANG === "vi" ? "en" : "vi"); updatePerkLine(); });
+document.getElementById("langBtnStart").addEventListener("click", function() { setLang(LANG === "vi" ? "en" : "vi"); updatePerkLine(); });
 function syncMusicBtns() {
   var icon = AudioEng.isMusicOn() ? "🔊" : "🔇";
   document.getElementById("musicBtn").textContent = icon;
