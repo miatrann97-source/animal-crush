@@ -551,6 +551,38 @@ button:disabled { opacity:.55; cursor:default; }
   75% { transform: translate(-50%,-50%) scale(1.08) rotate(1deg); opacity:1; }
   100% { transform: translate(-50%,-58%) scale(1) rotate(0deg); opacity:0; }
 }
+
+/* Cascade celebration: Animal Parade + Bubble Party (Bom's pick 2026-11-12).
+   Fires on cascade >= 3, alongside the praise word. One at a time: a new
+   chain while one is showing does not restart it. */
+function showCascadeCelebration(cascade) {
+  var layer = fxLayer(); if (!layer) return;
+  if (layer.querySelector(".cascade-celebration")) return;
+  var wrap = document.createElement("div");
+  wrap.className = "cascade-celebration";
+  var parade = document.createElement("div");
+  parade.className = "cascade-parade";
+  ANIMALS.forEach(function(name, i) {
+    var img = document.createElement("img");
+    img.src = IMG[name]; img.alt = name;
+    img.style.animationDelay = (i * 0.1) + "s";
+    parade.appendChild(img);
+  });
+  wrap.appendChild(parade);
+  for (var b = 0; b < FX_BUBBLES; b++) {
+    var bub = document.createElement("div");
+    bub.className = "cascade-bubble";
+    var size = 14 + Math.floor(Math.random() * 22);
+    bub.style.width = size + "px"; bub.style.height = size + "px";
+    bub.style.left = (4 + Math.random() * 88) + "%";
+    bub.style.animationDelay = (Math.random() * 0.8) + "s";
+    bub.style.animationDuration = (2 + Math.random() * 0.8) + "s";
+    wrap.appendChild(bub);
+  }
+  layer.appendChild(wrap);
+  setTimeout(function() { if (wrap.parentNode) wrap.parentNode.removeChild(wrap); }, 3000);
+}
+
 /* Expanding shockwave ring from a match (Candy Crush pop ring) */
 .fx-ring {
   position:absolute; z-index:26; pointer-events:none; border-radius:50%;
@@ -686,6 +718,16 @@ input[type=text]:focus { border-color:#ff5c8a; }
   .progress { height:7px; }
   .back-btn-big { width:56px; height:56px; font-size:32px; }
 }
+
+/* Cascade celebration: Animal Parade + Bubble Party (Bom's pick, An
+   approved any choice 2026-11-12). Fires on cascade >= 3. Overlay on
+   #fxLayer, pointer-events none, no screen shake, transform-only. */
+.cascade-celebration { position:absolute; inset:0; pointer-events:none; }
+.cascade-parade { position:absolute; left:0; right:0; bottom:5%; display:flex; justify-content:center; gap:4px; pointer-events:none; }
+.cascade-parade img { width:13%; max-width:60px; aspect-ratio:1; object-fit:contain; animation:paradeBounce .9s ease-in-out infinite; }
+@keyframes paradeBounce { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-14px); } }
+.cascade-bubble { position:absolute; bottom:-24px; border-radius:50%; background:radial-gradient(circle at 32% 30%, rgba(255,255,255,.95), rgba(255,255,255,.25) 55%, rgba(180,220,255,.5)); border:1px solid rgba(255,255,255,.8); pointer-events:none; animation:bubbleRise 2.4s linear forwards; }
+@keyframes bubbleRise { from { transform:translateY(0) scale(1); opacity:0; } 12% { opacity:1; } to { transform:translateY(-520px) scale(1.15); opacity:0; } }
 </style>
 </head>
 <body>
@@ -803,6 +845,19 @@ var IMG = {
   wolf: "tiles/wolf.png"
 };
 var ANIMALS = ["shark","otter","rabbit","mouse","jellyfish","fox"];
+/* Performance tiers (smoothest possible on every device/browser):
+   0 = phone (max perf), 1 = tablet (medium), 2 = desktop (full).
+   Fewer particles + less glow on small screens; batched reflows
+   everywhere. Helps Safari/Chrome/Edge alike: fewer DOM nodes, no
+   blur shadows while animating, one layout pass per refill. */
+var IS_PHONE = (window.matchMedia && window.matchMedia("(max-width: 599px)").matches) || false;
+var IS_TABLET = (window.matchMedia && window.matchMedia("(min-width: 600px) and (max-width: 1024px)").matches) || false;
+var QUALITY = IS_PHONE ? 0 : (IS_TABLET ? 1 : 2);
+var MAX_LIVE_PARTICLES = [200, 350, 650][QUALITY];
+var BURST_CAP = [80, 120, 200][QUALITY];
+var BURST_CAP_RAINBOW = [80, 120, 250][QUALITY];
+var DROPLETS_PER_CELL = [1, 2, 3][QUALITY];
+var FX_BUBBLES = [5, 6, 8][QUALITY];
 </script>
 <script>
 "use strict";
@@ -1581,7 +1636,7 @@ async function resolveBoard(swapPos) {
     showFloatScore(stepScore, clearCells);
     /* Play effects: Candy Crush bubble pop (pitch climbs with the cascade) + praise word + jingle on chained cascades */
     AudioEng.sfx("candyPop", { cascade: cascade });
-    if (cascade >= 2) { showPraiseText(cascade); AudioEng.sfx("praiseJingle", { cascade: cascade }); }
+    if (cascade >= 2) { showPraiseText(cascade); AudioEng.sfx("praiseJingle", { cascade: cascade }); if (cascade >= 3) showCascadeCelebration(cascade); }
     if (expanded.effects.indexOf("rainbow") >= 0) AudioEng.sfx("rainbow");
     else if (expanded.effects.indexOf("wrapped") >= 0) AudioEng.sfx("wrapped");
     else if (expanded.effects.indexOf("striped") >= 0) AudioEng.sfx("striped");
@@ -1655,7 +1710,7 @@ async function resolveBoard(swapPos) {
       await giantHeadBoom(giantType, giantRun.cells);
     }
     /* Cells cleared by special effects burst in their own tile colors too */
-    if (extraCells.length) burstCells(extraCells.map(function(k){ return k.split(",").map(Number); }), 10, 200);
+    if (extraCells.length) burstCells(extraCells.map(function(k){ return k.split(",").map(Number); }), 10, BURST_CAP);
     /* Striped beams sweep their row/column; rainbow lightning arcs to its targets.
        Per-tile numbers use the real points for that tile (its run rate, else 60). */
     var tilePts = {};
@@ -1827,7 +1882,7 @@ async function doRainbowSwap(r1, c1, r2, c2) {
   rainbowLightning(rb, list, function() { return 60; });
   bigBeam(list); /* rainbow clears are usually 8+ tiles: big bright beam */
   chainedBeams.forEach(function(bm) { stripedBeam(bm, function() { return 60; }); });
-  burstCells(list, 10, 250); /* rainbow clear bursts in each tile's own color */
+  burstCells(list, 10, BURST_CAP_RAINBOW); /* rainbow clear bursts in each tile's own color */
   list.forEach(function(cell) { var el = tileEl(cell[0], cell[1]); if (el) el.classList.add("pop"); });
   await sleep(210);
   list.forEach(function(cell) {
@@ -2115,6 +2170,7 @@ function positionEl(el, r, c) {
 function renderBoard(full) {
   /* sync DOM to model */
   var seen = {};
+  var newTiles = [];
   for (var r = 0; r < ROWS; r++) {
     for (var c = 0; c < COLS; c++) {
       var tl = state.board[r][c];
@@ -2127,12 +2183,20 @@ function renderBoard(full) {
         /* new tiles drop in from above */
         var startRow = r - (ROWS - r);
         positionEl(el, startRow, c);
-        void el.offsetWidth;
-        el.classList.add("new");
+        newTiles.push({ el: el, r: r, c: c });
+      } else {
+        positionEl(el, r, c);
       }
-      positionEl(el, r, c);
       refreshTileEl(tl, r, c);
     }
+  }
+  if (newTiles.length) {
+    /* ONE reflow for all new tiles (was one forced reflow per tile) */
+    void boardEl.offsetWidth;
+    newTiles.forEach(function(nt) {
+      nt.el.classList.add("new");
+      positionEl(nt.el, nt.r, nt.c);
+    });
   }
   Object.keys(elsById).forEach(function(id) {
     if (!seen[id]) removeTileEl(id);
@@ -2192,7 +2256,6 @@ var ANIMAL_EDGE = { shark:"#0b5fa5", otter:"#5d3a17", rabbit:"#ff9ecf", mouse:"#
 function fxLayer() { return document.getElementById("fxLayer"); }
 /* Live particle budget: keep phones smooth by never letting too many fly at once */
 var liveParticles = 0;
-var MAX_LIVE_PARTICLES = 650;
 function trackParticle(p, dur) {
   liveParticles++;
   var finished = false;
@@ -2220,7 +2283,7 @@ function spawnConfetti(layer, xPct, yPct, fill, edge) {
   p.style.width = w + "px"; p.style.height = h + "px";
   p.style.background = fill;
   p.style.border = "1px solid " + edge;
-  p.style.boxShadow = "0 0 6px " + fill;
+  if (QUALITY > 0) p.style.boxShadow = "0 0 " + (QUALITY === 1 ? 3 : 6) + "px " + fill;
   p.style.left = xPct + "%"; p.style.top = yPct + "%";
   layer.appendChild(p);
   var ang = Math.random() * Math.PI * 2;
@@ -2246,7 +2309,7 @@ function spawnDroplet(layer, xPct, yPct, fill, edge) {
   var size = 7 + Math.random() * 8;
   p.style.width = size + "px"; p.style.height = (size * 1.25) + "px";
   p.style.background = "radial-gradient(circle at 35% 30%, #ffffff 0%, " + fill + " 55%, " + edge + " 100%)";
-  p.style.boxShadow = "0 0 7px " + fill;
+  if (QUALITY > 0) p.style.boxShadow = "0 0 " + (QUALITY === 1 ? 3 : 7) + "px " + fill;
   p.style.left = xPct + "%"; p.style.top = yPct + "%";
   layer.appendChild(p);
   var ang = Math.random() * Math.PI * 2;
@@ -2272,7 +2335,7 @@ function spawnStar(layer, xPct, yPct) {
   p.style.background = "transparent";
   p.style.color = "#ffd23f";
   p.style.fontSize = (20 + Math.random() * 18) + "px";
-  p.style.textShadow = "0 0 10px #fff";
+  if (QUALITY > 0) p.style.textShadow = "0 0 " + (QUALITY === 1 ? 5 : 10) + "px #fff";
   p.style.borderRadius = "0";
   p.style.left = xPct + "%"; p.style.top = yPct + "%";
   layer.appendChild(p);
@@ -2706,7 +2769,7 @@ function bubbleBurst(cells) {
     rip.onfinish = function() { if (r.parentNode) r.parentNode.removeChild(r); };
     setTimeout(function() { if (r.parentNode) r.parentNode.removeChild(r); }, delay + 550);
     /* a few water droplets spray out as the bubble bursts */
-    for (var d = 0; d < 3; d++) spawnDroplet(layer, cx, cy, "#7dd3fc", "#ffffff");
+    for (var d = 0; d < DROPLETS_PER_CELL; d++) spawnDroplet(layer, cx, cy, "#7dd3fc", "#ffffff");
     /* soft bubble "plop", staggered with the visuals */
     AudioEng.sfx("bubble", { delay: delay / 1000 });
   });
