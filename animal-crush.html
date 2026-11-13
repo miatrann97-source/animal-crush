@@ -693,6 +693,31 @@ input[type=text]:focus { border-color:#ff5c8a; }
    the board is untouched. 10px semibold white + shadow reads over
    the green background; pointer-events:none never blocks a tile tap. */
 #devCredit { position:absolute; left:0; right:0; bottom:0.32cm; text-align:center; font-size:10px; font-weight:600; letter-spacing:.2px; color:rgba(255,255,255,.92); text-shadow:0 1px 3px rgba(0,0,0,.35); pointer-events:none; z-index:5; }
+/* v30: story chapters — full-screen card before levels 1/3/5/8.
+   z-index 60 sits above the transition overlay (55); the level timer
+   only starts after the player taps Play, so reading costs no time. */
+#storyScreen { position:fixed; inset:0; z-index:60; display:flex; align-items:center; justify-content:center; background:rgba(20,10,40,.72); padding:16px; }
+#storyScreen.hidden { display:none !important; }
+.story-card { background:#fff; border-radius:20px; max-width:460px; width:100%; max-height:82vh; overflow:auto; padding:20px 18px; text-align:center; box-shadow:0 12px 40px rgba(0,0,0,.35); }
+.story-card img.story-img { width:96px; height:96px; object-fit:contain; }
+.story-card h2 { font-size:20px; margin:6px 0 8px; color:#5b21b6; }
+.story-card p { font-size:16px; line-height:1.55; color:#444; text-align:left; margin:0 0 14px; }
+.story-card .green { font-size:18px; padding:12px 26px; }
+.story-item { display:flex; gap:10px; text-align:left; margin:12px 0; align-items:flex-start; }
+.story-item img { width:48px; height:48px; flex:0 0 auto; object-fit:contain; }
+.story-item b { font-size:15px; color:#5b21b6; }
+.story-item p { font-size:14px; margin:2px 0 0; }
+/* v30.2: small replay-from-Level-1 button under the start-screen buttons. */
+.reset-btn { background:none; border:none; color:#8a7a9e; font:inherit; font-size:.85rem; text-decoration:underline; cursor:pointer; margin-top:10px; opacity:.85; }
+/* v30.3: in-page reset confirm card (native window.confirm is swallowed
+   by automated browsers so it could never be verified — and the
+   in-game card looks better). z-index 70 sits above the story card. */
+#resetConfirm { position:fixed; inset:0; z-index:70; display:flex; align-items:center; justify-content:center; background:rgba(20,10,40,.72); padding:16px; }
+#resetConfirm.hidden { display:none !important; }
+#resetConfirmText { white-space:pre-line; }
+.btn-row { display:flex; gap:10px; justify-content:center; margin-top:6px; }
+.btn-row button { font-size:17px; padding:11px 22px; }
+
 
 /* v21 tall phones get a bigger HUD to match the taller board (per-size
    tuning: big/tall phones scale up, small/short phones stay compact).
@@ -728,7 +753,9 @@ input[type=text]:focus { border-color:#ff5c8a; }
   <div class="hud-btns">
     <button class="icon-btn" id="langBtnStart">VI | EN</button>
     <button class="icon-btn" id="musicBtnStart">🔊</button>
+    <button class="icon-btn" id="storyBtnStart">📖</button>
   </div>
+  <button class="reset-btn" id="resetBtn">↺ Chơi lại từ Màn 1</button>
 </div>
 
 <div class="screen hidden" id="gameScreen">
@@ -747,6 +774,7 @@ input[type=text]:focus { border-color:#ff5c8a; }
         <button class="icon-btn" id="langBtn">VI | EN</button>
         <button class="icon-btn blue" id="musicBtn">🔊</button>
         <button class="icon-btn green" id="homeBtn">🏠</button>
+        <button class="icon-btn" id="storyBtn" title="Đọc truyện">📖</button>
       </div>
     </div>
     <div class="hud-row">
@@ -812,7 +840,43 @@ input[type=text]:focus { border-color:#ff5c8a; }
   <div class="celeb-stars" id="celebStars"></div>
 </div>
 
+
+<div id="storyScreen" class="hidden">
+  <div class="story-card">
+    <img class="story-img" id="storyImg" src="tiles/shark.png" alt="">
+    <h2 id="storyTitle"></h2>
+    <p id="storyBody"></p>
+    <div id="storyList" class="hidden"></div>
+    <button id="storyPlayBtn" class="green"></button>
+    <button id="storyCloseBtn" class="ghost hidden"></button>
+  </div>
+</div>
+<div id="resetConfirm" class="hidden">
+  <div class="story-card">
+    <h2>↺ Chơi lại từ Màn 1?</h2>
+    <p id="resetConfirmText"></p>
+    <div class="btn-row">
+      <button id="resetConfirmYes" class="green">Chơi lại</button>
+      <button id="resetConfirmNo" class="ghost">Hủy</button>
+    </div>
+  </div>
+</div>
+
 <script>
+/* v30: ?reset=1 — An asked to start over from Level 1 (live). Clears
+   Animal Crush progress on THIS browser only (level, best, story-seen
+   flags), then strips the param so reopening the page does not reset
+   again. Runs here, before the game reads its saved level. Keeps
+   language, music and visit-counter settings. */
+(function () {
+  try {
+    if (new URLSearchParams(location.search).get("reset") !== "1") return;
+    ["animalCrushLevel", "animalCrushBest", "animalCrushMaxLevel", "ac_story_seen"].forEach(function (k) { localStorage.removeItem(k); });
+    history.replaceState(null, "", location.pathname);
+  } catch (e) {}
+})();
+
+
 "use strict";
 /* ================= Images (base64 injected at build time) ================= */
 var IMG = {
@@ -888,7 +952,9 @@ var STR = {
     levelUp: "Lên màn mới, khó hơn rồi đó!",
     visits: "Đã có {n} người chơi",
     scoreSaved: "Đã lưu",
-    rank: "Hạng"
+    rank: "Hạng",
+    storyPlay: "Chơi ngay ▶",
+    storyClose: "Đóng"
   },
   en: {
     tagline: "Match 3 same animals to pop them! The more you match, the higher your score.",
@@ -933,7 +999,9 @@ var STR = {
     levelUp: "New level, harder now!",
     visits: "{n} players so far",
     scoreSaved: "Saved",
-    rank: "Rank"
+    rank: "Rank",
+    storyPlay: "Play now ▶",
+    storyClose: "Close"
   }
 };
 function t(key) { return STR[LANG][key]; }
@@ -3128,7 +3196,7 @@ function showTransition(fromLevel) {
   transTimer = setTimeout(function() {
     stopBoings();
     ov.classList.add("hidden");
-    startLevel(next);
+    maybeShowStory(next, function() { startLevel(next); });
   }, 3900);
 }
 /* Level-start ice pour: tiles drop one by one like ice cubes into a glass
@@ -3166,6 +3234,127 @@ function playIceDrop() {
     if (!state.over && !document.getElementById("gameScreen").classList.contains("hidden")) startTimer();
   }, total + 120);
 }
+
+/* v30: story chapters — one short card before levels 1/3/5/8 (the perk
+   milestones), shown once per chapter. Timer starts only after Play. */
+var STORY = {
+  1: { img: "tiles/shark.png",
+    title: { vi: "Chương 1 — Viên Kẹo Cầu Vồng vỡ tan", en: "Chapter 1 — The Rainbow Candy shatters" },
+    body: { vi: "Đêm qua, Sói Đêm sống một mình trên núi Đen lén ôm Viên Kẹo Cầu Vồng về chơi cùng, ai dè làm rơi vỡ tan thành hàng ngàn mảnh kẹo văng khắp vương quốc. Bé Cá rủ hội bạn lên đường nhặt lại từng mảnh để ghép viên kẹo về như cũ — xếp 3 bạn thú giống nhau là nhặt được một mảnh đó!",
+      en: "Last night, the lonely Night Wolf from Black Mountain tried to carry the Rainbow Candy home for company — and dropped it! It shattered into thousands of candy pieces across the kingdom. Baby Shark and friends set off to pick up every piece — match 3 animals to collect one!" } },
+  3: { img: "tiles/otter.png",
+    title: { vi: "Chương 3 — Hồ Kẹo Dẻo", en: "Chapter 3 — Jelly Lake" },
+    body: { vi: "Cả nhóm tới Hồ Kẹo Dẻo, nơi Rái Cá làm đầu bếp. Từ màn này, bạn bè góp sức giúp Bé Cá thêm 10 lượt mỗi màn — càng đông càng vui mà!",
+      en: "The friends reach Jelly Lake, where Otter is the chef. From this level on, friends lend a hand: +10 moves every level — the more friends, the merrier!" } },
+  5: { img: "tiles/wolf.png",
+    title: { vi: "Chương 5 — Núi Sô-cô-la", en: "Chapter 5 — Chocolate Mountain" },
+    body: { vi: "Sói Đêm cuối cùng cũng chịu lộ mặt — thì ra sói chỉ cô đơn, muốn có bạn chơi cùng thôi. Bé Cá mời sói đi cùng luôn! Từ màn này, mỗi màn tặng một quả bom sói ngay từ đầu.",
+      en: "Night Wolf finally shows himself — he was never mean, just lonely and longing for friends. Baby Shark invites him along! From this level on, every level starts with a free wolf bomb." } },
+  8: { img: "tiles/jellyfish.png",
+    title: { vi: "Chương 8 — Đỉnh Cầu Vồng", en: "Chapter 8 — Rainbow Peak" },
+    body: { vi: "Viên Kẹo Cầu Vồng sắp lành lại rồi! Sức mạnh của cả nhóm nhân đôi từ màn này — điểm x2. Cố lên, cầu vồng đang chờ ở phía trước!",
+      en: "The Rainbow Candy is almost whole again! The whole team's power doubles from this level on — 2x points. Keep going, the rainbow is just ahead!" } }
+};
+var STORY_LEVELS = [1, 3, 5, 8];
+function storySeen(level) {
+  try { var s = JSON.parse(localStorage.getItem("ac_story_seen") || "[]"); return s.indexOf(level) !== -1; } catch (e) { return false; }
+}
+function storyMarkSeen(level) {
+  try { var s = JSON.parse(localStorage.getItem("ac_story_seen") || "[]"); if (s.indexOf(level) === -1) { s.push(level); localStorage.setItem("ac_story_seen", JSON.stringify(s)); } } catch (e) {}
+}
+function showStoryCard(level, onDone) {
+  var ch = STORY[level];
+  var ov = document.getElementById("storyScreen");
+  document.getElementById("storyImg").src = ch.img;
+  document.getElementById("storyTitle").textContent = ch.title[LANG];
+  document.getElementById("storyBody").textContent = ch.body[LANG];
+  document.getElementById("storyList").classList.add("hidden");
+  document.getElementById("storyImg").classList.remove("hidden");
+  document.getElementById("storyTitle").classList.remove("hidden");
+  document.getElementById("storyBody").classList.remove("hidden");
+  var play = document.getElementById("storyPlayBtn");
+  play.textContent = t("storyPlay");
+  play.classList.remove("hidden");
+  document.getElementById("storyCloseBtn").classList.add("hidden");
+  ov.classList.remove("hidden");
+  play.onclick = function() { storyMarkSeen(level); ov.classList.add("hidden"); if (onDone) onDone(); };
+}
+/* v30.1: resume the 7-minute timer after reading the story mid-level.
+   Unlike startTimer() (new level: resets to 7:00), this keeps the
+   remaining time — reading the story must not cost play time. */
+function resumeTimer() {
+  stopTimer();
+  updateTimerDisplay();
+  timerId = setInterval(function() {
+    if (state.over) return;
+    if (document.getElementById("gameScreen").classList.contains("hidden")) return;
+    if (state.timeLeft > 0) { state.timeLeft--; updateTimerDisplay(); }
+    if (state.timeLeft <= 0 && !state.busy) endLevel(false);
+  }, 1000);
+}
+function showStoryViewer() {
+  var ov = document.getElementById("storyScreen");
+  /* v30.1: opened mid-level (game screen visible) -> pause the timer
+     while reading, resume it on close. From the start screen there is
+     no running timer, so nothing to pause. */
+  var inGame = !document.getElementById("gameScreen").classList.contains("hidden");
+  if (inGame) stopTimer();
+  var list = document.getElementById("storyList");
+  var html = "";
+  for (var i = 0; i < STORY_LEVELS.length; i++) {
+    var ch = STORY[STORY_LEVELS[i]];
+    html += '<div class="story-item"><img src="' + ch.img + '" alt=""><div><b>' + ch.title[LANG] + '</b><p>' + ch.body[LANG] + '</p></div></div>';
+  }
+  list.innerHTML = html;
+  list.classList.remove("hidden");
+  document.getElementById("storyImg").classList.add("hidden");
+  document.getElementById("storyTitle").classList.add("hidden");
+  document.getElementById("storyBody").classList.add("hidden");
+  document.getElementById("storyPlayBtn").classList.add("hidden");
+  var close = document.getElementById("storyCloseBtn");
+  close.textContent = t("storyClose");
+  close.classList.remove("hidden");
+  ov.classList.remove("hidden");
+  close.onclick = function() { ov.classList.add("hidden"); if (inGame) resumeTimer(); };
+}
+function storySeenAny() {
+  try { var s = JSON.parse(localStorage.getItem("ac_story_seen") || "[]"); return s.length > 0; } catch (e) { return false; }
+}
+function maybeShowStory(level, proceed) {
+  /* First time ever (no chapter seen yet): start at the beginning —
+     Chapter 1 — no matter which level the player is on, so the story
+     is never skipped by old save progress. After that, chapters show
+     at their own levels; missed ones stay readable via the 📖 button. */
+  if (!storySeenAny()) { showStoryCard(1, proceed); return; }
+  if (!STORY[level] || storySeen(level)) { proceed(); return; }
+  showStoryCard(level, proceed);
+}
+document.getElementById("storyBtnStart").addEventListener("click", function() { AudioEng.unlock(); showStoryViewer(); });
+/* v30.1: 📖 button in the game HUD — read the story mid-level, too. */
+document.getElementById("storyBtn").addEventListener("click", function() { AudioEng.unlock(); showStoryViewer(); });
+/* v30.3: reset button on the start screen — An asked to replay from
+   Level 1. Uses an in-page confirm card (NOT window.confirm: automated
+   browsers swallow the native dialog, so it could never be verified —
+   and the in-game card looks better). Confirm erases the saved level
+   + local best on THIS device (the shared Firebase leaderboard stays). */
+document.getElementById("resetBtn").addEventListener("click", function() {
+  var lv = (typeof state !== "undefined" && state.level) || 1;
+  var best = parseInt(localStorage.getItem("animalCrushBest") || "0", 10);
+  document.getElementById("resetConfirmText").textContent =
+    "Sẽ mất Màn " + lv + " + kỷ lục " + best + " trên máy này (bảng chung còn nguyên).\n\nYou will lose Level " + lv + " + best " + best + " on this device (shared leaderboard stays).";
+  document.getElementById("resetConfirm").classList.remove("hidden");
+});
+document.getElementById("resetConfirmYes").addEventListener("click", function() {
+  ["animalCrushLevel", "animalCrushBest", "animalCrushMaxLevel", "ac_story_seen"].forEach(function(k) { localStorage.removeItem(k); });
+  location.reload();
+});
+document.getElementById("resetConfirmNo").addEventListener("click", function() {
+  document.getElementById("resetConfirm").classList.add("hidden");
+});
+document.getElementById("resetConfirm").addEventListener("click", function(e) {
+  if (e.target === this) this.classList.add("hidden");
+});
+
 function startLevel(level) {
   stopBoings();
   AudioEng.fadeApplause(0.3); /* safety net: no applause bleeding into the new level */
@@ -3478,11 +3667,11 @@ document.getElementById("hubBtnTop").addEventListener("click", function() {
 });
 document.getElementById("playBtn").addEventListener("click", function() {
   AudioEng.unlock();
-  startLevel(state.level);
+  maybeShowStory(state.level, function() { startLevel(state.level); });
 });
 document.getElementById("nextBtn").addEventListener("click", function() {
   showToast(t("levelUp"));
-  startLevel(state.level + 1);
+  maybeShowStory(state.level + 1, function() { startLevel(state.level + 1); });
 });
 document.getElementById("retryBtn").addEventListener("click", function() { startLevel(state.level); });
 document.getElementById("endHomeBtn").addEventListener("click", function() {
