@@ -663,6 +663,29 @@ input[type=text]:focus { border-color:#ff5c8a; }
   .best-line { font-size:22px; }
   .level-info { font-size:20px; }
 }
+
+/* v19 phones fill the screen: no dead space above/below the game (An
+   2026-11-12). The board stretches to fill the height left by the HUD;
+   tiles get taller and images use contain so animals are never cropped. */
+@media (max-width: 599px) {
+  #gameScreen { justify-content:flex-start; padding-bottom:12px; }
+  #boardWrap { flex:1 1 0; min-height:200px; }
+  #board { aspect-ratio:auto; height:100%; }
+  .tile img { object-fit:contain; }
+}
+
+/* v21 tall phones get a bigger HUD to match the taller board (per-size
+   tuning: big/tall phones scale up, small/short phones stay compact). */
+@media (max-width: 599px) and (min-height: 800px) {
+  #gameScreen { gap:10px; }
+  #hud { padding:8px 10px 10px; gap:4px; border-radius:20px; }
+  .hud-stat { font-size:13px; } .hud-stat b { font-size:18px; }
+  .icon-btn { padding:3px 6px; font-size:12px; min-width:30px; border-radius:13px; }
+  #hubBtn { padding:9px 14px; font-size:22px; min-width:52px; }
+  .perk-line { font-size:.78rem; padding:3px 8px; }
+  .progress { height:7px; }
+  .back-btn-big { width:56px; height:56px; font-size:32px; }
+}
 </style>
 </head>
 <body>
@@ -1589,48 +1612,12 @@ async function resolveBoard(swapPos) {
     /* Giant head zoom for 4+ matches (and L/T): that animal's head swells up, zooms
        out at the player and explodes in a huge bang. Plain 3-matches never trigger it.
        If several 4+ runs meet at once, the biggest one gets the spotlight. */
-    var giantRun = null, giantType = null;
-    found.runs.forEach(function(run) {
-      if (run.len >= 4 && (!giantRun || run.len > giantRun.len)) giantRun = run;
-    });
-    if (giantRun) {
-      var g0 = giantRun.cells[0];
-      var gtl = state.board[g0[0]] && state.board[g0[0]][g0[1]];
-      giantType = (gtl && gtl.type && gtl.type !== "rainbow") ? gtl.type : "fox";
-    } else if (found.wrapped.length) {
-      var w0 = found.wrapped[0];
-      var wtl = state.board[w0[0]] && state.board[w0[0]][w0[1]];
-      giantType = (wtl && wtl.type && wtl.type !== "rainbow") ? wtl.type : "fox";
-      giantRun = { cells: [w0] };
-    }
-    if (giantRun) {
-      /* 4-5 thunder bolts strike down from the sky onto the matched tiles,
-         together with the giant head moment. For a 4/5-match the bolts hit
-         every tile of the run; for an L/T they hit the whole L/T shape.
-         Plain 3-matches never get them. */
-      var thunderCells = [];
-      if (giantRun.cells.length > 1) {
-        thunderCells = giantRun.cells.slice();
-      } else {
-        var wkeys = {};
-        found.wrapped.forEach(function(w) { wkeys[w[0] + "," + w[1]] = true; });
-        var seen = {};
-        found.runs.forEach(function(run) {
-          var touches = false;
-          run.cells.forEach(function(cell) { if (wkeys[cell[0] + "," + cell[1]]) touches = true; });
-          if (touches) run.cells.forEach(function(cell) {
-            var k = cell[0] + "," + cell[1];
-            if (!seen[k]) { seen[k] = true; thunderCells.push(cell); }
-          });
-        });
-        found.wrapped.forEach(function(w) {
-          var k = w[0] + "," + w[1];
-          if (!seen[k]) { seen[k] = true; thunderCells.push(w); }
-        });
-      }
-      thunderStrikes(thunderCells);
-      await giantHeadBoom(giantType, giantRun.cells);
-    }
+/* v25: 4+ giant effect REMOVED (2026-11-13): An asked to try the tall board
+     WITHOUT the special effect on 4+ matches. The whole giant-head +
+     thunder sequence is removed here, so a 4+ match just clears with the
+     normal effects (confetti, bubbles, praise, chime) and still creates
+     its striped/rainbow/wrapped special. If this stays smooth, the giant
+     was the lag; if it still lags, the tall board itself is too heavy. */
     /* Cells cleared by special effects burst in their own tile colors too */
     if (extraCells.length) burstCells(extraCells.map(function(k){ return k.split(",").map(Number); }), 10, 200);
     /* Striped beams sweep their row/column; rainbow lightning arcs to its targets.
