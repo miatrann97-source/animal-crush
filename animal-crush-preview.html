@@ -78,19 +78,19 @@ button:disabled { opacity:.55; cursor:default; }
 
 /* ---------- Start screen ---------- */
 #startScreen { text-align:center; }
-/* v31: bé cá bơi qua lại trên màn hình mở đầu (An chọn 2026-11-13).
+/* v31.2: bé Tsum Tsum bơi ngang trên màn hình mở đầu (phác lần 3, An duyệt hướng Tsum Tsum 2026-11-13).
    CSS-only: 1 phần tử chạy left + bob bằng transform, bong bóng bay lên.
    Lane nằm trong #startScreen nên tự ẩn khi vào game. */
-#swimLane { position:relative; width:100%; height:72px; overflow:hidden; }
-#swimShark { position:absolute; top:2px; left:-25%; width:64px; animation: swimX 9s ease-in-out infinite alternate; will-change:left; }
-#swimShark img { width:64px; height:auto; display:block; animation: swimBob 1.5s ease-in-out infinite alternate; }
-@keyframes swimX { from { left:-25%; } to { left:100%; } }
+#swimLane { position:relative; width:100%; height:96px; overflow:hidden; }
+#swimShark { position:absolute; top:2px; left:-20%; width:75px; animation: swimX 9s ease-in-out infinite alternate; will-change:left; }
+#swimShark img { width:75px; height:auto; display:block; animation: swimBob 1.5s ease-in-out infinite alternate; }
+@keyframes swimX { from { left:-20%; } to { left:100%; } }
 @keyframes swimBob { from { transform: translateY(-3px) rotate(-4deg); } to { transform: translateY(4px) rotate(4deg); } }
-.swim-bubble { position:absolute; bottom:4px; width:10px; height:10px; border-radius:50%; background: radial-gradient(circle at 35% 35%, rgba(255,255,255,.95), rgba(170,215,255,.55)); border:1px solid rgba(255,255,255,.8); opacity:0; animation: bubbleRise 3.4s ease-in infinite; }
+.swim-bubble { position:absolute; bottom:4px; width:12px; height:12px; border-radius:50%; background: radial-gradient(circle at 35% 35%, rgba(255,255,255,.95), rgba(170,215,255,.55)); border:1px solid rgba(255,255,255,.8); opacity:0; animation: bubbleRise 3.4s ease-in infinite; }
 .sb1 { left:24%; animation-delay:0s; }
-.sb2 { left:50%; width:7px; height:7px; animation-delay:1.2s; }
-.sb3 { left:76%; width:12px; height:12px; animation-delay:2.3s; }
-@keyframes bubbleRise { 0% { transform:translateY(0); opacity:0; } 15% { opacity:.9; } 100% { transform:translateY(-56px); opacity:0; } }
+.sb2 { left:50%; width:9px; height:9px; animation-delay:1.2s; }
+.sb3 { left:76%; width:14px; height:14px; animation-delay:2.3s; }
+@keyframes bubbleRise { 0% { transform:translateY(0); opacity:0; } 15% { opacity:1; } 100% { transform:translateY(-56px); opacity:0; } }
 @media (prefers-reduced-motion: reduce) { #swimShark, #swimShark img, .swim-bubble { animation:none; } #swimShark { left:50%; transform:translateX(-50%); } }
 
 .logo-row { display:flex; gap:6px; justify-content:center; flex-wrap:wrap; margin: 6px 0; }
@@ -758,7 +758,7 @@ input[type=text]:focus { border-color:#ff5c8a; }
   <svg class="rainbow-arc" width="120" height="34" viewBox="0 0 120 34"><path d="M6 32 A54 54 0 0 1 114 32" fill="none" stroke="#ff2d55" stroke-width="5" stroke-linecap="round"/><path d="M14 32 A46 46 0 0 1 106 32" fill="none" stroke="#ff9500" stroke-width="5" stroke-linecap="round"/><path d="M22 32 A38 38 0 0 1 98 32" fill="none" stroke="#ffe600" stroke-width="5" stroke-linecap="round"/><path d="M30 32 A30 30 0 0 1 90 32" fill="none" stroke="#2ed573" stroke-width="5" stroke-linecap="round"/><path d="M38 32 A22 22 0 0 1 82 32" fill="none" stroke="#00b4ff" stroke-width="5" stroke-linecap="round"/></svg>
   <h1>Animal Crush</h1>
   <div id="swimLane" aria-hidden="true">
-    <div id="swimShark"><img src="https://miatrann97-source.github.io/animal-crush/tiles/shark.png" alt=""></div>
+    <div id="swimShark"><img src="https://miatrann97-source.github.io/animal-crush/tiles/shark-girl-tsum3-sketch.png" alt=""></div>
     <span class="swim-bubble sb1"></span>
     <span class="swim-bubble sb2"></span>
     <span class="swim-bubble sb3"></span>
