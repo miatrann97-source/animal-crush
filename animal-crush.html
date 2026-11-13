@@ -551,38 +551,6 @@ button:disabled { opacity:.55; cursor:default; }
   75% { transform: translate(-50%,-50%) scale(1.08) rotate(1deg); opacity:1; }
   100% { transform: translate(-50%,-58%) scale(1) rotate(0deg); opacity:0; }
 }
-
-/* Cascade celebration: Animal Parade + Bubble Party (Bom's pick 2026-11-12).
-   Fires on cascade >= 3, alongside the praise word. One at a time: a new
-   chain while one is showing does not restart it. */
-function showCascadeCelebration(cascade) {
-  var layer = fxLayer(); if (!layer) return;
-  if (layer.querySelector(".cascade-celebration")) return;
-  var wrap = document.createElement("div");
-  wrap.className = "cascade-celebration";
-  var parade = document.createElement("div");
-  parade.className = "cascade-parade";
-  ANIMALS.forEach(function(name, i) {
-    var img = document.createElement("img");
-    img.src = IMG[name]; img.alt = name;
-    img.style.animationDelay = (i * 0.1) + "s";
-    parade.appendChild(img);
-  });
-  wrap.appendChild(parade);
-  for (var b = 0; b < FX_BUBBLES; b++) {
-    var bub = document.createElement("div");
-    bub.className = "cascade-bubble";
-    var size = 14 + Math.floor(Math.random() * 22);
-    bub.style.width = size + "px"; bub.style.height = size + "px";
-    bub.style.left = (4 + Math.random() * 88) + "%";
-    bub.style.animationDelay = (Math.random() * 0.8) + "s";
-    bub.style.animationDuration = (2 + Math.random() * 0.8) + "s";
-    wrap.appendChild(bub);
-  }
-  layer.appendChild(wrap);
-  setTimeout(function() { if (wrap.parentNode) wrap.parentNode.removeChild(wrap); }, 3000);
-}
-
 /* Expanding shockwave ring from a match (Candy Crush pop ring) */
 .fx-ring {
   position:absolute; z-index:26; pointer-events:none; border-radius:50%;
@@ -695,39 +663,6 @@ input[type=text]:focus { border-color:#ff5c8a; }
   .best-line { font-size:22px; }
   .level-info { font-size:20px; }
 }
-
-/* v19 phones fill the screen: no dead space above/below the game (An
-   2026-11-12). The board stretches to fill the height left by the HUD;
-   tiles get taller and images use contain so animals are never cropped. */
-@media (max-width: 599px) {
-  #gameScreen { justify-content:flex-start; padding-bottom:12px; }
-  #boardWrap { flex:1 1 0; min-height:200px; }
-  #board { aspect-ratio:auto; height:100%; }
-  .tile img { object-fit:contain; }
-}
-
-/* v21 tall phones get a bigger HUD to match the taller board (per-size
-   tuning: big/tall phones scale up, small/short phones stay compact). */
-@media (max-width: 599px) and (min-height: 800px) {
-  #gameScreen { gap:10px; }
-  #hud { padding:8px 10px 10px; gap:4px; border-radius:20px; }
-  .hud-stat { font-size:13px; } .hud-stat b { font-size:18px; }
-  .icon-btn { padding:3px 6px; font-size:12px; min-width:30px; border-radius:13px; }
-  #hubBtn { padding:9px 14px; font-size:22px; min-width:52px; }
-  .perk-line { font-size:.78rem; padding:3px 8px; }
-  .progress { height:7px; }
-  .back-btn-big { width:56px; height:56px; font-size:32px; }
-}
-
-/* Cascade celebration: Animal Parade + Bubble Party (Bom's pick, An
-   approved any choice 2026-11-12). Fires on cascade >= 3. Overlay on
-   #fxLayer, pointer-events none, no screen shake, transform-only. */
-.cascade-celebration { position:absolute; inset:0; pointer-events:none; }
-.cascade-parade { position:absolute; left:0; right:0; bottom:5%; display:flex; justify-content:center; gap:4px; pointer-events:none; }
-.cascade-parade img { width:13%; max-width:60px; aspect-ratio:1; object-fit:contain; animation:paradeBounce .9s ease-in-out infinite; }
-@keyframes paradeBounce { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-14px); } }
-.cascade-bubble { position:absolute; bottom:-24px; border-radius:50%; background:radial-gradient(circle at 32% 30%, rgba(255,255,255,.95), rgba(255,255,255,.25) 55%, rgba(180,220,255,.5)); border:1px solid rgba(255,255,255,.8); pointer-events:none; animation:bubbleRise 2.4s linear forwards; }
-@keyframes bubbleRise { from { transform:translateY(0) scale(1); opacity:0; } 12% { opacity:1; } to { transform:translateY(-520px) scale(1.15); opacity:0; } }
 </style>
 </head>
 <body>
@@ -845,19 +780,6 @@ var IMG = {
   wolf: "tiles/wolf.png"
 };
 var ANIMALS = ["shark","otter","rabbit","mouse","jellyfish","fox"];
-/* Performance tiers (smoothest possible on every device/browser):
-   0 = phone (max perf), 1 = tablet (medium), 2 = desktop (full).
-   Fewer particles + less glow on small screens; batched reflows
-   everywhere. Helps Safari/Chrome/Edge alike: fewer DOM nodes, no
-   blur shadows while animating, one layout pass per refill. */
-var IS_PHONE = (window.matchMedia && window.matchMedia("(max-width: 599px)").matches) || false;
-var IS_TABLET = (window.matchMedia && window.matchMedia("(min-width: 600px) and (max-width: 1024px)").matches) || false;
-var QUALITY = IS_PHONE ? 0 : (IS_TABLET ? 1 : 2);
-var MAX_LIVE_PARTICLES = [200, 350, 650][QUALITY];
-var BURST_CAP = [80, 120, 200][QUALITY];
-var BURST_CAP_RAINBOW = [80, 120, 250][QUALITY];
-var DROPLETS_PER_CELL = [1, 2, 3][QUALITY];
-var FX_BUBBLES = [5, 6, 8][QUALITY];
 </script>
 <script>
 "use strict";
@@ -1636,7 +1558,7 @@ async function resolveBoard(swapPos) {
     showFloatScore(stepScore, clearCells);
     /* Play effects: Candy Crush bubble pop (pitch climbs with the cascade) + praise word + jingle on chained cascades */
     AudioEng.sfx("candyPop", { cascade: cascade });
-    if (cascade >= 2) { showPraiseText(cascade); AudioEng.sfx("praiseJingle", { cascade: cascade }); if (cascade >= 3) showCascadeCelebration(cascade); }
+    if (cascade >= 2) { showPraiseText(cascade); AudioEng.sfx("praiseJingle", { cascade: cascade }); }
     if (expanded.effects.indexOf("rainbow") >= 0) AudioEng.sfx("rainbow");
     else if (expanded.effects.indexOf("wrapped") >= 0) AudioEng.sfx("wrapped");
     else if (expanded.effects.indexOf("striped") >= 0) AudioEng.sfx("striped");
@@ -1707,11 +1629,10 @@ async function resolveBoard(swapPos) {
         });
       }
       thunderStrikes(thunderCells);
-      try { await giantHeadBoom(giantType, giantRun.cells); }
-      catch (e) { /* a giant-FX failure must never break the board */ }
+      await giantHeadBoom(giantType, giantRun.cells);
     }
     /* Cells cleared by special effects burst in their own tile colors too */
-    if (extraCells.length) burstCells(extraCells.map(function(k){ return k.split(",").map(Number); }), 10, BURST_CAP);
+    if (extraCells.length) burstCells(extraCells.map(function(k){ return k.split(",").map(Number); }), 10, 200);
     /* Striped beams sweep their row/column; rainbow lightning arcs to its targets.
        Per-tile numbers use the real points for that tile (its run rate, else 60). */
     var tilePts = {};
@@ -1883,7 +1804,7 @@ async function doRainbowSwap(r1, c1, r2, c2) {
   rainbowLightning(rb, list, function() { return 60; });
   bigBeam(list); /* rainbow clears are usually 8+ tiles: big bright beam */
   chainedBeams.forEach(function(bm) { stripedBeam(bm, function() { return 60; }); });
-  burstCells(list, 10, BURST_CAP_RAINBOW); /* rainbow clear bursts in each tile's own color */
+  burstCells(list, 10, 250); /* rainbow clear bursts in each tile's own color */
   list.forEach(function(cell) { var el = tileEl(cell[0], cell[1]); if (el) el.classList.add("pop"); });
   await sleep(210);
   list.forEach(function(cell) {
@@ -1897,9 +1818,6 @@ async function doRainbowSwap(r1, c1, r2, c2) {
 }
 
 /* Player swap attempt */
-/* Unstuck fix v24 (2026-11-12): trySwap used to set state.busy = true with no
-   try/finally, so any throw after that left the board locked forever
-   ("tiles don't move at all", on every device). Now busy is ALWAYS reset. */
 async function trySwap(r1, c1, r2, c2) {
   if (state.busy || state.over) return;
   if (!inBoard(r2, c2)) return;
@@ -1907,38 +1825,35 @@ async function trySwap(r1, c1, r2, c2) {
   if (!a || !b) return;
   if (a.type === "bomb" || b.type === "bomb") return; /* bombs are dragged to detonate, never swapped */
   state.busy = true;
-  try {
-    state.selected = null; renderSelection();
-    /* animate the swap */
-    state.board[r1][c1] = b; state.board[r2][c2] = a;
-    renderBoard(false);
-    AudioEng.sfx("click");
-    await sleep(230);
-    /* rainbow activation */
-    if (a.special === "rainbow" || b.special === "rainbow") {
-      state.moves--;
-      updateHUD();
-      await doRainbowSwap(r1, c1, r2, c2);
-      afterTurn();
-      return;
-    }
-    var found = findMatches(state.board);
-    if (found.runs.length === 0) {
-      state.board[r1][c1] = a; state.board[r2][c2] = b;
-      renderBoard(false);
-      AudioEng.sfx("invalid");
-      await sleep(230);
-      return;
-    }
+  state.selected = null; renderSelection();
+  /* animate the swap */
+  state.board[r1][c1] = b; state.board[r2][c2] = a;
+  renderBoard(false);
+  AudioEng.sfx("click");
+  await sleep(230);
+  /* rainbow activation */
+  if (a.special === "rainbow" || b.special === "rainbow") {
     state.moves--;
     updateHUD();
-    await resolveBoard([r2, c2]);
+    await doRainbowSwap(r1, c1, r2, c2);
     afterTurn();
-  } finally {
-    /* Never leave the board locked, on any path (normal, invalid, rainbow
-       or an unexpected error mid-resolve). */
     state.busy = false;
+    return;
   }
+  var found = findMatches(state.board);
+  if (found.runs.length === 0) {
+    state.board[r1][c1] = a; state.board[r2][c2] = b;
+    renderBoard(false);
+    AudioEng.sfx("invalid");
+    await sleep(230);
+    state.busy = false;
+    return;
+  }
+  state.moves--;
+  updateHUD();
+  await resolveBoard([r2, c2]);
+  afterTurn();
+  state.busy = false;
 }
 
 function afterTurn() {
@@ -2177,7 +2092,6 @@ function positionEl(el, r, c) {
 function renderBoard(full) {
   /* sync DOM to model */
   var seen = {};
-  var newTiles = [];
   for (var r = 0; r < ROWS; r++) {
     for (var c = 0; c < COLS; c++) {
       var tl = state.board[r][c];
@@ -2190,20 +2104,12 @@ function renderBoard(full) {
         /* new tiles drop in from above */
         var startRow = r - (ROWS - r);
         positionEl(el, startRow, c);
-        newTiles.push({ el: el, r: r, c: c });
-      } else {
-        positionEl(el, r, c);
+        void el.offsetWidth;
+        el.classList.add("new");
       }
+      positionEl(el, r, c);
       refreshTileEl(tl, r, c);
     }
-  }
-  if (newTiles.length) {
-    /* ONE reflow for all new tiles (was one forced reflow per tile) */
-    void boardEl.offsetWidth;
-    newTiles.forEach(function(nt) {
-      nt.el.classList.add("new");
-      positionEl(nt.el, nt.r, nt.c);
-    });
   }
   Object.keys(elsById).forEach(function(id) {
     if (!seen[id]) removeTileEl(id);
@@ -2263,6 +2169,7 @@ var ANIMAL_EDGE = { shark:"#0b5fa5", otter:"#5d3a17", rabbit:"#ff9ecf", mouse:"#
 function fxLayer() { return document.getElementById("fxLayer"); }
 /* Live particle budget: keep phones smooth by never letting too many fly at once */
 var liveParticles = 0;
+var MAX_LIVE_PARTICLES = 650;
 function trackParticle(p, dur) {
   liveParticles++;
   var finished = false;
@@ -2290,7 +2197,7 @@ function spawnConfetti(layer, xPct, yPct, fill, edge) {
   p.style.width = w + "px"; p.style.height = h + "px";
   p.style.background = fill;
   p.style.border = "1px solid " + edge;
-  if (QUALITY > 0) p.style.boxShadow = "0 0 " + (QUALITY === 1 ? 3 : 6) + "px " + fill;
+  p.style.boxShadow = "0 0 6px " + fill;
   p.style.left = xPct + "%"; p.style.top = yPct + "%";
   layer.appendChild(p);
   var ang = Math.random() * Math.PI * 2;
@@ -2316,7 +2223,7 @@ function spawnDroplet(layer, xPct, yPct, fill, edge) {
   var size = 7 + Math.random() * 8;
   p.style.width = size + "px"; p.style.height = (size * 1.25) + "px";
   p.style.background = "radial-gradient(circle at 35% 30%, #ffffff 0%, " + fill + " 55%, " + edge + " 100%)";
-  if (QUALITY > 0) p.style.boxShadow = "0 0 " + (QUALITY === 1 ? 3 : 7) + "px " + fill;
+  p.style.boxShadow = "0 0 7px " + fill;
   p.style.left = xPct + "%"; p.style.top = yPct + "%";
   layer.appendChild(p);
   var ang = Math.random() * Math.PI * 2;
@@ -2342,7 +2249,7 @@ function spawnStar(layer, xPct, yPct) {
   p.style.background = "transparent";
   p.style.color = "#ffd23f";
   p.style.fontSize = (20 + Math.random() * 18) + "px";
-  if (QUALITY > 0) p.style.textShadow = "0 0 " + (QUALITY === 1 ? 5 : 10) + "px #fff";
+  p.style.textShadow = "0 0 10px #fff";
   p.style.borderRadius = "0";
   p.style.left = xPct + "%"; p.style.top = yPct + "%";
   layer.appendChild(p);
@@ -2776,7 +2683,7 @@ function bubbleBurst(cells) {
     rip.onfinish = function() { if (r.parentNode) r.parentNode.removeChild(r); };
     setTimeout(function() { if (r.parentNode) r.parentNode.removeChild(r); }, delay + 550);
     /* a few water droplets spray out as the bubble bursts */
-    for (var d = 0; d < DROPLETS_PER_CELL; d++) spawnDroplet(layer, cx, cy, "#7dd3fc", "#ffffff");
+    for (var d = 0; d < 3; d++) spawnDroplet(layer, cx, cy, "#7dd3fc", "#ffffff");
     /* soft bubble "plop", staggered with the visuals */
     AudioEng.sfx("bubble", { delay: delay / 1000 });
   });
@@ -2847,12 +2754,6 @@ function thunderStrikes(cells) {
    straight out at the player, then explodes in a huge bang with confetti everywhere.
    Total ~620ms: zoom ~320ms, explosion ~300ms. The normal tile explosion for the
    matched tiles still happens underneath, right after. */
-/* QUALITY-gated giant head (freeze fix 2026-11-12): the full giant (blurred rainbow glow + spinning rays
-   + drop-shadowed head, awaited ~620ms) freezes the game on phones at 4+
-   matches — those filters are far too heavy for a phone GPU while the board
-   is also animating. Phones get just the big BÙM! text + a modest confetti
-   burst + sounds, and resolveBoard is not stalled. Tablets get the head zoom
-   without the filters. Desktop is unchanged. */
 async function giantHeadBoom(type, cells) {
   var layer = fxLayer(); if (!layer || !cells || !cells.length) return;
   var src = IMG[type] || IMG.fox;
@@ -2864,64 +2765,40 @@ async function giantHeadBoom(type, cells) {
      match itself (mcx, mcy). */
   var cx = 50, cy = 50;
   var mcx = (sc / cells.length + 0.5) * 12.5, mcy = (sr / cells.length + 0.5) * 12.5;
-  var col = { fill: ANIMAL_COLORS[type] || "#ffd23f", edge: ANIMAL_EDGE[type] || "#d35400" };
-  var burst = function(n) {
-    for (var i = 0; i < n; i++) {
-      var roll = Math.random();
-      var gold = roll < 0.25;
-      var f2 = gold ? "#ffd23f" : col.fill, e2 = gold ? "#ffffff" : col.edge;
-      if (roll < 0.55) spawnConfetti(layer, mcx, mcy, f2, e2);
-      else if (roll < 0.9) spawnDroplet(layer, mcx, mcy, f2, e2);
-      else spawnStar(layer, mcx, mcy);
-    }
-  };
-  if (QUALITY === 0) {
-    /* Phones: no giant head, no blurred RGB glow, no spinning rays. */
-    giantBoomText(cx, cy);
-    burst(30);
-    AudioEng.sfx("thunder");
-    AudioEng.sfx("boom");
-    await sleep(120);
-    return;
+  /* RGB rainbow light stream behind the head: rotating rainbow rays + soft rainbow glow
+     + twinkling rainbow sparkles. Created first so it sits behind the head (z-index 29
+     vs head 30). Scales in together with the head during the zoom. */
+  var rgb = document.createElement("div");
+  rgb.className = "fx-giant-rgb";
+  rgb.style.left = cx + "%"; rgb.style.top = cy + "%";
+  var rgbGlow = document.createElement("div");
+  rgbGlow.className = "rgb-glow";
+  rgb.appendChild(rgbGlow);
+  var rgbRays = document.createElement("div");
+  rgbRays.className = "rgb-rays";
+  rgb.appendChild(rgbRays);
+  var RGB_SPARK_COLORS = ["#ff2d55", "#ff9500", "#ffe600", "#2ed573", "#00d2ff", "#7b5cff", "#ff2d78"];
+  for (var s = 0; s < 12; s++) {
+    var sp = document.createElement("span");
+    sp.className = "rgb-spark";
+    sp.textContent = Math.random() < 0.5 ? "✦" : "★";
+    sp.style.color = RGB_SPARK_COLORS[s % RGB_SPARK_COLORS.length];
+    sp.style.left = (8 + Math.random() * 84) + "%";
+    sp.style.top = (8 + Math.random() * 84) + "%";
+    sp.style.animationDelay = (Math.random() * 0.5) + "s";
+    sp.style.fontSize = (12 + Math.random() * 10) + "px";
+    rgb.appendChild(sp);
   }
-  /* RGB rainbow light stream behind the head (desktop only — QUALITY 2):
-     rotating rainbow rays + soft rainbow glow + twinkling sparkles. Created
-     first so it sits behind the head (z-index 29 vs head 30). */
-  var rgb = null;
-  if (QUALITY === 2) {
-    rgb = document.createElement("div");
-    rgb.className = "fx-giant-rgb";
-    rgb.style.left = cx + "%"; rgb.style.top = cy + "%";
-    var rgbGlow = document.createElement("div");
-    rgbGlow.className = "rgb-glow";
-    rgb.appendChild(rgbGlow);
-    var rgbRays = document.createElement("div");
-    rgbRays.className = "rgb-rays";
-    rgb.appendChild(rgbRays);
-    var RGB_SPARK_COLORS = ["#ff2d55", "#ff9500", "#ffe600", "#2ed573", "#00d2ff", "#7b5cff", "#ff2d78"];
-    for (var s = 0; s < 12; s++) {
-      var sp = document.createElement("span");
-      sp.className = "rgb-spark";
-      sp.textContent = Math.random() < 0.5 ? "✦" : "★";
-      sp.style.color = RGB_SPARK_COLORS[s % RGB_SPARK_COLORS.length];
-      sp.style.left = (8 + Math.random() * 84) + "%";
-      sp.style.top = (8 + Math.random() * 84) + "%";
-      sp.style.animationDelay = (Math.random() * 0.5) + "s";
-      sp.style.fontSize = (12 + Math.random() * 10) + "px";
-      rgb.appendChild(sp);
-    }
-    layer.appendChild(rgb);
-    rgb.animate([
-      { transform: "translate(-50%,-50%) scale(0.15)", opacity: 0 },
-      { transform: "translate(-50%,-50%) scale(1.15)", opacity: 1, offset: 0.6 },
-      { transform: "translate(-50%,-50%) scale(1)", opacity: 1 }
-    ], { duration: 320, easing: "ease-out" });
-  }
+  layer.appendChild(rgb);
+  rgb.animate([
+    { transform: "translate(-50%,-50%) scale(0.15)", opacity: 0 },
+    { transform: "translate(-50%,-50%) scale(1.15)", opacity: 1, offset: 0.6 },
+    { transform: "translate(-50%,-50%) scale(1)", opacity: 1 }
+  ], { duration: 320, easing: "ease-out" });
   var img = document.createElement("img");
   img.className = "fx-giant-head";
   img.src = src;
   img.alt = "";
-  if (QUALITY === 1) img.style.filter = "none"; /* no drop-shadow on tablets */
   img.style.left = cx + "%"; img.style.top = cy + "%";
   layer.appendChild(img);
   var zoom = img.animate([
@@ -2930,26 +2807,30 @@ async function giantHeadBoom(type, cells) {
     { transform: "translate(-50%,-50%) scale(4.0) rotate(6deg)", opacity: 1, offset: 0.8 },
     { transform: "translate(-50%,-50%) scale(4.3) rotate(0deg)", opacity: 1 }
   ], { duration: 320, easing: "ease-out" });
-  /* Never hang on the animation: race it against a timeout so this
-     resolves in <=400ms even if the animation stalls or never settles. */
-  await Promise.race([zoom.finished.catch(function() {}), sleep(400)]);
+  try { await zoom.finished; } catch (e) { await sleep(320); }
   if (img.parentNode) img.parentNode.removeChild(img);
   /* RGB light flares brighter at the explosion, then fades out with the head */
-  if (rgb) {
-    var rgbOut = rgb.animate([
-      { transform: "translate(-50%,-50%) scale(1)", opacity: 1 },
-      { transform: "translate(-50%,-50%) scale(1.7)", opacity: 0 }
-    ], { duration: 300, easing: "ease-out" });
-    rgbOut.onfinish = function() { if (rgb.parentNode) rgb.parentNode.removeChild(rgb); };
-    setTimeout(function() { if (rgb.parentNode) rgb.parentNode.removeChild(rgb); }, 450);
-  }
+  var rgbOut = rgb.animate([
+    { transform: "translate(-50%,-50%) scale(1)", opacity: 1 },
+    { transform: "translate(-50%,-50%) scale(1.7)", opacity: 0 }
+  ], { duration: 300, easing: "ease-out" });
+  rgbOut.onfinish = function() { if (rgb.parentNode) rgb.parentNode.removeChild(rgb); };
+  setTimeout(function() { if (rgb.parentNode) rgb.parentNode.removeChild(rgb); }, 450);
   /* huge confetti storm in the animal's own colors + gold, flying everywhere */
-  burst(QUALITY === 1 ? 60 : 90);
+  var col = { fill: ANIMAL_COLORS[type] || "#ffd23f", edge: ANIMAL_EDGE[type] || "#d35400" };
+  for (var i = 0; i < 90; i++) {
+    var roll = Math.random();
+    var gold = roll < 0.25;
+    var f2 = gold ? "#ffd23f" : col.fill, e2 = gold ? "#ffffff" : col.edge;
+    if (roll < 0.55) spawnConfetti(layer, mcx, mcy, f2, e2);
+    else if (roll < 0.9) spawnDroplet(layer, mcx, mcy, f2, e2);
+    else spawnStar(layer, mcx, mcy);
+  }
   giantBoomText(cx, cy);
   flashScreen(); flashThunder();
   AudioEng.sfx("thunder");
   AudioEng.sfx("boom");
-  await sleep(QUALITY === 1 ? 200 : 300);
+  await sleep(300);
 }
 var CELEB_COLORS = ["#ff2d78","#ff9500","#ffe600","#2ed573","#00d2ff","#a55eea","#ff6b9d"];
 function celebrateWin() {
