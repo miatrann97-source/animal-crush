@@ -1543,10 +1543,11 @@ function makesInstantMatch(r, c, type) {
   return false;
 }
 /* Pick a refill type biased toward matching an already-placed orthogonal neighbour,
-   so new tiles often land next to a friend and matches keep forming. Never an instant match. */
+   so new tiles often land next to a friend and matches keep forming. Strong bias (80%)
+   so long runs of 6-8 same animals show up much more often. Never an instant match. */
 function pickRefillType(r, c) {
   var b = state.board;
-  if (Math.random() < 0.5) {
+  if (Math.random() < 0.8) {
     var opts = [];
     [[r+1,c],[r+2,c],[r,c-1],[r,c-2]].forEach(function(p) {
       var tl = inBoard(p[0], p[1]) && b[p[0]][p[1]];
