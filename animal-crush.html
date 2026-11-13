@@ -2642,7 +2642,12 @@ async function giantHeadBoom(type, cells) {
   var src = IMG[type] || IMG.fox;
   var sr = 0, sc = 0;
   cells.forEach(function(cell) { sr += cell[0]; sc += cell[1]; });
-  var cx = (sc / cells.length + 0.5) * 12.5, cy = (sr / cells.length + 0.5) * 12.5;
+  /* The giant head + BÙM! text sit at the board centre (50, 50), never at the
+     match spot: a 4+ match at the board edge used to get half its face and
+     half its BÙM! clipped by the frame. The confetti still bursts from the
+     match itself (mcx, mcy). */
+  var cx = 50, cy = 50;
+  var mcx = (sc / cells.length + 0.5) * 12.5, mcy = (sr / cells.length + 0.5) * 12.5;
   /* RGB rainbow light stream behind the head: rotating rainbow rays + soft rainbow glow
      + twinkling rainbow sparkles. Created first so it sits behind the head (z-index 29
      vs head 30). Scales in together with the head during the zoom. */
@@ -2700,9 +2705,9 @@ async function giantHeadBoom(type, cells) {
     var roll = Math.random();
     var gold = roll < 0.25;
     var f2 = gold ? "#ffd23f" : col.fill, e2 = gold ? "#ffffff" : col.edge;
-    if (roll < 0.55) spawnConfetti(layer, cx, cy, f2, e2);
-    else if (roll < 0.9) spawnDroplet(layer, cx, cy, f2, e2);
-    else spawnStar(layer, cx, cy);
+    if (roll < 0.55) spawnConfetti(layer, mcx, mcy, f2, e2);
+    else if (roll < 0.9) spawnDroplet(layer, mcx, mcy, f2, e2);
+    else spawnStar(layer, mcx, mcy);
   }
   giantBoomText(cx, cy);
   flashScreen(); flashThunder();
