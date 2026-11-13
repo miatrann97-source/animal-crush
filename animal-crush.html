@@ -134,9 +134,11 @@ button:disabled { opacity:.55; cursor:default; }
    still slide the whole page up/down. Lock the entire game screen against
    page scroll and let the leaderboard scroll inside its own card. The board
    stays FULL width (big tiles for mom) — instead the HUD is made compact on
-   narrow screens (below), which frees the vertical room the page needs. */
+   narrow screens (below), which frees the vertical room the page needs.
+   Merged 2026-11-12 (An's idea): the leaderboard now lives INSIDE the HUD
+   card — one panel instead of two — saving a card's padding + the gap. */
 #gameScreen { touch-action:none; }
-#gameLb { max-height:170px; overflow-y:auto; touch-action:pan-y; overscroll-behavior:contain; }
+#gameLb { max-height:170px; overflow-y:auto; touch-action:pan-y; overscroll-behavior:contain; border-top:2px dashed #ffd23f; margin-top:4px; padding-top:8px; }
 
 /* Compact HUD on narrow phones (iPhone 16 Pro): smaller padding/fonts/buttons
    so the HUD fits fully and leaves room for the full-size board. */
@@ -664,13 +666,13 @@ input[type=text]:focus { border-color:#ff5c8a; }
     </div>
     <div class="progress"><div id="progressFill"></div></div>
     <div class="perk-line" id="perkLine"></div>
+    <div id="gameLb"></div>
   </div>
   <div id="boardWrap">
     <div id="board"></div>
     <div id="fxLayer"></div>
     <div id="toast"></div>
   </div>
-  <div class="card" id="gameLb"></div>
 </div>
 
 <div id="endScreen" class="hidden">
