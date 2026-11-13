@@ -14,7 +14,7 @@
    reach past the frame; (2) overflow-x:clip on html/body stops any horizontal
    scroll or shift at the page level. (clip is stronger than hidden: it
    removes the scrollable overflow entirely instead of just hiding the bar.) */
-html { overflow-x: clip; overscroll-behavior: none; }
+html { overflow-x: clip; overscroll-behavior: none; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; } /* v27: stop iOS Safari inflating small HUD text */
 body {
   font-family: "Comic Sans MS", "Chalkboard SE", "Segoe UI", sans-serif;
   background: linear-gradient(135deg, #ff2d78, #ff9500, #ffe600, #2ed573, #00d2ff, #7c4dff, #ff2d78, #ff6b9d);
@@ -101,18 +101,23 @@ button:disabled { opacity:.55; cursor:default; }
 .level-info { font-family: 'Baloo 2', "Comic Sans MS", "Chalkboard SE", sans-serif; font-size:16px; font-weight:800; color:#fff; text-shadow: 0 2px 4px rgba(0,0,0,.3); }
 .rb { background: linear-gradient(90deg, #ff2d55, #ff9500, #ffe600, #2ed573, #00d2ff, #7b5cff, #ff2d78); -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-stroke: 0.6px #000; font-size:1.15em; }
 
+/* v27 compact HUD + board (2026-11-13): top panel too tall + board spilled at the
+   bottom — smaller back button (was the tallest row), tighter
+   padding/gaps/fonts on every size, square board centered (no more
+   stretch-to-fill), svh sizing so it fits with Safari toolbar up,
+   text-size-adjust + 100vh fallbacks for older phones/browsers. */
 /* ---------- HUD ---------- */
 #hud {
   width:100%; background-color: #fffdf5;
   background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22120%22%20height%3D%22120%22%20viewBox%3D%220%200%20120%20120%22%3E%0A%3Cg%20opacity%3D%220.55%22%3E%0A%20%20%3Cg%20fill%3D%22%23ff9ecf%22%3E%3Cellipse%20cx%3D%2216%22%20cy%3D%2224%22%20rx%3D%224%22%20ry%3D%223.2%22%2F%3E%3Ccircle%20cx%3D%2210.5%22%20cy%3D%2218.5%22%20r%3D%221.8%22%2F%3E%3Ccircle%20cx%3D%2214%22%20cy%3D%2216.5%22%20r%3D%221.8%22%2F%3E%3Ccircle%20cx%3D%2217.5%22%20cy%3D%2216.5%22%20r%3D%221.8%22%2F%3E%3Ccircle%20cx%3D%2221%22%20cy%3D%2218.5%22%20r%3D%221.8%22%2F%3E%3C%2Fg%3E%0A%20%20%3Cg%20fill%3D%22%234db8ff%22%3E%3Cpath%20d%3D%22M66%2014%20Q74%208%2082%2014%20Q74%2020%2066%2014%20Z%22%2F%3E%3Cpath%20d%3D%22M82%2014%20L88%2010%20L88%2018%20Z%22%2F%3E%3C%2Fg%3E%0A%20%20%3Cg%20fill%3D%22%23ffb347%22%3E%3Cpath%20d%3D%22M102%2046%20L104%2051%20L109%2051.5%20L105%2055%20L106.5%2060%20L102%2057.5%20L97.5%2060%20L99%2055%20L95%2051.5%20L100%2051%20Z%22%2F%3E%3C%2Fg%3E%0A%20%20%3Cg%20fill%3D%22%23ff9ecf%22%3E%3Cellipse%20cx%3D%2226%22%20cy%3D%2272%22%20rx%3D%222.6%22%20ry%3D%225.5%22%2F%3E%3Cellipse%20cx%3D%2233%22%20cy%3D%2272%22%20rx%3D%222.6%22%20ry%3D%225.5%22%2F%3E%3Ccircle%20cx%3D%2229.5%22%20cy%3D%2282%22%20r%3D%225%22%2F%3E%3C%2Fg%3E%0A%20%20%3Cg%20fill%3D%22%234db8ff%22%3E%3Cpath%20d%3D%22M62%2092%20Q70%2078%2078%2090%20Q70%2094%2062%2092%20Z%22%2F%3E%3C%2Fg%3E%0A%20%20%3Cg%20fill%3D%22%23ff5c8a%22%3E%3Cpath%20d%3D%22M104%20100%20C100%2096%2098%2093.5%2098%2091.5%20C98%2089.5%2099.5%2088%20101.5%2088%20C102.8%2088%20103.8%2088.8%20104%2090%20C104.2%2088.8%20105.2%2088%20106.5%2088%20C108.5%2088%20110%2089.5%20110%2091.5%20C110%2093.5%20108%2096%20104%20100%20Z%22%2F%3E%3C%2Fg%3E%0A%20%20%3Cg%20fill%3D%22%23b06bff%22%3E%3Cpath%20d%3D%22M46%2044%20A7%207%200%200%201%2060%2044%20Z%22%2F%3E%3Cpath%20d%3D%22M49%2044%20Q49%2049%2048%2051%20M53%2044%20Q53%2049%2053%2051%20M57%2044%20Q57%2049%2058%2051%22%20stroke%3D%22%23b06bff%22%20stroke-width%3D%221.6%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%2F%3E%3C%2Fg%3E%0A%3C%2Fg%3E%0A%3C%2Fsvg%3E");
   background-size: 120px 120px;
   border-radius: 24px; position:relative;
-  padding: 6px 8px 8px; box-shadow: 0 8px 24px rgba(0,0,0,.18);
-  display:flex; flex-direction:column; gap:3px; touch-action:none;
+  padding: 5px 8px 6px; box-shadow: 0 8px 24px rgba(0,0,0,.18);
+  display:flex; flex-direction:column; gap:2px; touch-action:none;
 }
 .hud-doodle { position:absolute; pointer-events:none; line-height:0; z-index:1; }
 .hud-row { display:flex; justify-content:space-between; align-items:center; gap:4px; flex-wrap:wrap; }
-.hud-stat { font-family: 'Baloo 2', "Comic Sans MS", "Chalkboard SE", sans-serif; font-size:12px; font-weight:700; line-height:1.35; color:#4a3527; }
+.hud-stat { font-family: 'Baloo 2', "Comic Sans MS", "Chalkboard SE", sans-serif; font-size:12px; font-weight:700; line-height:1.25; color:#4a3527; }
 .hud-stat b { font-size:16px; font-weight:800; background: linear-gradient(90deg, #ff2d55, #ff9500, #ffe600, #2ed573, #00d2ff, #7b5cff, #ff2d78); -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-stroke: 0.7px #000; }
 .hud-btns { display:flex; gap:3px; }
 .icon-btn {
@@ -124,11 +129,11 @@ button:disabled { opacity:.55; cursor:default; }
 .back-btn-big { position:absolute; top:12px; left:12px; width:52px; height:52px; font-size:30px; line-height:1; display:flex; align-items:center; justify-content:center; background:#fff; color:#5a4632; border:none; border-radius:16px; box-shadow: 0 4px 0 #e0d8d0, 0 6px 16px rgba(0,0,0,.18); cursor:pointer; z-index:5; font-family: 'Baloo 2', "Comic Sans MS", "Chalkboard SE", sans-serif; font-weight:700; }
 .back-btn-big:active { transform: translateY(2px); box-shadow: 0 2px 0 #e0d8d0, 0 3px 10px rgba(0,0,0,.15); }
 /* v17: game-HUD back button made bigger — easier to tap while playing */
-#hubBtn { padding:8px 12px; font-size:20px; min-width:48px; }
+#hubBtn { padding:4px 9px; font-size:16px; min-width:38px; } /* v27: was the tallest row */
 #hud .icon-btn.blue { border-color: #00b4ff; }
 #hud .icon-btn.green { border-color: #2ed573; }
 .progress { height:6px; background:#f0e6da; border-radius:999px; overflow:hidden; border: 2px solid #ffd23f; }
-.perk-line { margin-top:0; font-size:.7rem; font-weight:700; color:#b3541e; background:#fff3d6; border:2px dashed #ffbf47; border-radius:999px; padding:2px 6px; display:inline-block; white-space:nowrap; flex-shrink:0; }
+.perk-line { margin-top:0; font-size:.7rem; font-weight:700; color:#b3541e; background:#fff3d6; border:2px dashed #ffbf47; border-radius:999px; padding:1px 6px; display:inline-block; white-space:nowrap; flex-shrink:0; }
 .hud-perk-row { display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
 .hud-perk-row .progress { flex:1; min-width:0; }
 #progressFill { height:100%; width:0%; background: linear-gradient(90deg, #ff2d55, #ff9500, #ffe600, #2ed573, #00d2ff, #7b5cff); border-radius:999px; transition: width .3s ease; }
@@ -143,12 +148,12 @@ button:disabled { opacity:.55; cursor:default; }
    narrow screens (below), which frees the vertical room the page needs.
    v13 (An's call 2026-11-12): the leaderboard moved OUT of the game screen
    to the start screen — the game screen is just HUD + board now. */
-#gameScreen { touch-action:none; width:100%; min-height:100dvh; justify-content:center; justify-content:safe center; gap:4px; padding-top:4px; padding-bottom:64px; }
+#gameScreen { touch-action:none; width:100%; min-height:100vh; min-height:100dvh; min-height:100svh; justify-content:center; justify-content:safe center; gap:4px; padding-top:4px; padding-bottom:64px; } /* v27: svh last = fits even with Safari toolbar up */
 
 /* Compact HUD on narrow phones (iPhone 16 Pro): smaller padding/fonts/buttons
    so the HUD fits fully and leaves room for the full-size board. */
 @media (max-width:430px) {
-  #hud { padding:4px 6px 6px; gap:2px; border-radius:16px; }
+  #hud { padding:3px 6px 5px; gap:2px; border-radius:16px; }
   .hud-stat { font-size:11px; }
   .hud-stat b { font-size:15px; }
   .hud-row { gap:3px; }
@@ -629,13 +634,13 @@ input[type=text]:focus { border-color:#ff5c8a; }
    sitting in a narrow 520px column. Phones unchanged (base layout). */
 @media (min-width: 600px) {
   .screen { max-width:min(94vw, 720px); padding:18px 16px 32px; gap:16px; }
-  #boardWrap { max-width:calc(100dvh - 230px); margin-left:0; margin-right:0; }
-  #hud { padding:8px 12px 10px; gap:5px; border-radius:28px; }
+  #boardWrap { max-width:calc(100vh - 230px); max-width:calc(100dvh - 230px); max-width:calc(100svh - 230px); margin-left:0; margin-right:0; }
+  #hud { padding:7px 12px 8px; gap:4px; border-radius:28px; }
   .hud-stat { font-size:15px; } .hud-stat b { font-size:20px; }
   .icon-btn { padding:4px 8px; font-size:14px; min-width:34px; border-radius:14px; }
-  #hubBtn { padding:10px 16px; font-size:26px; min-width:60px; }
+  #hubBtn { padding:6px 12px; font-size:20px; min-width:48px; }
   .back-btn-big { width:64px; height:64px; font-size:36px; top:16px; left:16px; }
-  .perk-line { font-size:.85rem; padding:3px 10px; }
+  .perk-line { font-size:.8rem; padding:2px 10px; }
   .progress { height:8px; }
   .logo-row img { width:72px; height:72px; }
   .tagline { font-size:20px; }
@@ -647,13 +652,13 @@ input[type=text]:focus { border-color:#ff5c8a; }
 }
 @media (min-width: 1025px) {
   .screen { max-width:min(92vw, 760px); padding:20px 18px 36px; gap:18px; }
-  #boardWrap { max-width:calc(100dvh - 260px); }
-  #hud { padding:10px 14px 12px; gap:6px; border-radius:30px; }
+  #boardWrap { max-width:calc(100vh - 260px); max-width:calc(100dvh - 260px); max-width:calc(100svh - 260px); }
+  #hud { padding:8px 14px 10px; gap:5px; border-radius:30px; }
   .hud-stat { font-size:17px; } .hud-stat b { font-size:23px; }
   .icon-btn { padding:6px 10px; font-size:16px; min-width:40px; border-radius:16px; }
-  #hubBtn { padding:12px 18px; font-size:30px; min-width:68px; }
+  #hubBtn { padding:7px 14px; font-size:22px; min-width:52px; }
   .back-btn-big { width:72px; height:72px; font-size:42px; top:18px; left:18px; }
-  .perk-line { font-size:.95rem; padding:4px 12px; }
+  .perk-line { font-size:.9rem; padding:3px 12px; }
   .progress { height:9px; }
   .logo-row img { width:80px; height:80px; }
   .tagline { font-size:22px; }
@@ -666,24 +671,28 @@ input[type=text]:focus { border-color:#ff5c8a; }
 
 /* v19 phones fill the screen: no dead space above/below the game (An
    2026-11-12). The board stretches to fill the height left by the HUD;
-   tiles get taller and images use contain so animals are never cropped. */
+   tiles get taller and images use contain so animals are never cropped.
+   v27 (An 2026-11-13): stretch REVERTED — the tall board spilled past
+   the bottom (100dvh > visible area with Safari toolbar up). Board is
+   square again, game centered, sized to svh so it always fits. */
 @media (max-width: 599px) {
-  #gameScreen { justify-content:flex-start; padding-bottom:12px; }
-  #boardWrap { flex:1 1 0; min-height:200px; }
-  #board { aspect-ratio:auto; height:100%; }
+  #gameScreen { justify-content:safe center; padding-bottom:12px; }
+  #boardWrap { flex:0 1 auto; min-height:0; }
+  #board { aspect-ratio:1 / 1; height:auto; }
   .tile img { object-fit:contain; }
 }
 
 /* v21 tall phones get a bigger HUD to match the taller board (per-size
-   tuning: big/tall phones scale up, small/short phones stay compact). */
+   tuning: big/tall phones scale up, small/short phones stay compact).
+   v27: tall-phone HUD tightened back down — it was the tallest of all. */
 @media (max-width: 599px) and (min-height: 800px) {
   #gameScreen { gap:10px; }
-  #hud { padding:8px 10px 10px; gap:4px; border-radius:20px; }
-  .hud-stat { font-size:13px; } .hud-stat b { font-size:18px; }
-  .icon-btn { padding:3px 6px; font-size:12px; min-width:30px; border-radius:13px; }
-  #hubBtn { padding:9px 14px; font-size:22px; min-width:52px; }
-  .perk-line { font-size:.78rem; padding:3px 8px; }
-  .progress { height:7px; }
+  #hud { padding:6px 8px 7px; gap:3px; border-radius:20px; }
+  .hud-stat { font-size:12px; } .hud-stat b { font-size:17px; }
+  .icon-btn { padding:2px 5px; font-size:11px; min-width:28px; border-radius:13px; }
+  #hubBtn { padding:4px 10px; font-size:17px; min-width:40px; }
+  .perk-line { font-size:.72rem; padding:2px 7px; }
+  .progress { height:6px; }
   .back-btn-big { width:56px; height:56px; font-size:32px; }
 }
 </style>
