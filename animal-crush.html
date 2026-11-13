@@ -2840,6 +2840,12 @@ function thunderStrikes(cells) {
    straight out at the player, then explodes in a huge bang with confetti everywhere.
    Total ~620ms: zoom ~320ms, explosion ~300ms. The normal tile explosion for the
    matched tiles still happens underneath, right after. */
+/* QUALITY-gated giant head (freeze fix 2026-11-12): the full giant (blurred rainbow glow + spinning rays
+   + drop-shadowed head, awaited ~620ms) freezes the game on phones at 4+
+   matches — those filters are far too heavy for a phone GPU while the board
+   is also animating. Phones get just the big BÙM! text + a modest confetti
+   burst + sounds, and resolveBoard is not stalled. Tablets get the head zoom
+   without the filters. Desktop is unchanged. */
 async function giantHeadBoom(type, cells) {
   var layer = fxLayer(); if (!layer || !cells || !cells.length) return;
   var src = IMG[type] || IMG.fox;
@@ -2851,40 +2857,64 @@ async function giantHeadBoom(type, cells) {
      match itself (mcx, mcy). */
   var cx = 50, cy = 50;
   var mcx = (sc / cells.length + 0.5) * 12.5, mcy = (sr / cells.length + 0.5) * 12.5;
-  /* RGB rainbow light stream behind the head: rotating rainbow rays + soft rainbow glow
-     + twinkling rainbow sparkles. Created first so it sits behind the head (z-index 29
-     vs head 30). Scales in together with the head during the zoom. */
-  var rgb = document.createElement("div");
-  rgb.className = "fx-giant-rgb";
-  rgb.style.left = cx + "%"; rgb.style.top = cy + "%";
-  var rgbGlow = document.createElement("div");
-  rgbGlow.className = "rgb-glow";
-  rgb.appendChild(rgbGlow);
-  var rgbRays = document.createElement("div");
-  rgbRays.className = "rgb-rays";
-  rgb.appendChild(rgbRays);
-  var RGB_SPARK_COLORS = ["#ff2d55", "#ff9500", "#ffe600", "#2ed573", "#00d2ff", "#7b5cff", "#ff2d78"];
-  for (var s = 0; s < 12; s++) {
-    var sp = document.createElement("span");
-    sp.className = "rgb-spark";
-    sp.textContent = Math.random() < 0.5 ? "✦" : "★";
-    sp.style.color = RGB_SPARK_COLORS[s % RGB_SPARK_COLORS.length];
-    sp.style.left = (8 + Math.random() * 84) + "%";
-    sp.style.top = (8 + Math.random() * 84) + "%";
-    sp.style.animationDelay = (Math.random() * 0.5) + "s";
-    sp.style.fontSize = (12 + Math.random() * 10) + "px";
-    rgb.appendChild(sp);
+  var col = { fill: ANIMAL_COLORS[type] || "#ffd23f", edge: ANIMAL_EDGE[type] || "#d35400" };
+  var burst = function(n) {
+    for (var i = 0; i < n; i++) {
+      var roll = Math.random();
+      var gold = roll < 0.25;
+      var f2 = gold ? "#ffd23f" : col.fill, e2 = gold ? "#ffffff" : col.edge;
+      if (roll < 0.55) spawnConfetti(layer, mcx, mcy, f2, e2);
+      else if (roll < 0.9) spawnDroplet(layer, mcx, mcy, f2, e2);
+      else spawnStar(layer, mcx, mcy);
+    }
+  };
+  if (QUALITY === 0) {
+    /* Phones: no giant head, no blurred RGB glow, no spinning rays. */
+    giantBoomText(cx, cy);
+    burst(30);
+    AudioEng.sfx("thunder");
+    AudioEng.sfx("boom");
+    await sleep(120);
+    return;
   }
-  layer.appendChild(rgb);
-  rgb.animate([
-    { transform: "translate(-50%,-50%) scale(0.15)", opacity: 0 },
-    { transform: "translate(-50%,-50%) scale(1.15)", opacity: 1, offset: 0.6 },
-    { transform: "translate(-50%,-50%) scale(1)", opacity: 1 }
-  ], { duration: 320, easing: "ease-out" });
+  /* RGB rainbow light stream behind the head (desktop only — QUALITY 2):
+     rotating rainbow rays + soft rainbow glow + twinkling sparkles. Created
+     first so it sits behind the head (z-index 29 vs head 30). */
+  var rgb = null;
+  if (QUALITY === 2) {
+    rgb = document.createElement("div");
+    rgb.className = "fx-giant-rgb";
+    rgb.style.left = cx + "%"; rgb.style.top = cy + "%";
+    var rgbGlow = document.createElement("div");
+    rgbGlow.className = "rgb-glow";
+    rgb.appendChild(rgbGlow);
+    var rgbRays = document.createElement("div");
+    rgbRays.className = "rgb-rays";
+    rgb.appendChild(rgbRays);
+    var RGB_SPARK_COLORS = ["#ff2d55", "#ff9500", "#ffe600", "#2ed573", "#00d2ff", "#7b5cff", "#ff2d78"];
+    for (var s = 0; s < 12; s++) {
+      var sp = document.createElement("span");
+      sp.className = "rgb-spark";
+      sp.textContent = Math.random() < 0.5 ? "✦" : "★";
+      sp.style.color = RGB_SPARK_COLORS[s % RGB_SPARK_COLORS.length];
+      sp.style.left = (8 + Math.random() * 84) + "%";
+      sp.style.top = (8 + Math.random() * 84) + "%";
+      sp.style.animationDelay = (Math.random() * 0.5) + "s";
+      sp.style.fontSize = (12 + Math.random() * 10) + "px";
+      rgb.appendChild(sp);
+    }
+    layer.appendChild(rgb);
+    rgb.animate([
+      { transform: "translate(-50%,-50%) scale(0.15)", opacity: 0 },
+      { transform: "translate(-50%,-50%) scale(1.15)", opacity: 1, offset: 0.6 },
+      { transform: "translate(-50%,-50%) scale(1)", opacity: 1 }
+    ], { duration: 320, easing: "ease-out" });
+  }
   var img = document.createElement("img");
   img.className = "fx-giant-head";
   img.src = src;
   img.alt = "";
+  if (QUALITY === 1) img.style.filter = "none"; /* no drop-shadow on tablets */
   img.style.left = cx + "%"; img.style.top = cy + "%";
   layer.appendChild(img);
   var zoom = img.animate([
@@ -2896,27 +2926,21 @@ async function giantHeadBoom(type, cells) {
   try { await zoom.finished; } catch (e) { await sleep(320); }
   if (img.parentNode) img.parentNode.removeChild(img);
   /* RGB light flares brighter at the explosion, then fades out with the head */
-  var rgbOut = rgb.animate([
-    { transform: "translate(-50%,-50%) scale(1)", opacity: 1 },
-    { transform: "translate(-50%,-50%) scale(1.7)", opacity: 0 }
-  ], { duration: 300, easing: "ease-out" });
-  rgbOut.onfinish = function() { if (rgb.parentNode) rgb.parentNode.removeChild(rgb); };
-  setTimeout(function() { if (rgb.parentNode) rgb.parentNode.removeChild(rgb); }, 450);
-  /* huge confetti storm in the animal's own colors + gold, flying everywhere */
-  var col = { fill: ANIMAL_COLORS[type] || "#ffd23f", edge: ANIMAL_EDGE[type] || "#d35400" };
-  for (var i = 0; i < 90; i++) {
-    var roll = Math.random();
-    var gold = roll < 0.25;
-    var f2 = gold ? "#ffd23f" : col.fill, e2 = gold ? "#ffffff" : col.edge;
-    if (roll < 0.55) spawnConfetti(layer, mcx, mcy, f2, e2);
-    else if (roll < 0.9) spawnDroplet(layer, mcx, mcy, f2, e2);
-    else spawnStar(layer, mcx, mcy);
+  if (rgb) {
+    var rgbOut = rgb.animate([
+      { transform: "translate(-50%,-50%) scale(1)", opacity: 1 },
+      { transform: "translate(-50%,-50%) scale(1.7)", opacity: 0 }
+    ], { duration: 300, easing: "ease-out" });
+    rgbOut.onfinish = function() { if (rgb.parentNode) rgb.parentNode.removeChild(rgb); };
+    setTimeout(function() { if (rgb.parentNode) rgb.parentNode.removeChild(rgb); }, 450);
   }
+  /* huge confetti storm in the animal's own colors + gold, flying everywhere */
+  burst(QUALITY === 1 ? 60 : 90);
   giantBoomText(cx, cy);
   flashScreen(); flashThunder();
   AudioEng.sfx("thunder");
   AudioEng.sfx("boom");
-  await sleep(300);
+  await sleep(QUALITY === 1 ? 200 : 300);
 }
 var CELEB_COLORS = ["#ff2d78","#ff9500","#ffe600","#2ed573","#00d2ff","#a55eea","#ff6b9d"];
 function celebrateWin() {
