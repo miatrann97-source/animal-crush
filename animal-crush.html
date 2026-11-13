@@ -1707,7 +1707,8 @@ async function resolveBoard(swapPos) {
         });
       }
       thunderStrikes(thunderCells);
-      await giantHeadBoom(giantType, giantRun.cells);
+      try { await giantHeadBoom(giantType, giantRun.cells); }
+      catch (e) { /* a giant-FX failure must never break the board */ }
     }
     /* Cells cleared by special effects burst in their own tile colors too */
     if (extraCells.length) burstCells(extraCells.map(function(k){ return k.split(",").map(Number); }), 10, BURST_CAP);
@@ -1896,6 +1897,9 @@ async function doRainbowSwap(r1, c1, r2, c2) {
 }
 
 /* Player swap attempt */
+/* Unstuck fix v24 (2026-11-12): trySwap used to set state.busy = true with no
+   try/finally, so any throw after that left the board locked forever
+   ("tiles don't move at all", on every device). Now busy is ALWAYS reset. */
 async function trySwap(r1, c1, r2, c2) {
   if (state.busy || state.over) return;
   if (!inBoard(r2, c2)) return;
@@ -1903,35 +1907,38 @@ async function trySwap(r1, c1, r2, c2) {
   if (!a || !b) return;
   if (a.type === "bomb" || b.type === "bomb") return; /* bombs are dragged to detonate, never swapped */
   state.busy = true;
-  state.selected = null; renderSelection();
-  /* animate the swap */
-  state.board[r1][c1] = b; state.board[r2][c2] = a;
-  renderBoard(false);
-  AudioEng.sfx("click");
-  await sleep(230);
-  /* rainbow activation */
-  if (a.special === "rainbow" || b.special === "rainbow") {
+  try {
+    state.selected = null; renderSelection();
+    /* animate the swap */
+    state.board[r1][c1] = b; state.board[r2][c2] = a;
+    renderBoard(false);
+    AudioEng.sfx("click");
+    await sleep(230);
+    /* rainbow activation */
+    if (a.special === "rainbow" || b.special === "rainbow") {
+      state.moves--;
+      updateHUD();
+      await doRainbowSwap(r1, c1, r2, c2);
+      afterTurn();
+      return;
+    }
+    var found = findMatches(state.board);
+    if (found.runs.length === 0) {
+      state.board[r1][c1] = a; state.board[r2][c2] = b;
+      renderBoard(false);
+      AudioEng.sfx("invalid");
+      await sleep(230);
+      return;
+    }
     state.moves--;
     updateHUD();
-    await doRainbowSwap(r1, c1, r2, c2);
+    await resolveBoard([r2, c2]);
     afterTurn();
+  } finally {
+    /* Never leave the board locked, on any path (normal, invalid, rainbow
+       or an unexpected error mid-resolve). */
     state.busy = false;
-    return;
   }
-  var found = findMatches(state.board);
-  if (found.runs.length === 0) {
-    state.board[r1][c1] = a; state.board[r2][c2] = b;
-    renderBoard(false);
-    AudioEng.sfx("invalid");
-    await sleep(230);
-    state.busy = false;
-    return;
-  }
-  state.moves--;
-  updateHUD();
-  await resolveBoard([r2, c2]);
-  afterTurn();
-  state.busy = false;
 }
 
 function afterTurn() {
@@ -2923,7 +2930,9 @@ async function giantHeadBoom(type, cells) {
     { transform: "translate(-50%,-50%) scale(4.0) rotate(6deg)", opacity: 1, offset: 0.8 },
     { transform: "translate(-50%,-50%) scale(4.3) rotate(0deg)", opacity: 1 }
   ], { duration: 320, easing: "ease-out" });
-  try { await zoom.finished; } catch (e) { await sleep(320); }
+  /* Never hang on the animation: race it against a timeout so this
+     resolves in <=400ms even if the animation stalls or never settles. */
+  await Promise.race([zoom.finished.catch(function() {}), sleep(400)]);
   if (img.parentNode) img.parentNode.removeChild(img);
   /* RGB light flares brighter at the explosion, then fades out with the head */
   if (rgb) {
