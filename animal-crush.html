@@ -678,13 +678,21 @@ input[type=text]:focus { border-color:#ff5c8a; }
    v28 (An 2026-11-13): square board left TOO much empty space (~230px
    top/bottom). Stretch is BACK, but the game screen now has exactly
    1cm padding top + bottom, so the board fills the screen with only
-   1cm margins and can never spill past the edge. Sizing stays svh. */
+   1cm margins and can never spill past the edge. Sizing stays svh.
+   v29 (An 2026-11-13): developer credit at the very bottom of the
+   game screen — floats in the 1cm bottom margin strip, board keeps
+   its exact 1cm margins, no layout change. */
 @media (max-width: 599px) {
   #gameScreen { justify-content:safe center; padding-top:1cm; padding-bottom:1cm; } /* v28: 1cm margins top + bottom */
   #boardWrap { flex:1 1 0; min-height:0; }
   #board { aspect-ratio:auto; height:100%; }
   .tile img { object-fit:contain; }
 }
+
+/* v29: dev credit — floats in the bottom margin strip (v28 1cm), so
+   the board is untouched. 10px semibold white + shadow reads over
+   the green background; pointer-events:none never blocks a tile tap. */
+#devCredit { position:absolute; left:0; right:0; bottom:0.32cm; text-align:center; font-size:10px; font-weight:600; letter-spacing:.2px; color:rgba(255,255,255,.92); text-shadow:0 1px 3px rgba(0,0,0,.35); pointer-events:none; z-index:5; }
 
 /* v21 tall phones get a bigger HUD to match the taller board (per-size
    tuning: big/tall phones scale up, small/short phones stay compact).
@@ -754,6 +762,7 @@ input[type=text]:focus { border-color:#ff5c8a; }
     <div id="fxLayer"></div>
     <div id="toast"></div>
   </div>
+  <div id="devCredit">© 2026 Mia &amp; Bom · All Rights Reserved</div>
 </div>
 
 <div id="endScreen" class="hidden">
