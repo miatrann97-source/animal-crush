@@ -78,7 +78,7 @@ button:disabled { opacity:.55; cursor:default; }
 
 /* ---------- Start screen ---------- */
 #startScreen { text-align:center; }
-/* v31.31: cá heo video — sprite sheet trong suốt + đuôi vẫy (video PixVerse đã tách nền; sprite 30 khung, hiển thị 240px; đuôi vẫy + vây vẫy như cá heo thật; bơi 3D: xoay rotateY ở 2 đầu làn + nghiêng 3D, bong bóng bay lên.
+/* v31.32: cá heo video — sprite sheet trong suốt + đuôi vẫy (video PixVerse đã tách nền; sprite 30 khung, hiển thị 240px; đuôi vẫy + vây vẫy như cá heo thật; bơi 3D: xoay rotateY ở 2 đầu làn + nghiêng 3D, bong bóng bay lên.
    CSS-only cho bơi ngang + bob; JS nhỏ đổi khung hình sprite.
    Lane nằm trong #startScreen nên tự ẩn khi vào game. */
 #swimLane { position:relative; width:100%; height:170px; overflow:hidden; perspective:700px; }
@@ -798,7 +798,7 @@ var __previewStore = {
 })();
 
 
-  /* v31.31: chạy khung hình sprite cá heo bằng CANVAS (30 khung, 6 cột x 5 hàng, nguồn 480x324/khung, hiển thị 240x162; 12fps, vòng 2.5s). Canvas drawImage mượt hơn background-position trên iPhone (không bị khựng/lag). */
+  /* v31.32: chạy khung hình sprite cá heo bằng CANVAS (30 khung, 6 cột x 5 hàng, nguồn 480x324/khung, hiển thị 240x162; 12fps, vòng 2.5s). Canvas drawImage mượt hơn background-position trên iPhone (không bị khựng/lag). */
   (function () {
     var cv = document.getElementById("swimSprite");
     if (!cv) return;
@@ -806,7 +806,7 @@ var __previewStore = {
     var img = new Image();
     var COLS = 6, SW = 480, SH = 324, DW = 200, DH = 135, FRAMES = 30, frame = 0, last = 0, acc = 0, ready = false;
     img.onload = function () { ready = true; };
-    img.src = "https://miatrann97-source.github.io/animal-crush/tiles/dolphin-swim-sprite.png?v=353";
+    img.src = "https://miatrann97-source.github.io/animal-crush/tiles/dolphin-swim-sprite-finfix2.png?v=355";
     if (img.complete && img.naturalWidth) ready = true;
     function tick(ts) {
       if (!last) last = ts;
