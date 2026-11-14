@@ -802,13 +802,17 @@ var __previewStore = {
   (function () {
     var el = document.getElementById("swimSprite");
     if (!el) return;
-    var COLS = 6, FW = 240, FH = 162, FRAMES = 30, frame = 0, last = 0;
+    var COLS = 6, FW = 240, FH = 162, FRAMES = 30, frame = 0, last = 0, acc = 0;
     function tick(ts) {
       if (!last) last = ts;
       var dt = ts - last; last = ts;
-      frame = (frame + Math.floor(dt / 83)) % FRAMES;
-      var col = frame % COLS, row = Math.floor(frame / COLS);
-      el.style.backgroundPosition = (-col * FW) + "px " + (-row * FH) + "px";
+      acc += dt;
+      if (acc >= 83) {
+        frame = (frame + Math.floor(acc / 83)) % FRAMES;
+        acc = acc % 83;
+        var col = frame % COLS, row = Math.floor(frame / COLS);
+        el.style.backgroundPosition = (-col * FW) + "px " + (-row * FH) + "px";
+      }
       requestAnimationFrame(tick);
     }
     requestAnimationFrame(tick);
