@@ -135,6 +135,8 @@ button:disabled { opacity:.55; cursor:default; }
 .hud-row { display:flex; justify-content:space-between; align-items:center; gap:4px; flex-wrap:wrap; }
 .hud-stat { font-family: 'Baloo 2', "Comic Sans MS", "Chalkboard SE", sans-serif; font-size:12px; font-weight:700; line-height:1.25; color:#4a3527; }
 .hud-stat b { font-size:16px; font-weight:800; background: linear-gradient(90deg, #ff2d55, #ff9500, #ffe600, #2ed573, #00d2ff, #7b5cff, #ff2d78); -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-stroke: 0.7px #000; }
+/* v31.51: ten vung dat cua man hien tai, hien canh so man trong HUD. */
+.hud-stat #landName { font-size:11px; font-weight:700; color:#7c3fd4; }
 .hud-btns { display:flex; gap:3px; }
 .icon-btn {
   padding:2px 5px; font-size:11px; border-radius:12px; min-width:26px;
@@ -199,12 +201,15 @@ button:disabled { opacity:.55; cursor:default; }
    NO border/frame on any tile (An 2026-11-12: only the character + the coloured
    tile behind it; the old 3px outer frame extended into neighbours and covered
    their edges). Placed before .selected/.hint so those still override. */
-.tile.t-shark .inner { background:#d6ecff; }
-.tile.t-otter .inner { background:#f0e0cc; }
-.tile.t-rabbit .inner { background:#fff8ec; }
-.tile.t-mouse .inner { background:#e8eaec; }
-.tile.t-jellyfish .inner { background:#e9defc; }
-.tile.t-fox .inner { background:#ffe8cc; }
+/* v31.49: hieu ung SANG cho tung o — moi o co hao quang (glow) mau cua
+   rieng ban thu do (dung ANIMAL_COLORS; tho dung hong vi trang khong thay).
+   Glow TINH (khong nhap nhay/chop) nen khong dau mat. */
+.tile.t-shark .inner { background:#d6ecff; box-shadow: 0 0 8px 1px rgba(30,144,255,.45), inset 0 0 8px rgba(30,144,255,.25); }
+.tile.t-otter .inner { background:#f0e0cc; box-shadow: 0 0 8px 1px rgba(139,90,43,.45), inset 0 0 8px rgba(139,90,43,.25); }
+.tile.t-rabbit .inner { background:#fff8ec; box-shadow: 0 0 8px 1px rgba(255,158,207,.55), inset 0 0 8px rgba(255,158,207,.30); }
+.tile.t-mouse .inner { background:#e8eaec; box-shadow: 0 0 8px 1px rgba(154,160,166,.55), inset 0 0 8px rgba(154,160,166,.30); }
+.tile.t-jellyfish .inner { background:#e9defc; box-shadow: 0 0 8px 1px rgba(193,166,237,.60), inset 0 0 8px rgba(193,166,237,.35); }
+.tile.t-fox .inner { background:#ffe8cc; box-shadow: 0 0 8px 1px rgba(255,140,26,.55), inset 0 0 8px rgba(255,140,26,.30); }
 .tile img { width:100%; height:100%; object-fit:cover; display:block; pointer-events:none; }
 /* Glitter sparkle on every tile: three tiny gold stars that twinkle.
    Small and soft (9-11px, peak opacity .85, edge-biased spots so they never
@@ -710,6 +715,7 @@ input[type=text]:focus { border-color:#ff5c8a; }
    the green background; pointer-events:none never blocks a tile tap. */
 #devCredit { position:absolute; left:0; right:0; bottom:0.32cm; text-align:center; font-size:10px; font-weight:600; letter-spacing:.2px; color:rgba(255,255,255,.92); text-shadow:0 1px 3px rgba(0,0,0,.35); pointer-events:none; z-index:5; }
 /* v31.40: cá heo Flow pastel đưa lại vào game (An yêu cầu 2026-11-14) */
+/* v31.51: moi man la 1 vung dat rieng — man + qua toi man 25, glow tung o, truyen viet lai (An 2026-11-14). LIVE. */
 /* v30: story chapters — full-screen card before levels 1/3/5/8.
    z-index 60 sits above the transition overlay (55); the level timer
    only starts after the player taps Play, so reading costs no time. */
@@ -766,6 +772,7 @@ input[type=text]:focus { border-color:#ff5c8a; }
     <span class="swim-bubble sb3"></span>
   </div>
   <script>
+
   /* v31.34: chạy khung hình sprite cá heo bằng CANVAS (30 khung, 6 cột x 5 hàng, nguồn 480x324/khung, hiển thị 240x162; 12fps, vòng 2.5s). Canvas drawImage mượt hơn background-position trên iPhone (không bị khựng/lag). */
   (function () {
     var cv = document.getElementById("swimSprite");
@@ -819,7 +826,7 @@ input[type=text]:focus { border-color:#ff5c8a; }
     <span class="hud-doodle" style="top:38%; left:-8px;"><svg width="18" height="18" viewBox="0 0 24 24"><path d="M12 2 L13.5 9 L21 10 L15 14.5 L17 22 L12 17.5 L7 22 L9 14.5 L3 10 L10.5 9 Z" fill="#7b5cff"/></svg></span>
     <span class="hud-doodle" style="top:42%; right:-6px;"><svg width="16" height="16" viewBox="0 0 24 24"><path d="M12 2 L13 10 L21 11 L14 15 L16 23 L12 18 L8 23 L10 15 L3 11 L11 10 Z" fill="#2ed573"/></svg></span>
     <div class="hud-row">
-      <div class="hud-stat"><span id="lblLevel"></span> <b id="levelNum">1</b></div>
+      <div class="hud-stat"><span id="lblLevel"></span> <b id="levelNum">1</b> <span id="landName"></span></div>
       <div class="hud-stat"><span id="lblScore"></span> <b id="scoreNum">0</b></div>
       <div class="hud-stat"><span id="lblBest"></span> <b id="bestNum">0</b></div>
       <div class="hud-btns">
@@ -975,8 +982,8 @@ var STR = {
     movesLeft: "lượt",
     time: "Thời gian",
     transDone: "Màn {n} hoàn thành!",
-    transWalk: "Bạn làm tốt lắm, qua màn {n} thôi!",
-    transNext: "Màn {n} sắp mở ra!",
+    transWalk: "Bạn làm tốt lắm, qua màn {n} — {land} thôi!",
+    transNext: "Màn {n} — {land} sắp mở ra!",
     leaderboard: "Bảng thành tích",
     top10: "Top 10 chung",
     champion: "Nhà vô địch Animal Crush",
@@ -999,8 +1006,8 @@ var STR = {
     praise2: "Siêu quá!", praise3: "Đỉnh quá!", praise4: "Tuyệt vời!", praise5: "Thần thánh!",
     great: "Tuyệt vời!",
     amazing: "Siêu đỉnh!",
-    perkGift: "🎁 Quà màn", perkMoves: "+10 lượt", perkBomb: "1 bom sói", perkDouble: "Điểm x2",
-    perkNext3: "Lên màn 3 nhận +10 lượt!", perkNext5: "Lên màn 5 nhận 1 bom sói!", perkNext8: "Lên màn 8 nhận Điểm x2!",
+    perkGift: "🎁 Quà màn", perkMoves: "+10 lượt", perkMoves20: "+20 lượt", perkBomb: "1 bom sói", perkBomb2: "2 bom sói", perkRainbow: "1 kẹo cầu vồng", perkDouble: "Điểm x2", perkTriple: "Điểm x3",
+    perkNext3: "Lên màn 3 nhận +10 lượt!", perkNext5: "Lên màn 5 nhận 1 bom sói!", perkNext8: "Lên màn 8 nhận Điểm x2!", perkNext12: "Lên màn 12 nhận Điểm x3!", perkNext15: "Lên màn 15 nhận 2 bom sói!", perkNext20: "Lên màn 20 nhận +20 lượt!", perkNext25: "Lên màn 25 nhận 1 kẹo cầu vồng!",
     levelUp: "Lên màn mới, khó hơn rồi đó!",
     visits: "Đã có {n} người chơi",
     scoreSaved: "Đã lưu",
@@ -1022,8 +1029,8 @@ var STR = {
     movesLeft: "moves",
     time: "Time",
     transDone: "Level {n} cleared!",
-    transWalk: "Great job, on to level {n}!",
-    transNext: "Level {n} is about to open!",
+    transWalk: "Great job, on to level {n} — {land}!",
+    transNext: "Level {n} — {land} is about to open!",
     leaderboard: "Leaderboard",
     top10: "Shared top 10",
     champion: "Animal Crush Champion",
@@ -1046,8 +1053,8 @@ var STR = {
     praise2: "Super!", praise3: "Awesome!", praise4: "Delicious!", praise5: "Divine!",
     great: "Great!",
     amazing: "Amazing!",
-    perkGift: "🎁 Level gifts", perkMoves: "+10 moves", perkBomb: "1 wolf bomb", perkDouble: "2x points",
-    perkNext3: "Reach level 3 for +10 moves!", perkNext5: "Reach level 5 for 1 wolf bomb!", perkNext8: "Reach level 8 for 2x points!",
+    perkGift: "🎁 Level gifts", perkMoves: "+10 moves", perkMoves20: "+20 moves", perkBomb: "1 wolf bomb", perkBomb2: "2 wolf bombs", perkRainbow: "1 rainbow candy", perkDouble: "2x points", perkTriple: "3x points",
+    perkNext3: "Reach level 3 for +10 moves!", perkNext5: "Reach level 5 for 1 wolf bomb!", perkNext8: "Reach level 8 for 2x points!", perkNext12: "Reach level 12 for 3x points!", perkNext15: "Reach level 15 for 2 wolf bombs!", perkNext20: "Reach level 20 for +20 moves!", perkNext25: "Reach level 25 for 1 rainbow candy!",
     levelUp: "New level, harder now!",
     visits: "{n} players so far",
     scoreSaved: "Saved",
@@ -1427,12 +1434,51 @@ function levelConfig(level) {
 /* Level perks (qua theo man): the higher the level, the more help you get,
    so older players and kids can keep playing as the game gets harder.
    L3+: +10 moves. L5+: 1 free wolf bomb at level start. L8+: 2x points. */
+/* v31.49: perks mo rong toi man 25 — L3+ +10 luot, L5+ 1 bom soi,
+   L8+ diem x2, L12+ diem x3, L15+ 2 bom soi, L20+ +20 luot,
+   L25+ 1 keo cau vong ngay dau. */
 function levelPerks(level) {
   return {
-    movesBonus: level >= 3 ? 10 : 0,
-    freeBomb: level >= 5,
-    scoreMult: level >= 8 ? 2 : 1
+    movesBonus: level >= 20 ? 20 : (level >= 3 ? 10 : 0),
+    freeBombs: level >= 15 ? 2 : (level >= 5 ? 1 : 0),
+    freeRainbow: level >= 25,
+    scoreMult: level >= 12 ? 3 : (level >= 8 ? 2 : 1)
   };
+}
+/* v31.51: moi man la 1 vung dat rieng (25 vung, lap lai sau man 25).
+   Ten vung trung voi chuong truyen o cac moc (man 1 Rung Banh Quy, 3 Ho
+   Keo Deo, 5 Nui So-co-la, 8 Dinh Cau Vong, 12 Thao Nguyen Keo Mut, 15
+   Bien Keo Deo, 20 Rung Keo Bong, 25 Lau Dai Cau Vong). Hien trong HUD,
+   man hinh bat dau (levelInfo) va man chuyen man. */
+var LANDS = [
+  { vi: "Rừng Bánh Quy", en: "Cookie Forest" },
+  { vi: "Đồng Cỏ Sô-cô-la", en: "Chocolate Meadow" },
+  { vi: "Hồ Kẹo Dẻo", en: "Jelly Lake" },
+  { vi: "Thác Siro Dâu", en: "Strawberry Syrup Falls" },
+  { vi: "Núi Sô-cô-la", en: "Chocolate Mountain" },
+  { vi: "Hang Kẹo Đá", en: "Rock Candy Cave" },
+  { vi: "Đồi Kẹo Bông", en: "Cotton Candy Hills" },
+  { vi: "Đỉnh Cầu Vồng", en: "Rainbow Peak" },
+  { vi: "Vườn Kẹo Hoa", en: "Candy Flower Garden" },
+  { vi: "Suối Kẹo Chanh", en: "Lemon Candy Stream" },
+  { vi: "Cầu Kẹo Dẻo", en: "Gummy Bridge" },
+  { vi: "Thảo Nguyên Kẹo Mút", en: "Lollipop Meadow" },
+  { vi: "Rừng Kẹo Que", en: "Candy Cane Forest" },
+  { vi: "Hồ Kẹo Bạc Hà", en: "Mint Candy Lake" },
+  { vi: "Biển Kẹo Dẻo", en: "Gummy Sea" },
+  { vi: "Đảo Kẹo Dừa", en: "Coconut Candy Island" },
+  { vi: "Vịnh Kẹo Cam", en: "Orange Candy Bay" },
+  { vi: "Bãi Biển Kẹo", en: "Candy Beach" },
+  { vi: "Rạn San Hô Kẹo", en: "Candy Coral Reef" },
+  { vi: "Rừng Kẹo Bông", en: "Cotton Candy Forest" },
+  { vi: "Thung Lũng Kẹo Mật", en: "Honey Candy Valley" },
+  { vi: "Đồi Kẹo Nho", en: "Grape Candy Hills" },
+  { vi: "Suối Kẹo Đào", en: "Peach Candy Stream" },
+  { vi: "Cánh Đồng Kẹo", en: "Candy Fields" },
+  { vi: "Lâu Đài Cầu Vồng", en: "Rainbow Castle" }
+];
+function landForLevel(level) {
+  return LANDS[(level - 1) % LANDS.length];
 }
 
 var state = {
@@ -3091,21 +3137,34 @@ function updatePerkLine() {
   if (!el) return;
   var perks = levelPerks(state.level);
   var parts = [];
-  if (perks.movesBonus) parts.push(t("perkMoves"));
-  if (perks.freeBomb) parts.push(t("perkBomb"));
-  if (perks.scoreMult > 1) parts.push(t("perkDouble"));
+  if (perks.movesBonus >= 20) parts.push(t("perkMoves20"));
+  else if (perks.movesBonus) parts.push(t("perkMoves"));
+  if (perks.freeBombs === 2) parts.push(t("perkBomb2"));
+  else if (perks.freeBombs === 1) parts.push(t("perkBomb"));
+  if (perks.freeRainbow) parts.push(t("perkRainbow"));
+  if (perks.scoreMult === 3) parts.push(t("perkTriple"));
+  else if (perks.scoreMult > 1) parts.push(t("perkDouble"));
   if (parts.length) {
     el.textContent = t("perkGift") + " " + state.level + ": " + parts.join(" • ");
   } else if (state.level < 3) {
     el.textContent = t("perkNext3");
   } else if (state.level < 5) {
     el.textContent = t("perkNext5");
-  } else {
+  } else if (state.level < 8) {
     el.textContent = t("perkNext8");
+  } else if (state.level < 12) {
+    el.textContent = t("perkNext12");
+  } else if (state.level < 15) {
+    el.textContent = t("perkNext15");
+  } else if (state.level < 20) {
+    el.textContent = t("perkNext20");
+  } else {
+    el.textContent = t("perkNext25");
   }
 }
 function updateHUD() {
   document.getElementById("levelNum").textContent = state.level;
+  document.getElementById("landName").textContent = "· " + landForLevel(state.level)[LANG];
   document.getElementById("scoreNum").textContent = state.score;
   document.getElementById("bestNum").textContent = Math.max(state.best, state.score);
   document.getElementById("targetNum").textContent = state.target;
@@ -3236,8 +3295,9 @@ function showTransition(fromLevel) {
   var next = fromLevel + 1;
   var ov = document.getElementById("transitionScreen");
   document.getElementById("transTitle").textContent = t("transDone").replace("{n}", fromLevel);
-  document.getElementById("transMsg").textContent = t("transWalk").replace("{n}", next);
-  document.getElementById("transNext").textContent = t("transNext").replace("{n}", next);
+  var __land = landForLevel(next)[LANG];
+  document.getElementById("transMsg").textContent = t("transWalk").replace("{n}", next).replace("{land}", __land);
+  document.getElementById("transNext").textContent = t("transNext").replace("{n}", next).replace("{land}", __land);
   ov.classList.remove("hidden");
   var row = ov.querySelector(".trans-row");
   if (row) { row.style.animation = "none"; void row.offsetWidth; row.style.animation = ""; }
@@ -3292,22 +3352,38 @@ function playIceDrop() {
 var STORY = {
   1: { img: "tiles/shark.png",
     title: { vi: "Chương 1 — Viên Kẹo Cầu Vồng vỡ tan", en: "Chapter 1 — The Rainbow Candy shatters" },
-    body: { vi: "Đêm qua, Sói Đêm sống một mình trên núi Đen lén ôm Viên Kẹo Cầu Vồng về chơi cùng, ai dè làm rơi vỡ tan thành hàng ngàn mảnh kẹo văng khắp vương quốc. Bé Cá rủ hội bạn lên đường nhặt lại từng mảnh để ghép viên kẹo về như cũ — xếp 3 bạn thú giống nhau là nhặt được một mảnh đó!",
-      en: "Last night, the lonely Night Wolf from Black Mountain tried to carry the Rainbow Candy home for company — and dropped it! It shattered into thousands of candy pieces across the kingdom. Baby Shark and friends set off to pick up every piece — match 3 animals to collect one!" } },
+    body: { vi: "Đêm qua, trên núi Đen, Sói Đêm sống một mình đã lâu, lén ôm Viên Kẹo Cầu Vồng về để có bạn chơi cùng. Viên kẹo nặng quá, sói làm rơi — 'choang!' — vỡ thành hàng ngàn mảnh, văng khắp vương quốc. Bé Cá không chờ thêm một giây: rủ hội bạn lên đường, nhặt lại từng mảnh để ghép viên kẹo về như cũ. Xếp 3 bạn thú giống nhau là nhặt được một mảnh đó!",
+      en: "Last night, atop Black Mountain, the long-lonely Night Wolf tried to carry the Rainbow Candy home for company. It was too heavy — 'crash!' — and it shattered into thousands of pieces across the kingdom. Baby Shark didn't wait a second: she gathered her friends to pick up every piece and rebuild the candy. Match 3 animals to collect a piece!" } },
   3: { img: "tiles/otter.png",
     title: { vi: "Chương 3 — Hồ Kẹo Dẻo", en: "Chapter 3 — Jelly Lake" },
-    body: { vi: "Cả nhóm tới Hồ Kẹo Dẻo, nơi Rái Cá làm đầu bếp. Từ màn này, bạn bè góp sức giúp Bé Cá thêm 10 lượt mỗi màn — càng đông càng vui mà!",
-      en: "The friends reach Jelly Lake, where Otter is the chef. From this level on, friends lend a hand: +10 moves every level — the more friends, the merrier!" } },
+    body: { vi: "Cả nhóm tới Hồ Kẹo Dẻo, nơi Rái Cá — đầu bếp của nhóm — đang nấu một nồi súp kẹo dẻo thơm lừng để tiếp sức cho mọi người. Ai cũng góp một tay: người nhặt kẹo, người dọn đường, người cổ vũ. Từ màn này, tình bạn cho thêm sức mạnh — cộng 10 lượt mỗi màn!",
+      en: "The friends reach Jelly Lake, where Otter — the group's chef — is cooking a fragrant pot of jelly soup to fuel everyone. Each friend pitches in: one gathers candy, one clears the path, one cheers the loudest. From this level on, friendship adds strength — +10 moves every level!" } },
   5: { img: "tiles/wolf.png",
     title: { vi: "Chương 5 — Núi Sô-cô-la", en: "Chapter 5 — Chocolate Mountain" },
-    body: { vi: "Sói Đêm cuối cùng cũng chịu lộ mặt — thì ra sói chỉ cô đơn, muốn có bạn chơi cùng thôi. Bé Cá mời sói đi cùng luôn! Từ màn này, mỗi màn tặng một quả bom sói ngay từ đầu.",
-      en: "Night Wolf finally shows himself — he was never mean, just lonely and longing for friends. Baby Shark invites him along! From this level on, every level starts with a free wolf bomb." } },
+    body: { vi: "Trên Núi Sô-cô-la, Sói Đêm cuối cùng cũng chịu lộ mặt — thì ra sói chẳng hề xấu, chỉ cô đơn quá mà không biết làm sao để có bạn. Bé Cá mỉm cười, chìa tay ra: 'Đi cùng bọn mình đi!' Từ hôm đó, sói thành bạn thân của cả nhóm. Từ màn này, mỗi màn tặng một quả bom sói ngay từ đầu.",
+      en: "On Chocolate Mountain, Night Wolf finally shows himself — he was never mean, only lonely, and never knew how to make friends. Baby Shark smiles and holds out a fin: 'Come with us!' From that day on, the wolf is one of the group. From this level on, every level starts with a free wolf bomb." } },
   8: { img: "tiles/jellyfish.png",
     title: { vi: "Chương 8 — Đỉnh Cầu Vồng", en: "Chapter 8 — Rainbow Peak" },
-    body: { vi: "Viên Kẹo Cầu Vồng sắp lành lại rồi! Sức mạnh của cả nhóm nhân đôi từ màn này — điểm x2. Cố lên, cầu vồng đang chờ ở phía trước!",
-      en: "The Rainbow Candy is almost whole again! The whole team's power doubles from this level on — 2x points. Keep going, the rainbow is just ahead!" } }
+    body: { vi: "Đứng trên Đỉnh Cầu Vồng, cả nhóm ngước nhìn: Viên Kẹo Cầu Vồng đang lành lại, từng sắc màu quay về, rực rỡ hơn cả ngày xưa. Sứa Tím khẽ hát, ánh sáng tím lấp lánh trong đêm. Sức mạnh của cả nhóm nhân đôi từ màn này — điểm x2. Cầu vồng đang chờ ở phía trước, cố lên!",
+      en: "Standing on Rainbow Peak, the friends look up: the Rainbow Candy is healing, its colors returning brighter than ever. Lavender Jellyfish hums softly, her purple light twinkling in the dark. The whole team's power doubles from this level on — 2x points. The rainbow is waiting ahead — keep going!" } },
+  12: { img: "tiles/rabbit.png",
+    title: { vi: "Chương 12 — Thảo Nguyên Kẹo Mút", en: "Chapter 12 — Lollipop Meadow" },
+    body: { vi: "Thảo Nguyên Kẹo Mút bát ngát, cỏ ngọt thơm mùi dâu. Thỏ Trắng — người chạy nhanh nhất nhóm — lao đi trinh sát, rồi quay về reo lên: 'Màu cầu vồng lan tới đây rồi!' Cả nhóm càng quyết tâm hơn. Từ màn này, sức mạnh tình bạn tăng lên — điểm x3!",
+      en: "Lollipop Meadow stretches wide, its grass sweet with strawberry scent. White Rabbit — the fastest of the group — dashes ahead to scout, then rushes back: 'The rainbow's colors are reaching here!' The friends grow even more determined. From this level on, friendship power grows — 3x points!" } },
+  15: { img: "tiles/jellyfish.png",
+    title: { vi: "Chương 15 — Biển Kẹo Dẻo", en: "Chapter 15 — Gummy Sea" },
+    body: { vi: "Biển Kẹo Dẻo tối om, sóng vỗ ì ầm. Sứa Tím hít sâu, phát sáng rực rỡ, soi đường cho cả nhóm bơi qua — ánh sáng tím ấm áp dẫn lối giữa đêm đen. Từ màn này, mỗi màn tặng 2 quả bom sói ngay từ đầu!",
+      en: "The Gummy Sea is pitch dark, its waves rolling in. Lavender Jellyfish takes a deep breath and glows brilliantly, lighting the way across — warm purple light guiding them through the dark. From this level on, every level starts with 2 wolf bombs!" } },
+  20: { img: "tiles/mouse.png",
+    title: { vi: "Chương 20 — Rừng Kẹo Bông", en: "Chapter 20 — Cotton Candy Forest" },
+    body: { vi: "Rừng Kẹo Bông mờ sương, ngọt lịm mùi kẹo bông. Chuột Xám — nhỏ xíu mà thông minh nhất — chui qua từng khe hẹp, lôi ra những mảnh kẹo kẹt sâu trong đó mà chẳng ai với tới. Từ màn này, bạn bè góp sức nhiều hơn — thêm 20 lượt mỗi màn!",
+      en: "The Cotton Candy Forest is fogged with sweetness, smelling of spun sugar. Grey Mouse — tiny but the cleverest — squeezes through every crack, pulling out candy pieces wedged deep where no one else could reach. From this level on, friends lend even more — +20 moves every level!" } },
+  25: { img: "tiles/shark.png",
+    title: { vi: "Chương 25 — Lâu Đài Cầu Vồng", en: "Chapter 25 — Rainbow Castle" },
+    body: { vi: "Lâu Đài Cầu Vồng hiện ra trước mắt, lộng lẫy trong nắng. Viên Kẹo Cầu Vồng đã lành lại hoàn toàn — bảy sắc cầu vồng phủ khắp vương quốc, rực rỡ hơn cả ngày xưa. Cả nhóm mở tiệc lớn, và Sói Đêm — chú sói từng một mình trên núi Đen — cuối cùng cũng có cả một gia đình bạn bè. Từ màn này, mỗi màn tặng 1 kẹo cầu vồng ngay từ đầu!",
+      en: "Rainbow Castle appears before them, splendid in the sunlight. The Rainbow Candy is fully whole — seven rainbow colors covering the kingdom, brighter than ever before. The friends throw a grand feast, and Night Wolf — once alone on Black Mountain — finally has a whole family of friends. From this level on, every level starts with 1 rainbow candy!" } }
 };
-var STORY_LEVELS = [1, 3, 5, 8];
+var STORY_LEVELS = [1, 3, 5, 8, 12, 15, 20, 25];
 function storySeen(level) {
   try { var s = JSON.parse(localStorage.getItem("ac_story_seen") || "[]"); return s.indexOf(level) !== -1; } catch (e) { return false; }
 }
@@ -3421,10 +3497,17 @@ function startLevel(level) {
   state.busy = false;
   state.selected = null;
   state.board = createBoard();
-  if (perks.freeBomb) { /* L5+: 1 free wolf bomb at level start */
-    var br = Math.floor(Math.random() * ROWS), bc = Math.floor(Math.random() * COLS);
-    state.board[br][bc] = makeTile("bomb");
+  /* v31.49: dat bom soi + keo cau vong mien phi vao cac o KHAC NHAU
+     (khong de 2 qua trung 1 o). L5+: 1 bom; L15+: 2 bom; L25+: 1 keo cau vong. */
+  var __usedCells = {};
+  function __placeSpecial(type, special) {
+    var r2, c2;
+    do { r2 = Math.floor(Math.random() * ROWS); c2 = Math.floor(Math.random() * COLS); } while (__usedCells[r2 + "," + c2]);
+    __usedCells[r2 + "," + c2] = true;
+    state.board[r2][c2] = makeTile(type, special);
   }
+  for (var bi = 0; bi < perks.freeBombs; bi++) __placeSpecial("bomb");
+  if (perks.freeRainbow) __placeSpecial("rainbow", "rainbow");
   boardEl.innerHTML = "";
   elsById = {};
   renderBoard(true);
@@ -3652,7 +3735,7 @@ function applyLang() {
   document.getElementById("lblMoves").textContent = t("moves") + ":";
   document.getElementById("lblTime").textContent = t("time") + ":";
   var lc = levelConfig(state.level);
-  document.getElementById("levelInfo").innerHTML = t("level") + ' <b class="rb">' + state.level + "</b> · " + t("target") + ': <b class="rb">' + lc.target + "</b> · " + '<b class="rb">' + lc.moves + "</b> " + t("movesLeft") + ' · ⏱ <b class="rb">7:00</b>';
+  document.getElementById("levelInfo").innerHTML = t("level") + ' <b class="rb">' + state.level + "</b> · " + landForLevel(state.level)[LANG] + ' · ' + t("target") + ': <b class="rb">' + lc.target + "</b> · " + '<b class="rb">' + lc.moves + "</b> " + t("movesLeft") + ' · ⏱ <b class="rb">7:00</b>';
   document.getElementById("saveScoreBtn").textContent = t("save");
   document.getElementById("nextBtn").textContent = t("next");
   document.getElementById("retryBtn").textContent = t("retry");
