@@ -58,7 +58,7 @@
     var swimmer = document.getElementById('swimmer');
     var COLS = 6, FW = 320, FH = 216, FRAMES = 30;
     var frame = 0, last = performance.now(), acc = 0;
-    var dir = 1, x = 8, laneW = lane.clientWidth, maxX = laneW - 328;
+    var dir = 1, x = 20, laneW = lane.clientWidth, maxX = laneW - 340;
     var flipAt = false;
     function tick(now) {
       var dt = now - last; last = now;
@@ -71,10 +71,10 @@
         swimmer.style.backgroundPosition = (-col * FW) + 'px ' + (-row * FH) + 'px';
       }
       // swim left-right, ~11s per round trip
-      var speed = (maxX - 8) / 5500 * dt;
+      var speed = (maxX - 20) / 5500 * dt;
       x += speed * dir;
       if (x >= maxX) { x = maxX; dir = -1; }
-      if (x <= 8) { x = 8; dir = 1; }
+      if (x <= 20) { x = 20; dir = 1; }
       swimmer.style.left = x + 'px';
       swimmer.style.transform = dir === 1 ? 'scaleX(1)' : 'scaleX(-1)';
       requestAnimationFrame(tick);
