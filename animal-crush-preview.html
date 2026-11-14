@@ -78,21 +78,21 @@ button:disabled { opacity:.55; cursor:default; }
 
 /* ---------- Start screen ---------- */
 #startScreen { text-align:center; }
-/* v31.18: cá heo video — sprite sheet trong suốt + đuôi vẫy (lật ngang theo yêu cầu An 19:12, bụng xanh nhạt giữ ở dưới) (video Kling đã tách nền; sprite 30 khung, hiển thị 240px; đuôi vẫy + vây vẫy như cá heo thật; bơi 3D: xoay rotateY ở 2 đầu làn + nghiêng 3D, bong bóng bay lên.
-   CSS-only cho bơi ngang + bob; JS nhỏ đổi khung hình sprite.
+/* v31.19: gái cá mập bơi — ảnh tĩnh shark-girl-swim.png (700x533, trong suốt), hiển thị 220x168 trong làn 170px; bơi ngang + nhấp nhô 3D: xoay rotateY ở 2 đầu làn + nghiêng 3D, bong bóng bay lên.
+   CSS-only cho bơi ngang + bob; không canvas, không cắt đoạn.
    Lane nằm trong #startScreen nên tự ẩn khi vào game. */
 #swimLane { position:relative; width:100%; height:170px; overflow:hidden; perspective:700px; }
-#swimShark { position:absolute; top:2px; left:8px; width:240px; animation: swimX 11s linear infinite; will-change:left, transform; transform-style: preserve-3d; }
-.swimChar { position:relative; width:240px; height:162px; animation: swimBob3D 2.4s ease-in-out infinite alternate; }
-.swimSprite { position:absolute; left:0; top:0; width:240px; height:162px; display:block; transform: translateZ(0); will-change: transform; }
-@keyframes swimX { 0% { left:8px; transform: rotateY(180deg); } 40% { left:calc(100% - 248px); transform: rotateY(180deg); } 50% { left:calc(100% - 248px); transform: rotateY(360deg); } 90% { left:8px; transform: rotateY(360deg); } 100% { left:8px; transform: rotateY(540deg); } }
+#swimShark { position:absolute; top:2px; left:8px; width:220px; animation: swimX 11s linear infinite; will-change:left, transform; transform-style: preserve-3d; }
+.swimChar { position:relative; width:220px; height:168px; animation: swimBob3D 2.4s ease-in-out infinite alternate; }
+.swimImg { position:absolute; left:0; top:0; width:220px; height:168px; display:block; transform: translateZ(0); }
+@keyframes swimX { 0% { left:8px; transform: rotateY(0deg); } 40% { left:calc(100% - 228px); transform: rotateY(0deg); } 50% { left:calc(100% - 228px); transform: rotateY(180deg); } 90% { left:8px; transform: rotateY(180deg); } 100% { left:8px; transform: rotateY(360deg); } }
 @keyframes swimBob3D { from { transform: translateY(-3px) rotate(-4deg) rotateX(6deg) rotateY(-8deg) scale(1); } to { transform: translateY(4px) rotate(4deg) rotateX(-6deg) rotateY(8deg) scale(1.05); } }
 .swim-bubble { position:absolute; bottom:4px; width:12px; height:12px; border-radius:50%; background: radial-gradient(circle at 35% 35%, rgba(255,255,255,.95), rgba(170,215,255,.55)); border:1px solid rgba(255,255,255,.8); opacity:0; animation: bubbleRise 3.4s ease-in infinite; }
 .sb1 { left:24%; animation-delay:0s; }
 .sb2 { left:50%; width:9px; height:9px; animation-delay:1.2s; }
 .sb3 { left:76%; width:14px; height:14px; animation-delay:2.3s; }
 @keyframes bubbleRise { 0% { transform:translateY(0); opacity:0; } 15% { opacity:1; } 100% { transform:translateY(-56px); opacity:0; } }
-@media (prefers-reduced-motion: reduce) { #swimShark, #swimShark .swimSprite, .swim-bubble { animation:none; } #swimShark { left:50%; transform:translateX(-50%); } }
+@media (prefers-reduced-motion: reduce) { #swimShark, #swimShark .swimImg, .swim-bubble { animation:none; } #swimShark { left:50%; transform:translateX(-50%); } }
 
 .logo-row { display:flex; gap:6px; justify-content:center; flex-wrap:wrap; margin: 6px 0; }
 .logo-row img { width:56px; height:56px; border-radius:16px; box-shadow: 0 4px 10px rgba(0,0,0,.2); animation: logoBob 2s ease-in-out infinite; }
@@ -759,73 +759,11 @@ input[type=text]:focus { border-color:#ff5c8a; }
   <svg class="rainbow-arc" width="120" height="34" viewBox="0 0 120 34"><path d="M6 32 A54 54 0 0 1 114 32" fill="none" stroke="#ff2d55" stroke-width="5" stroke-linecap="round"/><path d="M14 32 A46 46 0 0 1 106 32" fill="none" stroke="#ff9500" stroke-width="5" stroke-linecap="round"/><path d="M22 32 A38 38 0 0 1 98 32" fill="none" stroke="#ffe600" stroke-width="5" stroke-linecap="round"/><path d="M30 32 A30 30 0 0 1 90 32" fill="none" stroke="#2ed573" stroke-width="5" stroke-linecap="round"/><path d="M38 32 A22 22 0 0 1 82 32" fill="none" stroke="#00b4ff" stroke-width="5" stroke-linecap="round"/></svg>
   <h1>Animal Crush</h1>
   <div id="swimLane" aria-hidden="true">
-    <div id="swimShark"><div class="swimChar"><canvas class="swimSprite" id="swimSprite" width="240" height="162"></canvas></div></div>
+    <div id="swimShark"><div class="swimChar"><img class="swimImg" id="swimImg" src="https://miatrann97-source.github.io/animal-crush/tiles/shark-girl-swim.png?v=335" alt="" /></div></div>
     <span class="swim-bubble sb1"></span>
     <span class="swim-bubble sb2"></span>
     <span class="swim-bubble sb3"></span>
   </div>
-  <script>
-/* Preview-only safe storage: this file is shown inside a chat widget
-   (preview mode), where the real __previewStore throws. Reads prefer the
-   real __previewStore; writes go to both, so progress survives a reload
-   here but never touches the live game's keys. */
-var __memStore = {};
-var __previewStore = {
-  getItem: function(k) {
-    try { var v = window["local" + "Storage"].getItem(k); if (v !== null) return v; } catch (e) {}
-    return (k in __memStore) ? __memStore[k] : null;
-  },
-  setItem: function(k, v) {
-    __memStore[k] = String(v);
-    try { window["local" + "Storage"].setItem(k, v); } catch (e) {}
-  },
-  removeItem: function(k) {
-    delete __memStore[k];
-    try { window["local" + "Storage"].removeItem(k); } catch (e) {}
-  }
-};
-/* v30: ?reset=1 — An asked to start over from Level 1 (preview). Clears
-   Animal Crush progress on THIS browser only (level, best, story-seen
-   flags), then strips the param so reopening the page does not reset
-   again. Runs here, before the game reads its saved level. Keeps
-   language, music and visit-counter settings. */
-(function () {
-  try {
-    if (new URLSearchParams(location.search).get("reset") !== "1") return;
-    ["animalCrushLevel", "animalCrushBest", "animalCrushMaxLevel", "ac_story_seen"].forEach(function (k) { __previewStore.removeItem(k); });
-    history.replaceState(null, "", location.pathname);
-  } catch (e) {}
-})();
-
-
-  /* v31.18: chạy khung hình sprite cá heo bằng CANVAS (30 khung, 6 cột x 5 hàng, nguồn 480x324/khung, hiển thị 240x162; 12fps, vòng 2.5s). Canvas drawImage mượt hơn background-position trên iPhone (không bị khựng/lag). */
-  (function () {
-    var cv = document.getElementById("swimSprite");
-    if (!cv) return;
-    var ctx = cv.getContext("2d");
-    var img = new Image();
-    var COLS = 6, SW = 480, SH = 324, DW = 240, DH = 162, FRAMES = 30, frame = 0, last = 0, acc = 0, ready = false;
-    img.onload = function () { ready = true; };
-    img.src = "https://miatrann97-source.github.io/animal-crush/tiles/dolphin-kling-sprite.png?v=334";
-    if (img.complete && img.naturalWidth) ready = true;
-    function tick(ts) {
-      if (!last) last = ts;
-      var dt = ts - last; last = ts;
-      acc += dt;
-      if (acc >= 83) {
-        frame = (frame + Math.floor(acc / 83)) % FRAMES;
-        acc = acc % 83;
-        if (ready) {
-          var col = frame % COLS, row = Math.floor(frame / COLS);
-          ctx.clearRect(0, 0, DW, DH);
-          ctx.drawImage(img, col * SW, row * SH, SW, SH, 0, 0, DW, DH);
-        }
-      }
-      requestAnimationFrame(tick);
-    }
-    requestAnimationFrame(tick);
-  })();
-  </script>
   <div class="logo-row" id="logoRow"></div>
   <p class="tagline" id="tagline"></p>
   <button id="playBtn" class="rainbow"><span class="mini-bubble b1"></span><span class="mini-bubble b2"></span><span class="play-label"></span></button>
@@ -947,6 +885,39 @@ var __previewStore = {
 </div>
 
 <script>
+/* Preview-only safe storage: this file is shown inside a chat widget
+   (preview mode), where the real __previewStore throws. Reads prefer the
+   real __previewStore; writes go to both, so progress survives a reload
+   here but never touches the live game's keys. */
+var __memStore = {};
+var __previewStore = {
+  getItem: function(k) {
+    try { var v = window["local" + "Storage"].getItem(k); if (v !== null) return v; } catch (e) {}
+    return (k in __memStore) ? __memStore[k] : null;
+  },
+  setItem: function(k, v) {
+    __memStore[k] = String(v);
+    try { window["local" + "Storage"].setItem(k, v); } catch (e) {}
+  },
+  removeItem: function(k) {
+    delete __memStore[k];
+    try { window["local" + "Storage"].removeItem(k); } catch (e) {}
+  }
+};
+/* v30: ?reset=1 — An asked to start over from Level 1 (preview). Clears
+   Animal Crush progress on THIS browser only (level, best, story-seen
+   flags), then strips the param so reopening the page does not reset
+   again. Runs here, before the game reads its saved level. Keeps
+   language, music and visit-counter settings. */
+(function () {
+  try {
+    if (new URLSearchParams(location.search).get("reset") !== "1") return;
+    ["animalCrushLevel", "animalCrushBest", "animalCrushMaxLevel", "ac_story_seen"].forEach(function (k) { __previewStore.removeItem(k); });
+    history.replaceState(null, "", location.pathname);
+  } catch (e) {}
+})();
+
+
 /* v30: ?reset=1 — An asked to start over from Level 1 (live). Clears
    Animal Crush progress on THIS browser only (level, best, story-seen
    flags), then strips the param so reopening the page does not reset
