@@ -78,15 +78,15 @@ button:disabled { opacity:.55; cursor:default; }
 
 /* ---------- Start screen ---------- */
 #startScreen { text-align:center; }
-/* v31.35: bé cá mập vẫy tay — sprite sheet trong suốt (video Flow đã tách nền; sprite 30 khung, hiển thị 100x170; bé đứng giữa làn vẫy tay chào, nhún nhảy nhẹ + bong bóng bay lên.
-   CSS-only cho nhún nhảy; JS nhỏ đổi khung hình sprite.
+/* v31.34: cá heo video — sprite sheet trong suốt + đuôi vẫy (video Flow đã tách nền; sprite 30 khung, hiển thị 240px; đuôi vẫy + vây vẫy như cá heo thật; bơi 3D: xoay rotateY ở 2 đầu làn + nghiêng 3D, bong bóng bay lên.
+   CSS-only cho bơi ngang + bob; JS nhỏ đổi khung hình sprite.
    Lane nằm trong #startScreen nên tự ẩn khi vào game. */
-#swimLane { position:relative; width:100%; height:180px; overflow:hidden; perspective:700px; }
-#swimShark { position:absolute; top:2px; left:50%; width:100px; transform:translateX(-50%); animation: swimSway 3.2s ease-in-out infinite alternate; will-change:transform; transform-style: preserve-3d; }
-.swimChar { position:relative; width:100px; height:170px; animation: swimBob3D 2.4s ease-in-out infinite alternate; }
-.swimSprite { position:absolute; left:0; top:0; width:100px; height:170px; display:block; transform: translateZ(0); will-change: transform; filter: drop-shadow(4px 6px 8px rgba(0, 30, 80, 0.35)); }
-@keyframes swimSway { from { transform:translateX(-50%) rotate(-3deg); } to { transform:translateX(-50%) rotate(3deg); } }
-@keyframes swimBob3D { from { transform: translateY(-3px) rotate(-2deg) rotateX(4deg) scale(1); } to { transform: translateY(4px) rotate(2deg) rotateX(-4deg) scale(1.04); } }
+#swimLane { position:relative; width:100%; height:170px; overflow:hidden; perspective:700px; }
+#swimShark { position:absolute; top:2px; left:8px; width:200px; animation: swimX 11s linear infinite; will-change:left, transform; transform-style: preserve-3d; }
+.swimChar { position:relative; width:200px; height:135px; animation: swimBob3D 2.4s ease-in-out infinite alternate; }
+.swimSprite { position:absolute; left:0; top:0; width:200px; height:135px; display:block; transform: translateZ(0); will-change: transform; filter: drop-shadow(4px 6px 8px rgba(0, 30, 80, 0.35)); }
+@keyframes swimX { 0% { left:8px; transform: rotateY(0deg); } 40% { left:calc(100% - 208px); transform: rotateY(0deg); } 50% { left:calc(100% - 208px); transform: rotateY(180deg); } 90% { left:8px; transform: rotateY(180deg); } 100% { left:8px; transform: rotateY(360deg); } }
+@keyframes swimBob3D { from { transform: translateY(-3px) rotate(-4deg) rotateX(6deg) rotateY(-8deg) scale(1); } to { transform: translateY(4px) rotate(4deg) rotateX(-6deg) rotateY(8deg) scale(1.05); } }
 .swim-bubble { position:absolute; bottom:4px; width:12px; height:12px; border-radius:50%; background: radial-gradient(circle at 35% 35%, rgba(255,255,255,.95), rgba(170,215,255,.55)); border:1px solid rgba(255,255,255,.8); opacity:0; animation: bubbleRise 3.4s ease-in infinite; }
 .sb1 { left:24%; animation-delay:0s; }
 .sb2 { left:50%; width:9px; height:9px; animation-delay:1.2s; }
@@ -709,7 +709,7 @@ input[type=text]:focus { border-color:#ff5c8a; }
    the board is untouched. 10px semibold white + shadow reads over
    the green background; pointer-events:none never blocks a tile tap. */
 #devCredit { position:absolute; left:0; right:0; bottom:0.32cm; text-align:center; font-size:10px; font-weight:600; letter-spacing:.2px; color:rgba(255,255,255,.92); text-shadow:0 1px 3px rgba(0,0,0,.35); pointer-events:none; z-index:5; }
-/* v31.35: bé cá mập vẫy tay — sprite sheet trong suốt (An duyệt 'Duyệt cái này đi bom iu' 2026-11-13) */
+/* v31.40: cá heo Flow pastel đưa lại vào game (An yêu cầu 2026-11-14) */
 /* v30: story chapters — full-screen card before levels 1/3/5/8.
    z-index 60 sits above the transition overlay (55); the level timer
    only starts after the player taps Play, so reading costs no time. */
@@ -760,21 +760,21 @@ input[type=text]:focus { border-color:#ff5c8a; }
   <svg class="rainbow-arc" width="120" height="34" viewBox="0 0 120 34"><path d="M6 32 A54 54 0 0 1 114 32" fill="none" stroke="#ff2d55" stroke-width="5" stroke-linecap="round"/><path d="M14 32 A46 46 0 0 1 106 32" fill="none" stroke="#ff9500" stroke-width="5" stroke-linecap="round"/><path d="M22 32 A38 38 0 0 1 98 32" fill="none" stroke="#ffe600" stroke-width="5" stroke-linecap="round"/><path d="M30 32 A30 30 0 0 1 90 32" fill="none" stroke="#2ed573" stroke-width="5" stroke-linecap="round"/><path d="M38 32 A22 22 0 0 1 82 32" fill="none" stroke="#00b4ff" stroke-width="5" stroke-linecap="round"/></svg>
   <h1>Animal Crush</h1>
   <div id="swimLane" aria-hidden="true">
-    <div id="swimShark"><div class="swimChar"><canvas class="swimSprite" id="swimSprite" width="100" height="170"></canvas></div></div>
+    <div id="swimShark"><div class="swimChar"><canvas class="swimSprite" id="swimSprite" width="200" height="135"></canvas></div></div>
     <span class="swim-bubble sb1"></span>
     <span class="swim-bubble sb2"></span>
     <span class="swim-bubble sb3"></span>
   </div>
   <script>
-  /* v31.35: chạy khung hình sprite bé cá mập bằng CANVAS (30 khung, 6 cột x 5 hàng, nguồn 180x306/khung, hiển thị 100x170; 12fps, vòng 2.5s). Canvas drawImage mượt hơn background-position trên iPhone (không bị khựng/lag). */
+  /* v31.34: chạy khung hình sprite cá heo bằng CANVAS (30 khung, 6 cột x 5 hàng, nguồn 480x324/khung, hiển thị 240x162; 12fps, vòng 2.5s). Canvas drawImage mượt hơn background-position trên iPhone (không bị khựng/lag). */
   (function () {
     var cv = document.getElementById("swimSprite");
     if (!cv) return;
     var ctx = cv.getContext("2d");
     var img = new Image();
-    var COLS = 6, SW = 180, SH = 306, DW = 100, DH = 170, FRAMES = 30, frame = 0, last = 0, acc = 0, ready = false;
+    var COLS = 6, SW = 480, SH = 324, DW = 200, DH = 135, FRAMES = 30, frame = 0, last = 0, acc = 0, ready = false;
     img.onload = function () { ready = true; };
-    img.src = "tiles/shark-girl-wave-sprite.png?v=362";
+    img.src = "tiles/dolphin-flow-sprite-pastel.png?v=359";
     if (img.complete && img.naturalWidth) ready = true;
     function tick(ts) {
       if (!last) last = ts;
