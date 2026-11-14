@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bé cá heo bơi — nền trong suốt</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    min-height: 100vh;
+    background: linear-gradient(180deg, #7fd4e8 0%, #3aa7d6 45%, #1b6fb8 100%);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    font-family: -apple-system, "Segoe UI", sans-serif; overflow: hidden;
+  }
+  h1 { color: #fff; font-size: 20px; margin-bottom: 8px; text-shadow: 0 2px 8px rgba(0,0,0,.25); }
+  p { color: rgba(255,255,255,.85); font-size: 14px; margin-bottom: 18px; }
+  .lane {
+    position: relative; width: min(92vw, 560px); height: 230px;
+    border-radius: 24px; overflow: hidden;
+    background: linear-gradient(180deg, rgba(255,255,255,.14), rgba(255,255,255,.04));
+    border: 2px solid rgba(255,255,255,.35);
+  }
+  .swimmer {
+    position: absolute; left: 8px; top: 50%;
+    width: 320px; height: 216px; margin-top: -108px;
+    background-image: url("https://miatrann97-source.github.io/animal-crush/tiles/dolphin-swim-sprite.png");
+    background-repeat: no-repeat;
+    background-size: 1920px 1080px;
+    will-change: left, transform;
+  }
+  .bubble {
+    position: absolute; bottom: -20px; border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.9), rgba(255,255,255,.15));
+    animation: rise 6s linear infinite;
+  }
+  @keyframes rise { to { transform: translateY(-260px); opacity: 0; } }
+</style>
+</head>
+<body>
+  <h1>🐬 Bé cá heo bơi — nền trong suốt</h1>
+  <p>Đuôi vẫy, vây vẫy, không còn nền xanh đằng sau nữa</p>
+  <div class="lane" id="lane">
+    <div class="swimmer" id="swimmer"></div>
+  </div>
+  <script>
+    var lane = document.getElementById('lane');
+    for (var i = 0; i < 10; i++) {
+      var b = document.createElement('div');
+      b.className = 'bubble';
+      var s = 6 + Math.random() * 14;
+      b.style.width = s + 'px'; b.style.height = s + 'px';
+      b.style.left = (Math.random() * 92) + '%';
+      b.style.animationDelay = (Math.random() * 6) + 's';
+      b.style.animationDuration = (4 + Math.random() * 4) + 's';
+      lane.appendChild(b);
+    }
+    // sprite sheet: 6 cols x 5 rows, 30 frames, each 320x216
+    var swimmer = document.getElementById('swimmer');
+    var COLS = 6, FW = 320, FH = 216, FRAMES = 30;
+    var frame = 0, last = performance.now(), acc = 0;
+    var dir = 1, x = 8, laneW = lane.clientWidth, maxX = laneW - 328;
+    var flipAt = false;
+    function tick(now) {
+      var dt = now - last; last = now;
+      // wag: 12 fps -> new frame every ~83ms
+      acc += dt;
+      if (acc >= 83) {
+        var steps = Math.floor(acc / 83); acc = acc % 83;
+        frame = (frame + steps) % FRAMES;
+        var col = frame % COLS, row = Math.floor(frame / COLS);
+        swimmer.style.backgroundPosition = (-col * FW) + 'px ' + (-row * FH) + 'px';
+      }
+      // swim left-right, ~11s per round trip
+      var speed = (maxX - 8) / 5500 * dt;
+      x += speed * dir;
+      if (x >= maxX) { x = maxX; dir = -1; }
+      if (x <= 8) { x = 8; dir = 1; }
+      swimmer.style.left = x + 'px';
+      swimmer.style.transform = dir === 1 ? 'scaleX(1)' : 'scaleX(-1)';
+      requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  </script>
+</body>
+</html>
