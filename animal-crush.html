@@ -531,6 +531,21 @@ button:disabled { opacity:.55; cursor:default; }
 .fx-beam { position:absolute; z-index:24; pointer-events:none; }
 .fx-beam.h { left:0; width:100%; height:12.5%; background: linear-gradient(180deg, rgba(255,190,0,0) 0%, rgba(255,210,60,.8) 16%, #fffbe8 40%, #ffffff 50%, #fffbe8 60%, rgba(255,210,60,.8) 84%, rgba(255,190,0,0) 100%); box-shadow: 0 0 10px 2px rgba(255,200,40,.55); animation: beamSweepX .34s ease-out forwards; }
 .fx-beam.v { top:0; height:100%; width:12.5%; background: linear-gradient(90deg, rgba(255,190,0,0) 0%, rgba(255,210,60,.8) 16%, #fffbe8 40%, #ffffff 50%, #fffbe8 60%, rgba(255,210,60,.8) 84%, rgba(255,190,0,0) 100%); box-shadow: 0 0 10px 2px rgba(255,200,40,.55); animation: beamSweepY .34s ease-out forwards; }
+/* v31.53: 3 tia sang theo dung huong o trung nhau — moi tia mau cua ban
+   thu trung (bien --c), mo dan roi tat dan (1 nhịp mem, khong nhap
+   nhay). .fx-ray: tia DOC (cot sang doc tu tren dinh bang xuong toi o,
+   rong 1 o). .fx-ray-h: tia NGANG (dai sang ngang doc theo hang, cao 1
+   o, dai 3 o tam o). */
+.fx-ray { position:absolute; top:0; width:12.5%; z-index:24; pointer-events:none;
+  background: linear-gradient(90deg, transparent 0%, var(--c) 22%, #ffffff 50%, var(--c) 78%, transparent 100%);
+  box-shadow: 0 0 14px 4px var(--c);
+  transform-origin: 50% 0; animation: rayDown .6s ease-out forwards; }
+.fx-ray-h { position:absolute; height:12.5%; width:37.5%; z-index:24; pointer-events:none;
+  background: linear-gradient(180deg, transparent 0%, var(--c) 22%, #ffffff 50%, var(--c) 78%, transparent 100%);
+  box-shadow: 0 0 14px 4px var(--c);
+  transform-origin: 50% 50%; animation: rayAcross .6s ease-out forwards; }
+@keyframes rayDown { 0% { transform: scaleY(0); opacity:0; } 30% { transform: scaleY(1); opacity:1; } 100% { transform: scaleY(1); opacity:0; } }
+@keyframes rayAcross { 0% { transform: scaleX(0); opacity:0; } 30% { transform: scaleX(1); opacity:1; } 100% { transform: scaleX(1); opacity:0; } }
 /* big bright beam for many-tile clears (8+): a white-pink cross of light through
    the cleared area, much wider and brighter than the striped beam */
 .fx-bigbeam { position:absolute; z-index:24; pointer-events:none; }
@@ -716,6 +731,7 @@ input[type=text]:focus { border-color:#ff5c8a; }
 #devCredit { position:absolute; left:0; right:0; bottom:0.32cm; text-align:center; font-size:10px; font-weight:600; letter-spacing:.2px; color:rgba(255,255,255,.92); text-shadow:0 1px 3px rgba(0,0,0,.35); pointer-events:none; z-index:5; }
 /* v31.40: cá heo Flow pastel đưa lại vào game (An yêu cầu 2026-11-14) */
 /* v31.51: moi man la 1 vung dat rieng — man + qua toi man 25, glow tung o, truyen viet lai (An 2026-11-14). LIVE. */
+/* v31.53: 3 tia sang theo dung huong o trung nhau — ngang thi tia ngang, doc thi tia doc (An 2026-11-14). LIVE. */
 /* v30: story chapters — full-screen card before levels 1/3/5/8.
    z-index 60 sits above the transition overlay (55); the level timer
    only starts after the player taps Play, so reading costs no time. */
@@ -772,6 +788,7 @@ input[type=text]:focus { border-color:#ff5c8a; }
     <span class="swim-bubble sb3"></span>
   </div>
   <script>
+
 
   /* v31.34: chạy khung hình sprite cá heo bằng CANVAS (30 khung, 6 cột x 5 hàng, nguồn 480x324/khung, hiển thị 240x162; 12fps, vòng 2.5s). Canvas drawImage mượt hơn background-position trên iPhone (không bị khựng/lag). */
   (function () {
@@ -1804,6 +1821,7 @@ async function resolveBoard(swapPos) {
         }
       } else {
         smallMatchFx(run.cells, type);
+        tripleBeam(run.cells, type, run.horiz); /* v31.53: 3 tia theo dung huong o */
       }
     });
     /* Water chime: matched tiles ring like a glass harp the moment they find each other.
@@ -2587,6 +2605,30 @@ function smallMatchFx(cells, type) {
   cells.forEach(function(cell) { _sr += cell[0]; _sc += cell[1]; });
   shockwaveRing((_sc / cells.length + 0.5) * 12.5, (_sr / cells.length + 0.5) * 12.5);
   lightningTo(cells);
+}
+/* v31.53: 3 tia sang theo dung huong o trung nhau — moi o trung duoc 1
+   tia, mau cua ban thu trung. horiz=true (match ngang): tia NGANG lan
+   ra doc theo hang; horiz=false (match doc): tia DOC chieu xuong tu
+   tren dinh bang toi o. Chi cho 3-match (goi o nhanh else, run.len
+   === 3). */
+function tripleBeam(cells, type, horiz) {
+  var layer = fxLayer(); if (!layer || !cells || !cells.length) return;
+  cells.forEach(function(cell) {
+    var col = colorForCell(cell[0], cell[1], type);
+    var div = document.createElement("div");
+    if (horiz) {
+      div.className = "fx-ray-h";
+      div.style.top = (cell[0] * 12.5) + "%";
+      div.style.left = ((cell[1] - 1) * 12.5) + "%";
+    } else {
+      div.className = "fx-ray";
+      div.style.left = (cell[1] * 12.5) + "%";
+      div.style.height = ((cell[0] + 1) * 12.5) + "%";
+    }
+    div.style.setProperty("--c", col.fill);
+    layer.appendChild(div);
+    setTimeout(function() { if (div.parentNode) div.parentNode.removeChild(div); }, 650);
+  });
 }
 function shakeScreen(size) {
   /* Screen shake removed: it gave An eye strain and headaches. Kept as a
