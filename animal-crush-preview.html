@@ -78,27 +78,21 @@ button:disabled { opacity:.55; cursor:default; }
 
 /* ---------- Start screen ---------- */
 #startScreen { text-align:center; }
-/* v31.16: cá heo từ hình An gửi — photo sprite cắt 3 đoạn + sóng Puppet Pin + 3D (ảnh gốc của An, chỉ bỏ nền xanh + xoay ngang; KHÔNG vẽ lại; đuôi vẫy ±14°, thân uốn ±6°, đầu ±7°, chu kỳ 2s lệch pha thành sóng chữ S như cá heo bơi thật; vây ngực nằm trong torso nên nghiêng theo thân; cá 220px, ảnh có ?v=326 chống cache cũ; bơi 3D: xoay rotateY ở 2 đầu làn + nghiêng 3D, không cắt mép làn; bong bóng bay lên.
-   CSS-only: 1 phần tử chạy left + bob bằng transform, bong bóng bay lên.
+/* v31.17: cá heo video — sprite sheet trong suốt + đuôi vẫy (video PixVerse đã tách nền; sprite 30 khung, hiển thị 240px; đuôi vẫy + vây vẫy như cá heo thật; bơi 3D: xoay rotateY ở 2 đầu làn + nghiêng 3D, bong bóng bay lên.
+   CSS-only cho bơi ngang + bob; JS nhỏ đổi khung hình sprite.
    Lane nằm trong #startScreen nên tự ẩn khi vào game. */
-#swimLane { position:relative; width:100%; height:160px; overflow:hidden; perspective:700px; }
-#swimShark { position:absolute; top:2px; left:8px; width:220px; animation: swimX 11s linear infinite; will-change:left, transform; transform-style: preserve-3d; }
-.swimChar { position:relative; width:220px; height:148px; animation: swimBob3D 2.4s ease-in-out infinite alternate; }
-.swimChar img { position:absolute; left:0; top:0; width:220px; height:auto; display:block; }
-.swimHead { transform-origin:76% 57%; animation: waveHead 2s ease-in-out infinite; }
-.swimTorso { transform-origin:55% 55%; animation: waveTorso 2s ease-in-out infinite; }
-.swimTail { transform-origin:34% 47%; animation: waveTail 2s ease-in-out infinite; }
-@keyframes waveHead { 0% { transform:rotate(0deg); } 25% { transform:rotate(7deg); } 50% { transform:rotate(0deg); } 75% { transform:rotate(-7deg); } 100% { transform:rotate(0deg); } }
-@keyframes waveTorso { 0% { transform:rotate(-6deg); } 25% { transform:rotate(3deg); } 50% { transform:rotate(6deg); } 75% { transform:rotate(-3deg); } 100% { transform:rotate(-6deg); } }
-@keyframes waveTail { 0% { transform:rotate(-14deg); } 25% { transform:rotate(-7deg); } 50% { transform:rotate(14deg); } 75% { transform:rotate(7deg); } 100% { transform:rotate(-14deg); } }
-@keyframes swimX { 0% { left:8px; transform: rotateY(0deg); } 40% { left:calc(100% - 228px); transform: rotateY(0deg); } 50% { left:calc(100% - 228px); transform: rotateY(180deg); } 90% { left:8px; transform: rotateY(180deg); } 100% { left:8px; transform: rotateY(360deg); } }
+#swimLane { position:relative; width:100%; height:170px; overflow:hidden; perspective:700px; }
+#swimShark { position:absolute; top:2px; left:8px; width:240px; animation: swimX 11s linear infinite; will-change:left, transform; transform-style: preserve-3d; }
+.swimChar { position:relative; width:240px; height:162px; animation: swimBob3D 2.4s ease-in-out infinite alternate; }
+.swimSprite { position:absolute; left:0; top:0; width:240px; height:162px; background-image:url("https://miatrann97-source.github.io/animal-crush/tiles/dolphin-swim-sprite.png?v=327"); background-repeat:no-repeat; background-size:1440px 810px; background-position:0px 0px; display:block; }
+@keyframes swimX { 0% { left:8px; transform: rotateY(0deg); } 40% { left:calc(100% - 248px); transform: rotateY(0deg); } 50% { left:calc(100% - 248px); transform: rotateY(180deg); } 90% { left:8px; transform: rotateY(180deg); } 100% { left:8px; transform: rotateY(360deg); } }
 @keyframes swimBob3D { from { transform: translateY(-3px) rotate(-4deg) rotateX(6deg) rotateY(-8deg) scale(1); } to { transform: translateY(4px) rotate(4deg) rotateX(-6deg) rotateY(8deg) scale(1.05); } }
 .swim-bubble { position:absolute; bottom:4px; width:12px; height:12px; border-radius:50%; background: radial-gradient(circle at 35% 35%, rgba(255,255,255,.95), rgba(170,215,255,.55)); border:1px solid rgba(255,255,255,.8); opacity:0; animation: bubbleRise 3.4s ease-in infinite; }
 .sb1 { left:24%; animation-delay:0s; }
 .sb2 { left:50%; width:9px; height:9px; animation-delay:1.2s; }
 .sb3 { left:76%; width:14px; height:14px; animation-delay:2.3s; }
 @keyframes bubbleRise { 0% { transform:translateY(0); opacity:0; } 15% { opacity:1; } 100% { transform:translateY(-56px); opacity:0; } }
-@media (prefers-reduced-motion: reduce) { #swimShark, #swimShark img, .swim-bubble { animation:none; } #swimShark { left:50%; transform:translateX(-50%); } }
+@media (prefers-reduced-motion: reduce) { #swimShark, #swimShark .swimSprite, .swim-bubble { animation:none; } #swimShark { left:50%; transform:translateX(-50%); } }
 
 .logo-row { display:flex; gap:6px; justify-content:center; flex-wrap:wrap; margin: 6px 0; }
 .logo-row img { width:56px; height:56px; border-radius:16px; box-shadow: 0 4px 10px rgba(0,0,0,.2); animation: logoBob 2s ease-in-out infinite; }
@@ -765,11 +759,61 @@ input[type=text]:focus { border-color:#ff5c8a; }
   <svg class="rainbow-arc" width="120" height="34" viewBox="0 0 120 34"><path d="M6 32 A54 54 0 0 1 114 32" fill="none" stroke="#ff2d55" stroke-width="5" stroke-linecap="round"/><path d="M14 32 A46 46 0 0 1 106 32" fill="none" stroke="#ff9500" stroke-width="5" stroke-linecap="round"/><path d="M22 32 A38 38 0 0 1 98 32" fill="none" stroke="#ffe600" stroke-width="5" stroke-linecap="round"/><path d="M30 32 A30 30 0 0 1 90 32" fill="none" stroke="#2ed573" stroke-width="5" stroke-linecap="round"/><path d="M38 32 A22 22 0 0 1 82 32" fill="none" stroke="#00b4ff" stroke-width="5" stroke-linecap="round"/></svg>
   <h1>Animal Crush</h1>
   <div id="swimLane" aria-hidden="true">
-    <div id="swimShark"><div class="swimChar"><img class="swimTail" src="https://miatrann97-source.github.io/animal-crush/tiles/dolphin-photo-tail.png?v=326" alt=""><img class="swimTorso" src="https://miatrann97-source.github.io/animal-crush/tiles/dolphin-photo-torso.png?v=326" alt=""><img class="swimHead" src="https://miatrann97-source.github.io/animal-crush/tiles/dolphin-photo-head.png?v=326" alt=""></div></div>
+    <div id="swimShark"><div class="swimChar"><div class="swimSprite" id="swimSprite"></div></div></div>
     <span class="swim-bubble sb1"></span>
     <span class="swim-bubble sb2"></span>
     <span class="swim-bubble sb3"></span>
   </div>
+  <script>
+/* Preview-only safe storage: this file is shown inside a chat widget
+   (preview mode), where the real __previewStore throws. Reads prefer the
+   real __previewStore; writes go to both, so progress survives a reload
+   here but never touches the live game's keys. */
+var __memStore = {};
+var __previewStore = {
+  getItem: function(k) {
+    try { var v = window["local" + "Storage"].getItem(k); if (v !== null) return v; } catch (e) {}
+    return (k in __memStore) ? __memStore[k] : null;
+  },
+  setItem: function(k, v) {
+    __memStore[k] = String(v);
+    try { window["local" + "Storage"].setItem(k, v); } catch (e) {}
+  },
+  removeItem: function(k) {
+    delete __memStore[k];
+    try { window["local" + "Storage"].removeItem(k); } catch (e) {}
+  }
+};
+/* v30: ?reset=1 — An asked to start over from Level 1 (preview). Clears
+   Animal Crush progress on THIS browser only (level, best, story-seen
+   flags), then strips the param so reopening the page does not reset
+   again. Runs here, before the game reads its saved level. Keeps
+   language, music and visit-counter settings. */
+(function () {
+  try {
+    if (new URLSearchParams(location.search).get("reset") !== "1") return;
+    ["animalCrushLevel", "animalCrushBest", "animalCrushMaxLevel", "ac_story_seen"].forEach(function (k) { __previewStore.removeItem(k); });
+    history.replaceState(null, "", location.pathname);
+  } catch (e) {}
+})();
+
+
+  /* v31.17: chạy khung hình sprite cá heo (30 khung, 6 cột x 5 hàng, mỗi khung 240x162 hiển thị; 12fps, vòng 2.5s). */
+  (function () {
+    var el = document.getElementById("swimSprite");
+    if (!el) return;
+    var COLS = 6, FW = 240, FH = 162, FRAMES = 30, frame = 0, last = 0;
+    function tick(ts) {
+      if (!last) last = ts;
+      var dt = ts - last; last = ts;
+      frame = (frame + Math.floor(dt / 83)) % FRAMES;
+      var col = frame % COLS, row = Math.floor(frame / COLS);
+      el.style.backgroundPosition = (-col * FW) + "px " + (-row * FH) + "px";
+      requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  })();
+  </script>
   <div class="logo-row" id="logoRow"></div>
   <p class="tagline" id="tagline"></p>
   <button id="playBtn" class="rainbow"><span class="mini-bubble b1"></span><span class="mini-bubble b2"></span><span class="play-label"></span></button>
@@ -891,39 +935,6 @@ input[type=text]:focus { border-color:#ff5c8a; }
 </div>
 
 <script>
-/* Preview-only safe storage: this file is shown inside a chat widget
-   (preview mode), where the real __previewStore throws. Reads prefer the
-   real __previewStore; writes go to both, so progress survives a reload
-   here but never touches the live game's keys. */
-var __memStore = {};
-var __previewStore = {
-  getItem: function(k) {
-    try { var v = window["local" + "Storage"].getItem(k); if (v !== null) return v; } catch (e) {}
-    return (k in __memStore) ? __memStore[k] : null;
-  },
-  setItem: function(k, v) {
-    __memStore[k] = String(v);
-    try { window["local" + "Storage"].setItem(k, v); } catch (e) {}
-  },
-  removeItem: function(k) {
-    delete __memStore[k];
-    try { window["local" + "Storage"].removeItem(k); } catch (e) {}
-  }
-};
-/* v30: ?reset=1 — An asked to start over from Level 1 (preview). Clears
-   Animal Crush progress on THIS browser only (level, best, story-seen
-   flags), then strips the param so reopening the page does not reset
-   again. Runs here, before the game reads its saved level. Keeps
-   language, music and visit-counter settings. */
-(function () {
-  try {
-    if (new URLSearchParams(location.search).get("reset") !== "1") return;
-    ["animalCrushLevel", "animalCrushBest", "animalCrushMaxLevel", "ac_story_seen"].forEach(function (k) { __previewStore.removeItem(k); });
-    history.replaceState(null, "", location.pathname);
-  } catch (e) {}
-})();
-
-
 /* v30: ?reset=1 — An asked to start over from Level 1 (live). Clears
    Animal Crush progress on THIS browser only (level, best, story-seen
    flags), then strips the param so reopening the page does not reset
