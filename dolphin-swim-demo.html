@@ -22,10 +22,10 @@
   }
   .swimmer {
     position: absolute; left: 8px; top: 50%;
-    width: 320px; height: 216px; margin-top: -108px;
+    width: 280px; height: 189px; margin-top: -94px;
     background-image: url("https://miatrann97-source.github.io/animal-crush/tiles/dolphin-swim-sprite.png");
     background-repeat: no-repeat;
-    background-size: 1920px 1080px;
+    background-size: 1680px 945px;
     will-change: left, transform;
   }
   .bubble {
@@ -56,9 +56,9 @@
     }
     // sprite sheet: 6 cols x 5 rows, 30 frames, each 320x216
     var swimmer = document.getElementById('swimmer');
-    var COLS = 6, FW = 320, FH = 216, FRAMES = 30;
+    var COLS = 6, FW = 280, FH = 189, FRAMES = 30;
     var frame = 0, last = performance.now(), acc = 0;
-    var dir = 1, x = 20, laneW = lane.clientWidth, maxX = laneW - 340;
+    var dir = 1, x = 20, laneW = lane.clientWidth, maxX = laneW - 300;
     var flipAt = false;
     function tick(now) {
       var dt = now - last; last = now;
