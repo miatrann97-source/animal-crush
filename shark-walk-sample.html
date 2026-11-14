@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Mẫu bé cá mập đi bộ — Animal Crush</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html, body { height:100%; overflow:hidden; }
+  body {
+    font-family:-apple-system, "Segoe UI", Roboto, sans-serif;
+    background:#bfe8f5 url("https://miatrann97-source.github.io/animal-crush/map-bg-simple.jpg") center/cover no-repeat;
+  }
+  h1 {
+    position:absolute; top:14px; left:0; right:0; text-align:center;
+    font-size:1.25rem; color:#22405a;
+    text-shadow:0 2px 4px rgba(255,255,255,.9), 0 0 10px rgba(255,255,255,.8);
+  }
+  p.sub {
+    position:absolute; top:46px; left:0; right:0; text-align:center;
+    font-size:.85rem; color:#5a6b7d;
+    text-shadow:0 1px 3px rgba(255,255,255,.9);
+  }
+  /* Con duong: doan be di qua di lai tren doan duong nay. */
+  .road {
+    position:absolute; left:0; right:0; bottom:18%;
+    height:90px;
+    background:linear-gradient(180deg, rgba(255,255,255,.55), rgba(255,255,255,.28));
+    border-top:3px dashed rgba(255,255,255,.8);
+    border-bottom:3px dashed rgba(255,255,255,.8);
+  }
+  /* Doan di: be ca dan dau, 5 be khoi vuong theo sau, vua di vua bouncy. */
+  .party {
+    position:absolute; bottom:18%; left:0;
+    display:flex; align-items:flex-end;
+    animation:walkAcross 9s linear infinite;
+  }
+  @keyframes walkAcross {
+    0% { transform:translateX(-320px); }
+    100% { transform:translateX(110vw); }
+  }
+  .baby {
+    display:block; flex:0 0 auto; margin-left:6px;
+    filter:drop-shadow(0 4px 6px rgba(34,64,90,.35));
+    animation:walkBob .45s ease-in-out infinite alternate;
+  }
+  .baby img { display:block; width:100%; height:auto; }
+  .baby.leader { width:130px; margin-left:0; z-index:2; }
+  .baby.follower { width:76px; }
+  .baby:nth-child(1) { animation-delay:0s; }
+  .baby:nth-child(2) { animation-delay:.08s; }
+  .baby:nth-child(3) { animation-delay:.16s; }
+  .baby:nth-child(4) { animation-delay:.24s; }
+  .baby:nth-child(5) { animation-delay:.32s; }
+  .baby:nth-child(6) { animation-delay:.4s; }
+  /* Buoc di: nay len + nghieng nhe nhu dang buoc chan, roi ha xuong. */
+  @keyframes walkBob {
+    from { transform:translateY(0) rotate(-3deg); }
+    to { transform:translateY(-16px) rotate(3deg); }
+  }
+  .note {
+    position:absolute; bottom:10px; left:0; right:0; text-align:center;
+    font-size:.78rem; color:#5a6b7d;
+    text-shadow:0 1px 3px rgba(255,255,255,.9);
+  }
+</style>
+</head>
+<body>
+  <h1>🐬 Bé cá mập đi bộ</h1>
+  <p class="sub">Bé cá mẫu của game dẫn đầu · 5 bé khối vuông theo sau · vừa đi vừa bouncy</p>
+  <div class="road"></div>
+  <div class="party">
+    <span class="baby leader"><img src="https://miatrann97-source.github.io/animal-crush/tiles/shark.png" alt="Bé cá mập"></span>
+    <span class="baby follower"><img src="https://miatrann97-source.github.io/animal-crush/tiles/otter.png" alt="Rái cá"></span>
+    <span class="baby follower"><img src="https://miatrann97-source.github.io/animal-crush/tiles/rabbit.png" alt="Thỏ trắng"></span>
+    <span class="baby follower"><img src="https://miatrann97-source.github.io/animal-crush/tiles/mouse.png" alt="Chuột xám"></span>
+    <span class="baby follower"><img src="https://miatrann97-source.github.io/animal-crush/tiles/jellyfish.png" alt="Sứa tím"></span>
+    <span class="baby follower"><img src="https://miatrann97-source.github.io/animal-crush/tiles/fox.png" alt="Cáo cam"></span>
+  </div>
+  <div class="note">Mẫu chuyển động bằng ảnh của game (không phải video AI) — An xem dáng đi có đúng ý không nha</div>
+</body>
+</html>
