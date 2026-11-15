@@ -586,7 +586,7 @@ button:disabled { opacity:.55; cursor:default; }
 .map-total, .map-sub { text-shadow:0 1px 3px rgba(255,255,255,.95), 0 0 8px rgba(255,255,255,.85); }
 .map-total { text-align:center; font-weight:800; color:#b26a00; font-size:1rem; }
 .map-sub { text-align:center; font-size:.85rem; opacity:.75; color:#22405a; margin:2px 0 6px; }
-.map-scroll { flex:1; overflow-y:auto; position:relative; border-radius:18px; background:rgba(255,255,255,.15); padding:8px 0 16px; -webkit-overflow-scrolling:touch; } /* v31.72: KHONG lam mo nua (An 2026-11-14) — nen moi giua trong, chi phu trang nhe .15 cho chu ro */
+.map-scroll { flex:1; overflow-y:auto; position:relative; border-radius:18px; background:rgba(255,255,255,.08); padding:8px 0 16px; -webkit-overflow-scrolling:touch; } /* v31.95: overlay trang .15 -> .08 cho nut ro hon (An 2026-11-14: nut mo); v31.72: KHONG lam mo nua — nen moi giua trong */
 #mapPath { position:relative; padding-top:72px; } /* v31.60: room above node 1 so the party (standing above its node) is fully visible, not hidden behind the header */
 #mapRoad { position:absolute; inset:0; width:100%; height:100%; pointer-events:none; z-index:0; filter:drop-shadow(0 0 6px rgba(255, 200, 80, .8)) drop-shadow(0 0 16px rgba(255, 190, 60, .4)); } /* v31.73: duong cau vong phat sang RO hon (test v31.71: glow cu 5px/.55 qua mo, mat thuong khong thay) */
 .map-row { height:110px; position:relative; z-index:1; } /* v31.68: row cao hon cho nut 72px + ten dat vua */
@@ -627,9 +627,9 @@ button:disabled { opacity:.55; cursor:default; }
 .map-node .crown { position:absolute; top:-16px; left:50%; transform:translateX(-50%); font-size:1.1rem; }
 .map-node .lock { font-size:1.2rem; }
 .map-node .lock-badge { position:absolute; right:-7px; bottom:-7px; font-size:.95rem; line-height:1; } /* v31.60: locked nodes keep their number; the lock becomes a small corner badge */
-.map-node .map-land-img { position:absolute; inset:3px; border-radius:50%; background-image:url(map-nodes/glass-orbs-nodes.jpg); background-size:5000% 100%; background-repeat:no-repeat; filter:saturate(1.45) contrast(1.07); } /* v31.94: the node IS its level's hand-drawn glass orb (An approved the 50-orb set 2026-11-14); inset 3px so the state colour still shows as a ring */
-.map-node .map-land-img::after { content:""; position:absolute; inset:0; border-radius:50%; pointer-events:none; background:radial-gradient(circle at 32% 24%, rgba(255,255,255,.95) 0%, rgba(255,255,255,.45) 22%, rgba(255,255,255,.08) 38%, rgba(255,255,255,0) 55%), radial-gradient(circle at 50% 118%, rgba(255,255,255,.4) 0%, rgba(255,255,255,0) 48%); box-shadow:inset 0 -6px 10px rgba(0,0,0,.22), inset 0 5px 8px rgba(255,255,255,.55); } /* v31.90: glass-mirror dome over the glass orb — round & shiny like a glass lollipop (An 2026-11-14) */
-.map-node.locked .map-land-img { filter:grayscale(1); opacity:.55; } /* locked: the cake picture is greyed out */
+.map-node .map-land-img { position:absolute; inset:3px; border-radius:50%; background-image:url(map-nodes/glass-orbs-nodes.jpg); background-size:5000% 100%; background-repeat:no-repeat; filter:saturate(1.55) contrast(1.12); } /* v31.95: saturate 1.45->1.55, contrast 1.07->1.12 (An: nut mo); v31.94: the node IS its level's hand-drawn glass orb (An approved the 50-orb set 2026-11-14); inset 3px so the state colour still shows as a ring */
+.map-node .map-land-img::after { content:""; position:absolute; inset:0; border-radius:50%; pointer-events:none; background:radial-gradient(circle at 30% 20%, rgba(255,255,255,1) 0%, rgba(255,255,255,.55) 14%, rgba(255,255,255,.12) 26%, rgba(255,255,255,0) 35%), radial-gradient(circle at 50% 118%, rgba(255,255,255,.55) 0%, rgba(255,255,255,0) 42%); box-shadow:inset 0 -6px 10px rgba(0,0,0,.22), inset 0 4px 6px rgba(255,255,255,.35); } /* v31.95: specular nho gon + sac net hon (tan het o 35% thay vi 55%), vien sang duoi manh hon .4->.55, bong trang tren giam .55->.35 (An 2026-11-14: nut mo); v31.90: glass-mirror dome — round & shiny like a glass lollipop */
+.map-node.locked .map-land-img { filter:grayscale(1) contrast(1.12); opacity:.68; } /* v31.95: locked opacity .55->.68 + contrast 1.12 cho hinh khoa ro hon (van xam + vong xam + khoa, van nhan ra la khoa); locked: the orb picture is greyed out */
 .map-node .map-num { position:absolute; top:-7px; left:-7px; min-width:22px; height:22px; padding:0 4px; border-radius:10px; background:#22405a; color:#fff; font-size:.72rem; font-weight:900; display:flex; align-items:center; justify-content:center; border:2px solid #fff; box-sizing:border-box; } /* v31.62: level number as a small corner badge */
 .map-node .map-story { position:absolute; top:-8px; right:-8px; font-size:.9rem; }
 .map-stars { position:absolute; top:52px; left:50%; transform:translateX(-50%); font-size:.85rem; letter-spacing:1px; color:#ffd23f; text-shadow:0 1px 2px rgba(0,0,0,.35), 0 0 3px rgba(255,255,255,.6); white-space:nowrap; }
@@ -833,7 +833,7 @@ input[type=text]:focus { border-color:#ff5c8a; }
 #devCredit { position:absolute; left:0; right:0; bottom:0.32cm; text-align:center; font-size:10px; font-weight:600; letter-spacing:.2px; color:rgba(255,255,255,.92); text-shadow:0 1px 3px rgba(0,0,0,.35); pointer-events:none; z-index:5; }
 /* v31.40: cá heo Flow pastel đưa lại vào game (An yêu cầu 2026-11-14) */
 /* v31.51: moi man la 1 vung dat rieng — man + qua toi man 25, glow tung o, truyen viet lai (An 2026-11-14). LIVE. */
-/* v31.74: cay VE TAY doc 2 ben DUONG (An sua 2026-11-14) — cay bam theo duong (nut ±16%), khong phai hang cay vien background; bo emoji. LIVE v31.94. */
+/* v31.74: cay VE TAY doc 2 ben DUONG (An sua 2026-11-14) — cay bam theo duong (nut ±16%), khong phai hang cay vien background; bo emoji. LIVE v31.95. */
 /* v30: story chapters — full-screen card before levels 1/3/5/8.
    z-index 60 sits above the transition overlay (55); the level timer
    only starts after the player taps Play, so reading costs no time. */
