@@ -214,7 +214,9 @@ button:disabled { opacity:.55; cursor:default; }
 .tile.t-mouse img { filter: drop-shadow(0 -3px 4px rgba(185,190,195,.95)) drop-shadow(0 0 7px rgba(154,160,166,.60)); }
 .tile.t-jellyfish img { filter: drop-shadow(0 -3px 4px rgba(210,185,250,.95)) drop-shadow(0 0 7px rgba(193,166,237,.65)); }
 .tile.t-fox img { filter: drop-shadow(0 -3px 4px rgba(255,170,65,.95)) drop-shadow(0 0 7px rgba(255,140,26,.60)); }
-.tile img { width:105%; height:105%; margin:-2.5%; object-fit:cover; display:block; pointer-events:none; animation: tileSway 2.6s ease-in-out infinite; transform-origin: 50% 88%; } /* v31.76: dong dua/lac lu nhe (An 2026-11-14) — xoay ±2° quanh chan duoi, 2.6s, nhe nhang, khong chop/khong rung man hinh. v31.80: mat cac be TO HON NUA (An 2026-11-14, dong y cat vien trong suot) — phong to anh 120% trong o thay vi cat file goc (cat se cat mat tai/vay; phong to thi mat chiem ~91% o, vien trong suot hap thu phan tran nen khong de len o ke. v31.86: An gui anh iPad — dau to qua, de len dau ban ke — thu nho xuong 110% (mat ~0.81 o, van to hon v31.79) cho anh rong nhat (ca map/chuot) vua khit trong o, khong de. v31.87: An choi ban live — dau van hoi to — thu nho them xiu xuong 105% (mat ~0.77 o, van to hon v31.79), anh rong nhat gio nam 2.75%..97.25% trong o, co khoang ho ro rang. */
+.tile img { width:105%; height:105%; margin:-2.5%; object-fit:cover; display:block; pointer-events:none; animation: tileSway 2.6s ease-in-out infinite; transform-origin: 50% 88%; } /* v31.76: dong dua/lac lu nhe (An 2026-11-14) — xoay ±2° quanh chan duoi, 2.6s, nhe nhang, khong chop/khong rung man hinh. v31.80: mat cac be TO HON NUA (An 2026-11-14, dong y cat vien trong suot) — phong to anh 120% trong o thay vi cat file goc (cat se cat mat tai/vay; phong to thi mat chiem ~91% o, vien trong suot hap thu phan tran nen khong de len o ke. v31.86: An gui anh iPad — dau to qua, de len dau ban ke — thu nho xuong 110% (mat ~0.81 o, van to hon v31.79) cho anh rong nhat (ca map/chuot) vua khit trong o, khong de. v31.87: An choi ban live — dau van hoi to — thu nho them xiu xuong 105% (mat ~0.77 o, van to hon v31.79), anh rong nhat gio nam 2.75%..97.25% trong o, co khoang ho ro rang. v31.88: tren iPad van to — do o iPad ~87px nen khe ho o 105% chi ~5px — rieng may tinh bang (600-1024px) xuong 100% (khe ho ~9px, mat ~64px van to ro), dien thoai giu 105%. */
+/* v31.88: An — tren iPad dau van to sau khi refresh — thu nho rieng cho may tinh bang (600-1024px): dau 100% (mat ~0.73 o, khe ho giua cac dau ~9px tren o ~87px), dien thoai giu 105%. */
+@media (min-width: 600px) and (max-width: 1024px) { .tile img { width:100%; height:100%; margin:0; } }
 @keyframes tileSway { 0%,100% { transform: rotate(-2deg); } 50% { transform: rotate(2deg); } }
 .tile:nth-child(even) img { animation-delay: -1.3s; } /* xen ke chan/le cho song dong */
 /* Glitter sparkle on every tile: three tiny gold stars that twinkle.
@@ -811,7 +813,7 @@ input[type=text]:focus { border-color:#ff5c8a; }
 #devCredit { position:absolute; left:0; right:0; bottom:0.32cm; text-align:center; font-size:10px; font-weight:600; letter-spacing:.2px; color:rgba(255,255,255,.92); text-shadow:0 1px 3px rgba(0,0,0,.35); pointer-events:none; z-index:5; }
 /* v31.40: cá heo Flow pastel đưa lại vào game (An yêu cầu 2026-11-14) */
 /* v31.51: moi man la 1 vung dat rieng — man + qua toi man 25, glow tung o, truyen viet lai (An 2026-11-14). LIVE. */
-/* v31.74: cay VE TAY doc 2 ben DUONG (An sua 2026-11-14) — cay bam theo duong (nut ±16%), khong phai hang cay vien background; bo emoji. LIVE v31.87. */
+/* v31.74: cay VE TAY doc 2 ben DUONG (An sua 2026-11-14) — cay bam theo duong (nut ±16%), khong phai hang cay vien background; bo emoji. LIVE v31.88. */
 /* v30: story chapters — full-screen card before levels 1/3/5/8.
    z-index 60 sits above the transition overlay (55); the level timer
    only starts after the player taps Play, so reading costs no time. */
