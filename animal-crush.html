@@ -214,7 +214,7 @@ button:disabled { opacity:.55; cursor:default; }
 .tile.t-mouse img { filter: drop-shadow(0 -3px 4px rgba(185,190,195,.95)) drop-shadow(0 0 7px rgba(154,160,166,.60)); }
 .tile.t-jellyfish img { filter: drop-shadow(0 -3px 4px rgba(210,185,250,.95)) drop-shadow(0 0 7px rgba(193,166,237,.65)); }
 .tile.t-fox img { filter: drop-shadow(0 -3px 4px rgba(255,170,65,.95)) drop-shadow(0 0 7px rgba(255,140,26,.60)); }
-.tile img { width:120%; height:120%; margin:-10%; object-fit:cover; display:block; pointer-events:none; animation: tileSway 2.6s ease-in-out infinite; transform-origin: 50% 88%; } /* v31.76: dong dua/lac lu nhe (An 2026-11-14) — xoay ±2° quanh chan duoi, 2.6s, nhe nhang, khong chop/khong rung man hinh. v31.80: mat cac be TO HON NUA (An 2026-11-14, dong y cat vien trong suot) — phong to anh 120% trong o thay vi cat file goc (cat se cat mat tai/vay; phong to thi mat chiem ~91% o, vien trong suot hap thu phan tran nen khong de len o ke) */
+.tile img { width:110%; height:110%; margin:-5%; object-fit:cover; display:block; pointer-events:none; animation: tileSway 2.6s ease-in-out infinite; transform-origin: 50% 88%; } /* v31.76: dong dua/lac lu nhe (An 2026-11-14) — xoay ±2° quanh chan duoi, 2.6s, nhe nhang, khong chop/khong rung man hinh. v31.80: mat cac be TO HON NUA (An 2026-11-14, dong y cat vien trong suot) — phong to anh 120% trong o thay vi cat file goc (cat se cat mat tai/vay; phong to thi mat chiem ~91% o, vien trong suot hap thu phan tran nen khong de len o ke. v31.86: An gui anh iPad — dau to qua, de len dau ban ke — thu nho xuong 110% (mat ~0.81 o, van to hon v31.79) cho anh rong nhat (ca map/chuot) vua khit trong o, khong de. */
 @keyframes tileSway { 0%,100% { transform: rotate(-2deg); } 50% { transform: rotate(2deg); } }
 .tile:nth-child(even) img { animation-delay: -1.3s; } /* xen ke chan/le cho song dong */
 /* Glitter sparkle on every tile: three tiny gold stars that twinkle.
@@ -811,7 +811,7 @@ input[type=text]:focus { border-color:#ff5c8a; }
 #devCredit { position:absolute; left:0; right:0; bottom:0.32cm; text-align:center; font-size:10px; font-weight:600; letter-spacing:.2px; color:rgba(255,255,255,.92); text-shadow:0 1px 3px rgba(0,0,0,.35); pointer-events:none; z-index:5; }
 /* v31.40: cá heo Flow pastel đưa lại vào game (An yêu cầu 2026-11-14) */
 /* v31.51: moi man la 1 vung dat rieng — man + qua toi man 25, glow tung o, truyen viet lai (An 2026-11-14). LIVE. */
-/* v31.74: cay VE TAY doc 2 ben DUONG (An sua 2026-11-14) — cay bam theo duong (nut ±16%), khong phai hang cay vien background; bo emoji. LIVE v31.85. */
+/* v31.74: cay VE TAY doc 2 ben DUONG (An sua 2026-11-14) — cay bam theo duong (nut ±16%), khong phai hang cay vien background; bo emoji. LIVE v31.86. */
 /* v30: story chapters — full-screen card before levels 1/3/5/8.
    z-index 60 sits above the transition overlay (55); the level timer
    only starts after the player taps Play, so reading costs no time. */
@@ -1619,7 +1619,11 @@ function seededRand(seed) {
 function levelConfig(level) {
   var r = seededRand(level * 7 + 13);
   var target = Math.round((15000 + (level - 1) * 5000 + r * 2000) / 100) * 100;
-  return { target: target, moves: Math.max(60, 100 - (level - 1) * 3) };
+  var moves = Math.max(60, 100 - (level - 1) * 3);
+  /* v31.86 (An 2026-11-14 — man 50 la man cuoi DAI + KHO: me An choi le qua):
+     man 50 duoc 120 luot (gap doi) + muc tieu x1.5 (~390.000), choi lau ma kho thang. */
+  if (level === 50) { target = Math.round(target * 1.5 / 100) * 100; moves = 120; }
+  return { target: target, moves: moves };
 }
 /* Level perks (qua theo man): the higher the level, the more help you get,
    so older players and kids can keep playing as the game gets harder.
@@ -1635,12 +1639,13 @@ function levelPerks(level) {
     scoreMult: level >= 12 ? 3 : (level >= 8 ? 2 : 1)
   };
 }
-/* v31.51: moi man la 1 vung dat rieng (30 vung, lap lai sau man 30).
+/* v31.51: moi man la 1 vung dat rieng (50 vung, lap lai sau man 50).
    Ten vung trung voi chuong truyen o cac moc (man 1 Rung Banh Quy, 3 Ho
    Keo Deo, 5 Nui So-co-la, 8 Dinh Cau Vong, 12 Thao Nguyen Keo Mut, 15
    Bien Keo Deo, 20 Rung Keo Bong, 25 Lau Dai Cau Vong, 26 Cong Cau
-   Vong, 28 Ho Trang Keo, 30 Cung Dien Ngoi Sao). Hien trong HUD,
-   man hinh bat dau (levelInfo) va man chuyen man. */
+   Vong, 28 Ho Trang Keo, 30 Cung Dien Ngoi Sao, 35 Rung Keo Que,
+   40 Dao Keo May, 45 Dinh Keo Trang, 50 Lau Dai Trang Sao). Hien
+   trong HUD, man hinh bat dau (levelInfo) va man chuyen man. */
 var LANDS = [
   { vi: "Rừng Bánh Quy", en: "Cookie Forest" },
   { vi: "Đồng Cỏ Sô-cô-la", en: "Chocolate Meadow" },
@@ -1671,7 +1676,27 @@ var LANDS = [
   { vi: "Đồng Kẹo Sao", en: "Star Candy Meadow" },
   { vi: "Hồ Trăng Kẹo", en: "Candy Moon Lake" },
   { vi: "Rừng Bánh Gừng", en: "Gingerbread Forest" },
-  { vi: "Cung Điện Ngôi Sao", en: "Star Palace" }
+  { vi: "Cung Điện Ngôi Sao", en: "Star Palace" },
+  { vi: "Đồi Kẹo Mơ", en: "Dream Candy Hills" },
+  { vi: "Suối Kẹo Vani", en: "Vanilla Candy Stream" },
+  { vi: "Vườn Kẹo Anh Đào", en: "Cherry Candy Garden" },
+  { vi: "Hồ Sô-cô-la Trắng", en: "White Chocolate Lake" },
+  { vi: "Rừng Kẹo Quế", en: "Cinnamon Candy Forest" },
+  { vi: "Thác Kẹo Caramel", en: "Caramel Candy Falls" },
+  { vi: "Đồng Kẹo Hoa Hồng", en: "Rose Candy Meadow" },
+  { vi: "Núi Kẹo Đá Quý", en: "Jewel Candy Mountain" },
+  { vi: "Biển Kẹo Sữa", en: "Milk Candy Sea" },
+  { vi: "Đảo Kẹo Mây", en: "Cloud Candy Island" },
+  { vi: "Rừng Kẹo Táo", en: "Apple Candy Forest" },
+  { vi: "Vườn Kẹo Oải Hương", en: "Lavender Candy Garden" },
+  { vi: "Cầu Kẹo Pha Lê", en: "Crystal Candy Bridge" },
+  { vi: "Hang Kẹo Ngọc", en: "Jade Candy Cave" },
+  { vi: "Đỉnh Kẹo Trăng", en: "Moon Candy Peak" },
+  { vi: "Biển Kẹo Sao Băng", en: "Shooting Star Candy Sea" },
+  { vi: "Rừng Kẹo Ánh Sáng", en: "Light Candy Forest" },
+  { vi: "Thung Lũng Kẹo Vàng", en: "Golden Candy Valley" },
+  { vi: "Vườn Kẹo Sao Mai", en: "Morning Star Candy Garden" },
+  { vi: "Lâu Đài Trăng Sao", en: "Moon Star Castle" }
 ];
 function landForLevel(level) {
   return LANDS[(level - 1) % LANDS.length];
@@ -3717,7 +3742,7 @@ function showTransition(fromLevel) {
    theo — An tu chon man muon choi (cham node hoac nut "Choi man {n}"). */
 var MAP_OFFSETS = [50, 28, 72, 38, 62, 20, 80, 45, 55, 30, 70, 25, 75]; /* % ngang, lap lai — duong uon luon */
 var mapCurrentLevel = 1;
-function mapMaxShown() { return LANDS.length; } /* v31.65: show ALL 30 levels — An wants to scroll through every level (2026-11-14); .map-scroll already scrolls */
+function mapMaxShown() { return LANDS.length; } /* v31.65: show ALL 50 levels — An wants to scroll through every level (2026-11-14); .map-scroll already scrolls */
 /* v31.55: doan buoc di — sau khi thang 1 man, be ca + cac be khoi vuong
    buoc tu nut cua man vua qua sang nut cua man tiep theo roi dung lai;
    luc do man tiep theo mo ra. Mo ban do bang tay thi doan dung yen o
@@ -4087,9 +4112,25 @@ var STORY = {
   30: { img: "tiles/shark.png",
     title: { vi: "Chương 30 — Cung Điện Ngôi Sao", en: "Chapter 30 — Star Palace" },
     body: { vi: "Cung Điện Ngôi Sao hiện ra giữa bầu trời đầy sao. Cả nhóm cùng nhau đổ hết ánh sao đã nhặt vào chiếc đèn — 'bừng!' — đèn sáng trở lại, rực rỡ hơn cả ngày xưa, cả bầu trời lấp lánh như rắc kim tuyến. Tiên Sao Nhỏ cười tít mắt, bay một vòng rồi đáp xuống vai Cá Con: 'Từ nay mình là bạn của các cậu nhé!' Cầu vồng giờ đã vươn tới tận các vì sao — và chuyến phiêu lưu của Cá Con lại có thêm một người bạn.",
-      en: "The Star Palace appears among the stars. Together the friends pour all the starlight they gathered into the lamp — 'whoosh!' — it blazes back to life, brighter than ever, the whole sky sparkling like scattered glitter. The tiny Star Fairy laughs and lands on Baby Fish's shoulder: 'From now on, I'm one of your friends!' The rainbow now reaches all the way to the stars — and Baby Fish's adventure has one more friend." } }
+      en: "The Star Palace appears among the stars. Together the friends pour all the starlight they gathered into the lamp — 'whoosh!' — it blazes back to life, brighter than ever, the whole sky sparkling like scattered glitter. The tiny Star Fairy laughs and lands on Baby Fish's shoulder: 'From now on, I'm one of your friends!' The rainbow now reaches all the way to the stars — and Baby Fish's adventure has one more friend." } },
+  35: { img: "tiles/fox.png",
+    title: { vi: "Chương 35 — Rừng Kẹo Quế", en: "Chapter 35 — Cinnamon Candy Forest" },
+    body: { vi: "Rừng Kẹo Quế thơm nức mùi quế, nhưng tối om — một Thỏ Trăng Nhỏ lạc đường, đang ngồi khóc dưới gốc cây quế. Cáo Cam — người biết mọi đường tắt — reo lên: 'Đi lối này, mình rành đường trăng nhất!' Cả nhóm nắm tay nhau đi qua rừng tối, đèn sao của Tiên Sao Nhỏ lấp lánh dẫn lối.",
+      en: "The Cinnamon Candy Forest smells sweetly of cinnamon, but it is pitch dark — a little Moon Bunny is lost, crying under a cinnamon tree. Orange Fox — who knows every shortcut — calls out: 'This way, I know the moon road best!' The friends hold hands through the dark forest, the Star Fairy's lamp twinkling to guide them." } },
+  40: { img: "tiles/jellyfish.png",
+    title: { vi: "Chương 40 — Đảo Kẹo Mây", en: "Chapter 40 — Cloud Candy Island" },
+    body: { vi: "Đảo Kẹo Mây chìm trong sương mù dày đặc, chẳng thấy đường đâu. Sứa Tím hít sâu, phát sáng rực rỡ, soi đường cho cả nhóm bay qua — ánh sáng tím ấm áp, y như những lần qua biển tối và hồ trăng trước đây. Dưới ánh sáng đó, từng đám mây kẹo trắng muốt hiện ra, mềm như bông.",
+      en: "Cloud Candy Island is lost in thick fog, no path in sight. Lavender Jellyfish takes a deep breath and glows brilliantly, lighting the way across — warm purple light, just like crossing the dark sea and the moon lake before. Under that glow, fluffy white candy clouds appear, soft as cotton." } },
+  45: { img: "tiles/rabbit.png",
+    title: { vi: "Chương 45 — Đỉnh Kẹo Trăng", en: "Chapter 45 — Moon Candy Peak" },
+    body: { vi: "Đỉnh Kẹo Trăng cao vút, trăng kẹo lơ lửng ngay trên đầu. Thỏ Trắng — người chạy nhanh nhất nhóm — lao vút lên đỉnh trinh sát, rồi quay về reo lên: 'Thấy rồi! Lâu Đài Trăng Sao ở ngay đằng kia, đèn trăng tắt ngúm trên đỉnh tháp!' Cả nhóm hít sâu, bước tiếp — đích đến đã ở ngay trước mắt.",
+      en: "Moon Candy Peak rises high, the candy moon hanging just overhead. White Rabbit — the fastest of the group — dashes up to scout, then rushes back: 'I see it! The Moon Star Castle is right over there, its moon lamp dark atop the tower!' The friends take a deep breath and press on — the destination is right in front of them." } },
+  50: { img: "tiles/shark.png",
+    title: { vi: "Chương 50 — Lâu Đài Trăng Sao", en: "Chapter 50 — Moon Star Castle" },
+    body: { vi: "Lâu Đài Trăng Sao hiện ra giữa bầu trời đêm, tháp cao nhất có một chiếc đèn trăng tắt ngúm. Cả nhóm cùng nhau thắp lại đèn — 'bừng!' — ánh trăng sáng trở lại, rực rỡ hơn cả ngày xưa; trăng, sao và cầu vồng cùng tỏa sáng khắp vương quốc. Tiên Sao Nhỏ và Thỏ Trăng reo lên, cả hội bạn ôm nhau cười. Màn cuối dài và khó nhất hành trình — 120 lượt, mục tiêu gấp rưỡi — nhưng có bạn bè bên cạnh, Cá Con chẳng sợ gì cả!",
+      en: "The Moon Star Castle appears in the night sky, its tallest tower holding a dark moon lamp. Together the friends relight the lamp — 'whoosh!' — moonlight blazes back, brighter than ever; moon, stars and rainbow shine together over the kingdom. The Star Fairy and the Moon Bunny cheer, and the whole group hugs and laughs. The final level is the longest and hardest of the journey — 120 moves, one-and-a-half times the target — but with friends beside her, Baby Fish fears nothing!" } }
 };
-var STORY_LEVELS = [1, 3, 5, 8, 10, 12, 15, 20, 25, 26, 28, 30];
+var STORY_LEVELS = [1, 3, 5, 8, 10, 12, 15, 20, 25, 26, 28, 30, 35, 40, 45, 50];
 function storySeen(level) {
   try { var s = JSON.parse(localStorage.getItem("ac_story_seen") || "[]"); return s.indexOf(level) !== -1; } catch (e) { return false; }
 }
