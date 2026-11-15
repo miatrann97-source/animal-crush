@@ -157,6 +157,25 @@ button:disabled { opacity:.55; cursor:default; }
 .hud-perk-row { display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
 .hud-perk-row .progress { flex:1; min-width:0; }
 #progressFill { height:100%; width:0%; background: linear-gradient(90deg, #ff2d55, #ff9500, #ffe600, #2ed573, #00d2ff, #7b5cff); border-radius:999px; transition: width .3s ease; }
+/* ============ v31.89 demo: keo deo + nhiem vu + boss + mua keo (man 1-10) ============ */
+.tile .jelly { position:absolute; inset:0; border-radius:14%; pointer-events:none; z-index:2; background:rgba(255,120,180,.30); box-shadow: inset 0 0 0 2px rgba(255,80,150,.75); }
+.tile .jelly.hp1 { background:rgba(255,120,180,.14); box-shadow: inset 0 0 0 2px rgba(255,80,150,.45); }
+.tile .jelly.hp1::after { content:""; position:absolute; left:18%; right:18%; top:50%; height:2px; background:rgba(255,255,255,.85); transform:rotate(-18deg); border-radius:2px; }
+.tile .jelly-hp { position:absolute; left:2px; bottom:2px; width:18px; height:18px; line-height:18px; text-align:center; font-size:12px; font-weight:800; color:#fff; background:#ff5c8a; border:2px solid #fff; border-radius:50%; pointer-events:none; }
+.quest-line { font-size:14px; font-weight:800; color:#b26a00; text-align:center; padding:3px 8px; background:#fff3d6; border:2px dashed #ffbf47; border-radius:999px; margin-top:2px; }
+#bossPanel { display:flex; align-items:center; gap:10px; width:100%; background:#fffdf5; border-radius:18px; padding:8px 12px; box-shadow:0 4px 14px rgba(0,0,0,.15); }
+#bossPanel.hidden { display:none; }
+#bossImg { width:56px; height:56px; border-radius:14px; flex-shrink:0; }
+.boss-info { flex:1; min-width:0; }
+#bossName { font-weight:800; color:#7c3fd4; font-size:16px; }
+.boss-hp { height:14px; background:#efe6f7; border-radius:999px; overflow:hidden; margin:4px 0; border:2px solid #c1a6ed; }
+#bossHpFill { height:100%; width:100%; background:linear-gradient(90deg,#c1a6ed,#7c3fd4); transition:width .3s ease; }
+#bossHpText { font-size:13px; color:#7c3fd4; font-weight:700; }
+#candyRain { position:absolute; inset:0; overflow:hidden; pointer-events:none; z-index:5; }
+#candyRain.hidden { display:none; }
+.candy-drop { position:absolute; top:-14px; border-radius:50%; opacity:.75; animation: candyFall linear infinite; }
+@keyframes candyFall { from { transform: translateY(-20px) rotate(0deg); } to { transform: translateY(110vh) rotate(300deg); } }
+@media (prefers-reduced-motion: reduce) { #candyRain { display:none; } .candy-drop { animation:none; } }
 
 /* ---------- Board ---------- */
 #boardWrap { width:calc(100% + 24px); max-width:none; margin-left:-12px; margin-right:-12px; position:relative; overflow:hidden; border-radius:18px; touch-action:none; }
@@ -215,8 +234,8 @@ button:disabled { opacity:.55; cursor:default; }
 .tile.t-jellyfish img { filter: drop-shadow(0 -3px 4px rgba(210,185,250,.95)) drop-shadow(0 0 7px rgba(193,166,237,.65)); }
 .tile.t-fox img { filter: drop-shadow(0 -3px 4px rgba(255,170,65,.95)) drop-shadow(0 0 7px rgba(255,140,26,.60)); }
 .tile img { width:105%; height:105%; margin:-2.5%; object-fit:cover; display:block; pointer-events:none; animation: tileSway 2.6s ease-in-out infinite; transform-origin: 50% 88%; } /* v31.76: dong dua/lac lu nhe (An 2026-11-14) — xoay ±2° quanh chan duoi, 2.6s, nhe nhang, khong chop/khong rung man hinh. v31.80: mat cac be TO HON NUA (An 2026-11-14, dong y cat vien trong suot) — phong to anh 120% trong o thay vi cat file goc (cat se cat mat tai/vay; phong to thi mat chiem ~91% o, vien trong suot hap thu phan tran nen khong de len o ke. v31.86: An gui anh iPad — dau to qua, de len dau ban ke — thu nho xuong 110% (mat ~0.81 o, van to hon v31.79) cho anh rong nhat (ca map/chuot) vua khit trong o, khong de. v31.87: An choi ban live — dau van hoi to — thu nho them xiu xuong 105% (mat ~0.77 o, van to hon v31.79), anh rong nhat gio nam 2.75%..97.25% trong o, co khoang ho ro rang. v31.88: tren iPad van to — do o iPad ~87px nen khe ho o 105% chi ~5px — rieng may tinh bang (600-1024px) xuong 100% (khe ho ~9px, mat ~64px van to ro), dien thoai giu 105%. */
-/* v31.88: An — tren iPad dau van to sau khi refresh — thu nho rieng cho may tinh bang (600-1024px): dau 100% (mat ~0.73 o, khe ho giua cac dau ~9px tren o ~87px), dien thoai giu 105%. */
-@media (min-width: 600px) and (max-width: 1024px) { .tile img { width:100%; height:100%; margin:0; } }
+/* v31.88: An — tren iPad dau van to sau khi refresh — thu nho rieng cho may tinh bang (600-1024px): dau 100% (mat ~0.73 o, khe ho giua cac dau ~9px tren o ~87px), dien thoai giu 105%. v31.92: An — tren PC/laptop dau van to de len nhau — mo rong 100% ra moi man hinh >=600px. */
+@media (min-width: 600px) { .tile img { width:100%; height:100%; margin:0; } } /* v31.92: An — tren PC/laptop dau van to de len dau ban ke — mo rong luat 100% tu chi-may-tinh-bang (600-1024px) ra moi man hinh >=600px ke ca desktop: khe ho ~9.5px tren o ~95px hap thu duoc do lac tileSway, dien thoai (<600px) giu 105%. */
 @keyframes tileSway { 0%,100% { transform: rotate(-2deg); } 50% { transform: rotate(2deg); } }
 .tile:nth-child(even) img { animation-delay: -1.3s; } /* xen ke chan/le cho song dong */
 /* Glitter sparkle on every tile: three tiny gold stars that twinkle.
@@ -529,13 +548,13 @@ button:disabled { opacity:.55; cursor:default; }
 .fx-bubble::after { content:""; position:absolute; left:16%; top:10%; width:36%; height:24%; border-radius:50%; border-top:3px solid rgba(255,255,255,0.95); transform: rotate(-25deg); }
 .fx-ripple { position:absolute; width:12.5%; aspect-ratio:1/1; transform: translate(-50%,-50%); border-radius:50%; pointer-events:none; z-index:23;
   border: 2px solid rgba(186,230,253,0.9); box-shadow: 0 0 8px rgba(125,211,252,0.6); }
-.fx-flash-screen { position:fixed; inset:0; background:#fff; opacity:0; pointer-events:none; z-index:45; }
+.fx-flash-screen { position:fixed; inset:0; background:#fff; opacity:0; pointer-events:none; z-index:45; will-change: opacity; } /* v31.91: will-change de chop chi composite, khong ve lai ca man hinh */
 .boom-text {
   position:absolute; z-index:26; font-weight:900; font-size: clamp(48px, 12vw, 64px); color:#ffcf3f;
   text-shadow: 3px 3px 0 #fff, 0 0 26px #ff9d00, 0 6px 12px rgba(0,0,0,.35);
   pointer-events:none; white-space:nowrap; transform: translate(-50%,-50%);
 }
-.fx-flash { position:absolute; inset:0; background:#fff; opacity:0; pointer-events:none; }
+.fx-flash { position:absolute; inset:0; background:#fff; opacity:0; pointer-events:none; will-change: opacity; } /* v31.91: will-change de chop chi composite */
 .fx-bolt { position:absolute; inset:0; width:100%; height:100%; pointer-events:none; filter: drop-shadow(0 0 8px #fff) drop-shadow(0 0 16px #ffe45e); }
 /* striped-candy beam: white-hot core with a warm gold glow, sweeping out from the candy.
    Thunder version: much stronger glow so the beam blazes across the row/column. */
@@ -608,7 +627,8 @@ button:disabled { opacity:.55; cursor:default; }
 .map-node .crown { position:absolute; top:-16px; left:50%; transform:translateX(-50%); font-size:1.1rem; }
 .map-node .lock { font-size:1.2rem; }
 .map-node .lock-badge { position:absolute; right:-7px; bottom:-7px; font-size:.95rem; line-height:1; } /* v31.60: locked nodes keep their number; the lock becomes a small corner badge */
-.map-node .map-land-img { position:absolute; inset:3px; border-radius:50%; background-image:url(map-nodes/bellablues-nodes.jpg); background-size:700% 100%; background-repeat:no-repeat; } /* v31.63: the node IS its land's cake picture (sprite slice); inset 3px so the state colour still shows as a ring */
+.map-node .map-land-img { position:absolute; inset:3px; border-radius:50%; background-image:url(map-nodes/glass-orbs-nodes.jpg); background-size:5000% 100%; background-repeat:no-repeat; filter:saturate(1.45) contrast(1.07); } /* v31.94: the node IS its level's hand-drawn glass orb (An approved the 50-orb set 2026-11-14); inset 3px so the state colour still shows as a ring */
+.map-node .map-land-img::after { content:""; position:absolute; inset:0; border-radius:50%; pointer-events:none; background:radial-gradient(circle at 32% 24%, rgba(255,255,255,.95) 0%, rgba(255,255,255,.45) 22%, rgba(255,255,255,.08) 38%, rgba(255,255,255,0) 55%), radial-gradient(circle at 50% 118%, rgba(255,255,255,.4) 0%, rgba(255,255,255,0) 48%); box-shadow:inset 0 -6px 10px rgba(0,0,0,.22), inset 0 5px 8px rgba(255,255,255,.55); } /* v31.90: glass-mirror dome over the glass orb — round & shiny like a glass lollipop (An 2026-11-14) */
 .map-node.locked .map-land-img { filter:grayscale(1); opacity:.55; } /* locked: the cake picture is greyed out */
 .map-node .map-num { position:absolute; top:-7px; left:-7px; min-width:22px; height:22px; padding:0 4px; border-radius:10px; background:#22405a; color:#fff; font-size:.72rem; font-weight:900; display:flex; align-items:center; justify-content:center; border:2px solid #fff; box-sizing:border-box; } /* v31.62: level number as a small corner badge */
 .map-node .map-story { position:absolute; top:-8px; right:-8px; font-size:.9rem; }
@@ -630,7 +650,7 @@ button:disabled { opacity:.55; cursor:default; }
 @keyframes beamSweepY { 0% { transform: scaleY(0); opacity:.55; } 45% { transform: scaleY(1); opacity:1; } 100% { transform: scaleY(1); opacity:0; } }
 /* rainbow lightning: blue-white electric bolts, clearly different from the warm gold beam.
    Thunder version: much thicker glow so the bolts blaze across the board. */
-.fx-bolt-blue { position:absolute; inset:0; width:100%; height:100%; pointer-events:none; filter: drop-shadow(0 0 10px #bae6fd) drop-shadow(0 0 26px #38bdf8) drop-shadow(0 0 44px #0ea5e9); }
+.fx-bolt-blue { position:absolute; inset:0; width:100%; height:100%; pointer-events:none; will-change: opacity; filter: drop-shadow(0 0 18px rgba(56,189,248,.8)); } /* v31.91: 1 drop-shadow thay vi 3 — set dai bang bi lag/khung tren iPad vi 3 lop filter phai raster lai moi khung hinh; van sang xanh, giu nguyen tia set (450ms) */
 /* thunder flash: icy blue full-screen flash for lightning strikes */
 .fx-flash-thunder { background: #cfeeff; }
 /* giant head zoom: one tile image swelling up and flying out at the player */
@@ -813,7 +833,7 @@ input[type=text]:focus { border-color:#ff5c8a; }
 #devCredit { position:absolute; left:0; right:0; bottom:0.32cm; text-align:center; font-size:10px; font-weight:600; letter-spacing:.2px; color:rgba(255,255,255,.92); text-shadow:0 1px 3px rgba(0,0,0,.35); pointer-events:none; z-index:5; }
 /* v31.40: cá heo Flow pastel đưa lại vào game (An yêu cầu 2026-11-14) */
 /* v31.51: moi man la 1 vung dat rieng — man + qua toi man 25, glow tung o, truyen viet lai (An 2026-11-14). LIVE. */
-/* v31.74: cay VE TAY doc 2 ben DUONG (An sua 2026-11-14) — cay bam theo duong (nut ±16%), khong phai hang cay vien background; bo emoji. LIVE v31.88. */
+/* v31.74: cay VE TAY doc 2 ben DUONG (An sua 2026-11-14) — cay bam theo duong (nut ±16%), khong phai hang cay vien background; bo emoji. LIVE v31.94. */
 /* v30: story chapters — full-screen card before levels 1/3/5/8.
    z-index 60 sits above the transition overlay (55); the level timer
    only starts after the player taps Play, so reading costs no time. */
@@ -936,6 +956,7 @@ input[type=text]:focus { border-color:#ff5c8a; }
 </div>
 
 <div class="screen hidden" id="gameScreen">
+  <div id="candyRain" class="hidden"></div>
   <div id="hud">
     <span class="hud-doodle" style="top:-12px; left:14px;"><svg width="26" height="26" viewBox="0 0 24 24"><path d="M12 1 L14.5 8.5 L22 9 L16.5 14 L18.5 21.5 L12 17.5 L5.5 21.5 L7.5 14 L2 9 L9.5 8.5 Z" fill="#ffd23f" stroke="#ff9500" stroke-width="1.2"/></svg></span>
     <span class="hud-doodle" style="top:-10px; right:22px;"><svg width="24" height="24" viewBox="0 0 24 24"><path d="M12 21 C5 15 2 11 2 7.5 C2 4.5 4.5 2 7.5 2 C9.5 2 11 3.5 12 5 C13 3.5 14.5 2 16.5 2 C19.5 2 22 4.5 22 7.5 C22 11 19 15 12 21 Z" fill="#ff5c8a" stroke="#d6336c" stroke-width="1"/></svg></span>
@@ -961,6 +982,15 @@ input[type=text]:focus { border-color:#ff5c8a; }
       <button class="icon-btn" id="hubBtn" title="Về trang tổng hợp game">&#8592;</button>
     </div>
     <div class="hud-perk-row"><div class="perk-line" id="perkLine"></div><div class="progress"><div id="progressFill"></div></div></div>
+    <div id="questLine" class="quest-line hidden"></div>
+  </div>
+  <div id="bossPanel" class="hidden">
+    <img id="bossImg" alt="Quái Kẹo Dẻo">
+    <div class="boss-info">
+      <div id="bossName">👾 Quái Kẹo Dẻo</div>
+      <div class="boss-hp"><div id="bossHpFill"></div></div>
+      <div id="bossHpText">HP 12/12</div>
+    </div>
   </div>
   <div id="boardWrap">
     <div id="board"></div>
@@ -1273,10 +1303,7 @@ var AudioEng = (function() {
        + thunder thi khong; luc no chi con <audio> fallback, ma tren iOS
        no im khi play() goi ngoai thao tac cham (xem ghi chu applause). */
     decodeGlass();
-    /* v31.85 (An 2026-11-14): tieng sam mp3 hien tai SAI — An gui
-       video moi, se cat lai sau. Tam thoi KHONG decodeThunder() de
-       tieng sam cu khong bao gio phat; chi con sam tong hop tu
-       thunderStrikes o dot 0. */
+    decodeThunder(); /* v31.94: bat lai tieng sam MOI — cat tu video An gui (6.38-8.38s, 2 tieng sam) */
     return true;
   }
   /* Real crowd applause recording (cut from An's video): fetch the file as
@@ -1308,9 +1335,9 @@ var AudioEng = (function() {
     if (!ctx || !glassArrayBuf || glassBuf) return;
     ctx.decodeAudioData(glassArrayBuf, function(buf){ glassBuf = buf; }, function(){});
   }
-  /* Eagle thunder recording (cut from An's TikTok video: the one huge crack
-     at 15.0s, ~2s with fade-out): fetch + decode like glass, so it plays
-     reliably on iOS through sfxGain. */
+  /* Eagle thunder recording (v31.94: re-cut from An's TikTok video,
+     6.38-8.38s — a double strike, ~2s): fetch + decode like glass, so
+     it plays reliably on iOS through sfxGain. */
   function fetchThunder() {
     if (thunderLoading || thunderBuf || thunderArrayBuf) return;
     thunderLoading = true;
@@ -1388,7 +1415,7 @@ var AudioEng = (function() {
   }
   fetchApplause(); /* start downloading the applause recording on page load */
   fetchGlass(); /* start downloading the glass break sound on page load */
-  /* fetchThunder(); — v31.85: tam dung tai tieng sam cu (SAI, se thay bang ban cat tu video moi An gui) */
+  fetchThunder(); /* v31.94: bat lai — tai tieng sam MOI ngay khi mo trang */
   return {
     unlock: function() { ensure(); },
     startMusic: function() {
@@ -1507,7 +1534,7 @@ var AudioEng = (function() {
           if (ga) { ga.currentTime = 0; ga.volume = 0.9; ga.play().catch(function(){}); }
         }
       }
-      else if (name === "eagleThunder") { /* v31.77: dai bang sam set NO TO (An 2026-11-14) — tieng sam that cat tu video TikTok An gui (tieng no lon o giay 15, ~2s); choi TO qua gain 1.0, chi o dot dau cua vu no dai bang */
+      else if (name === "eagleThunder") { /* v31.77: dai bang sam set NO TO (An 2026-11-14) — tieng sam that cat tu video TikTok An gui (v31.94: cat moi 6.38-8.38s, 2 tieng sam); choi TO qua gain 1.0, chi o dot dau cua vu no dai bang */
         if (!musicOn) return; /* respects the mute toggle */
         if (thunderBuf) {
           var tsrc = ctx.createBufferSource(); tsrc.buffer = thunderBuf;
@@ -1515,8 +1542,9 @@ var AudioEng = (function() {
           tsrc.connect(tg); tg.connect(sfxGain);
           tsrc.start(now);
         } else {
-          /* v31.85: tieng sam mp3 TAT (ban cu SAI) — khong phat <audio>
-             fallback; chi con sam tong hop tu thunderStrikes o dot 0 */
+          /* buffer not ready yet: fall back to the audio element (v31.94: bat lai cung tieng sam MOI) */
+          var ta = document.getElementById("thunderAudio");
+          if (ta) { ta.currentTime = 0; ta.volume = 1.0; ta.play().catch(function(){}); }
         }
       }
       else if (name === "icePour") { /* ice cubes pouring into a glass at level start (Mẫu A approved): bright ringing clinks, one per tile, + trickling water underneath */
@@ -1641,6 +1669,116 @@ function levelPerks(level) {
     scoreMult: level >= 12 ? 3 : (level >= 8 ? 2 : 1)
   };
 }
+/* ================= v31.89 demo: 4 y tuong gop lai, chi man 1-10 =================
+   (1) Keo deo cung: man 2/4/6/8 co o deo 2 HP (man 8 co 6 o). Danh 1 lan nut
+   (con 1), danh lan 2 moi vo. Deo la thuoc tinh cua O (khong phai cua keo)
+   nen van doi cho binh thuong, khong pha logic doi/xep hop le.
+   (2) Nhiem vu rieng man 1-10: thang can DU DIEM + XONG NHIEM VU.
+   (3) Mua keo: hat keo roi nhe tren man choi man 1-10, tat khi
+   prefers-reduced-motion. (4) Boss man 10: Quai Keo Deo HP 12 — moi o vo
+   gay 1 sat thuong; moi lan kich hoat keo dac biet (soc/goi/cau vong) +3.
+   Man 11+ giu nguyen luat cu (chi can du diem). */
+var QUESTS = {
+  1: { kind: "type", type: "rabbit", target: 12, icon: "🐰", label: { vi: "Ăn thỏ", en: "Clear rabbits" } },
+  2: { kind: "type", type: "shark", target: 12, icon: "🦈", label: { vi: "Ăn cá mập", en: "Clear sharks" } },
+  3: { kind: "bomb", target: 1, icon: "💣", label: { vi: "Nổ bom sói", en: "Detonate wolf bombs" } },
+  4: { kind: "jelly", target: 4, icon: "🍮", label: { vi: "Phá kẹo dẻo", en: "Clear jelly" } },
+  5: { kind: "rainbow", target: 1, icon: "🌈", label: { vi: "Tạo cầu vồng", en: "Create rainbows" } },
+  6: { kind: "type", type: "jellyfish", target: 15, icon: "🎐", label: { vi: "Ăn sứa", en: "Clear jellyfish" } },
+  7: { kind: "type", type: "fox", target: 18, icon: "🦊", label: { vi: "Ăn cáo", en: "Clear foxes" } },
+  8: { kind: "jelly", target: 6, icon: "🍮", label: { vi: "Phá kẹo dẻo", en: "Clear jelly" } },
+  9: { kind: "bomb", target: 2, icon: "💣", label: { vi: "Nổ bom sói", en: "Detonate wolf bombs" } },
+  10: { kind: "boss", target: 12, icon: "👾", label: { vi: "Đánh bại Quái Kẹo Dẻo", en: "Defeat the Jelly Monster" } }
+};
+function jellyCellsForLevel(level) {
+  if (level === 8) return [[3,2],[3,3],[3,4],[4,2],[4,3],[4,4]];
+  if (level === 2 || level === 4 || level === 6) return [[3,3],[3,4],[4,3],[4,4]];
+  return [];
+}
+/* Chia danh sach o sap vo: o deo con 2 HP thi nut (con 1) va SONG, khong vo
+   lan nay; cac o khac vo binh thuong. Tra {clear, blocked}. */
+function splitJellyCells(list) {
+  var clear = [], blocked = [];
+  list.forEach(function(cell) {
+    var k = cell[0] + "," + cell[1];
+    if (state.jelly[k] === 2) { state.jelly[k] = 1; blocked.push(cell); }
+    else clear.push(cell);
+  });
+  return { clear: clear, blocked: blocked };
+}
+function questProgress() {
+  var q = state.quest; if (!q) return 0;
+  if (q.kind === "type") return state.counts[q.type] || 0;
+  if (q.kind === "jelly") return state.counts.jelly || 0;
+  if (q.kind === "bomb") return state.counts.bombs || 0;
+  if (q.kind === "rainbow") return state.counts.rainbows || 0;
+  if (q.kind === "boss") return Math.max(0, 12 - state.bossHP);
+  return 0;
+}
+function questDone() {
+  if (state.level > 10 || !state.quest) return true;
+  return questProgress() >= state.quest.target;
+}
+function questText() {
+  var q = state.quest; if (!q) return "";
+  var p = Math.min(questProgress(), q.target);
+  var lbl = (q.label && q.label[LANG]) || q.label.vi;
+  return q.icon + " " + lbl + ": " + p + "/" + q.target + (p >= q.target ? " ✅" : "");
+}
+function updateBossPanel() {
+  var bp = document.getElementById("bossPanel");
+  if (!bp) return;
+  if (state.level === 10) {
+    bp.classList.remove("hidden");
+    var fill = document.getElementById("bossHpFill");
+    if (fill) fill.style.width = Math.max(0, state.bossHP / 12 * 100) + "%";
+    var tx = document.getElementById("bossHpText");
+    if (tx) tx.textContent = "HP " + Math.max(0, state.bossHP) + "/12";
+  } else bp.classList.add("hidden");
+}
+function damageBoss(n) {
+  if (state.level !== 10 || state.bossHP <= 0) return;
+  state.bossHP = Math.max(0, state.bossHP - n);
+  updateBossPanel();
+}
+/* Dem 1 o vua vo: loai thu cho nhiem vu, deo HP 1 cho nhiem vu deo,
+   sat thuong boss 1. Chi goi o noi o that su bi xoa khoi ban. */
+function countClearedCell(r, c, tl) {
+  if (!tl) return;
+  if (ANIMALS.indexOf(tl.type) >= 0) {
+    state.counts[tl.type] = (state.counts[tl.type] || 0) + 1;
+    var k = r + "," + c;
+    if (state.jelly[k]) { state.counts.jelly = (state.counts.jelly || 0) + 1; delete state.jelly[k]; }
+  }
+  damageBoss(1);
+}
+var CANDY_COLORS = ["#ffb3d9", "#ffd23f", "#8fd3f4", "#c1a6ed", "#a8e6a1", "#ffb347"];
+function startCandyRain() {
+  var rain = document.getElementById("candyRain");
+  if (!rain) return;
+  stopCandyRain();
+  if (state.level > 10) return;
+  if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  rain.classList.remove("hidden");
+  for (var i = 0; i < 12; i++) {
+    var d = document.createElement("div");
+    d.className = "candy-drop";
+    var s = 6 + Math.random() * 6;
+    d.style.width = s + "px"; d.style.height = s + "px";
+    d.style.left = (Math.random() * 98) + "%";
+    d.style.background = CANDY_COLORS[i % CANDY_COLORS.length];
+    if (Math.random() < 0.5) d.style.borderRadius = "4px";
+    d.style.animationDuration = (6 + Math.random() * 2).toFixed(2) + "s";
+    d.style.animationDelay = (-Math.random() * 8).toFixed(2) + "s";
+    rain.appendChild(d);
+  }
+}
+function stopCandyRain() {
+  var rain = document.getElementById("candyRain");
+  if (!rain) return;
+  rain.innerHTML = "";
+  rain.classList.add("hidden");
+}
 /* v31.51: moi man la 1 vung dat rieng (50 vung, lap lai sau man 50).
    Ten vung trung voi chuong truyen o cac moc (man 1 Rung Banh Quy, 3 Ho
    Keo Deo, 5 Nui So-co-la, 8 Dinh Cau Vong, 12 Thao Nguyen Keo Mut, 15
@@ -1703,13 +1841,13 @@ var LANDS = [
 function landForLevel(level) {
   return LANDS[(level - 1) % LANDS.length];
 }
-/* v31.63: one cake picture per land (An approved the BELLABLUES cake set).
-   Sprite map-nodes/bellablues-nodes.jpg: 7 cakes, each 256px (0 eclair
-   tower, 1 cream puff, 2 chocolate cake, 3 mille-feuille, 4 waffle,
-   5 eclairs, 6 croissant); table cycles after 25 like the lands do. */
-var NODE_IMG = [0, 2, 1, 4, 2, 3, 1, 0, 5, 6, 1, 0, 5, 3, 6, 4, 4, 6, 5, 1, 3, 0, 4, 6, 0];
+/* v31.94: one hand-drawn glass orb per LEVEL (An approved the 50-orb
+   set 2026-11-14). Sprite: 50 orbs in a horizontal strip, each 192px;
+   cell = level - 1 (L1 cell 0 ... L50 cell 49). */
+/* v31.94: each level has its OWN glass orb — cell = level - 1.
+   The old 25-entry NODE_IMG cycling the 7 BELLABLUES cakes is gone. */
 function nodeImg(level) {
-  return NODE_IMG[(level - 1) % NODE_IMG.length];
+  return level - 1;
 }
 
 
@@ -1726,9 +1864,17 @@ var state = {
   busy: false,
   over: false,
   selected: null,
-  tileSeq: 1
+  tileSeq: 1,
+  /* v31.89 demo (man 1-10): keo deo theo o, dem nhiem vu, HP boss */
+  jelly: {},
+  counts: { shark: 0, otter: 0, rabbit: 0, mouse: 0, jellyfish: 0, fox: 0, jelly: 0, bombs: 0, rainbows: 0 },
+  quest: null,
+  bossHP: 0,
+  questToastShown: false
 };
 var sleep = function(ms) { return new Promise(function(res){ setTimeout(res, ms); }); };
+/* v31.93: cho 1 khung hinh ve xong (2 rAF) — dung de chia nho dot bien tao layer khi roi lai sau set dai bang. */
+function nextFrame() { return new Promise(function(res){ requestAnimationFrame(function(){ requestAnimationFrame(res); }); }); }
 function randType() { return ANIMALS[Math.floor(Math.random() * ANIMALS.length)]; }
 function makeTile(type, special) {
   return { id: state.tileSeq++, type: type, special: special || null };
@@ -1966,7 +2112,10 @@ async function bounceThenPop(cells) {
 }
 
 /* Resolve all matches until the board settles. Returns total points earned. */
-async function resolveBoard(swapPos) {
+/* v31.93: quiet=true = cascade "lang" sau set dai bang: chi pop + diem +
+   am thanh, khong them hieu ung (tia/bong bong/hat/chu khen) — de khong
+   chong len duoi hat cua con set luc ban dang roi lai. */
+async function resolveBoard(swapPos, quiet) {
   var total = 0, cascade = 0;
   while (true) {
     var found = findMatches(state.board);
@@ -2012,6 +2161,24 @@ async function resolveBoard(swapPos) {
     /* Expand with special effects */
     var expanded = expandClear(clearCells);
     var extraCells = Object.keys(expanded.cells).filter(function(k) { return !clearCells.some(function(cc){ return cc[0] + "," + cc[1] === k; }); });
+    /* v31.89: deo — danh 1 lan nut (HP 2->1), o song va khong tinh diem lan
+       do; o deo trong run ma thanh keo dac biet thi van nut. Diem cua o bi
+       chan duoc tru truoc khi nhan he so. */
+    var runPts = {};
+    found.runs.forEach(function(run) { run.cells.forEach(function(cell) { runPts[cell[0] + "," + cell[1]] = rateFor(run.len); }); });
+    var jellyBlocked = [];
+    Object.keys(expanded.cells).forEach(function(k) {
+      if (state.jelly[k] === 2) { state.jelly[k] = 1; jellyBlocked.push(k); delete expanded.cells[k]; }
+    });
+    found.runs.forEach(function(run) { run.cells.forEach(function(cell) {
+      var k2 = cell[0] + "," + cell[1];
+      if (state.jelly[k2] === 2) { state.jelly[k2] = 1; }
+    }); });
+    var jellyDeduct = 0;
+    jellyBlocked.forEach(function(k) { jellyDeduct += (runPts[k] || 60); });
+    stepScore -= jellyDeduct;
+    /* v31.89: kich hoat keo dac biet (soc/goi/cau vong) gay +3 sat thuong boss, tinh 1 lan/vong. */
+    if (state.level === 10 && expanded.effects.length) damageBoss(3);
     stepScore += extraCells.length * 60;
     stepScore *= mult;
     stepScore *= state.scoreMult; /* L8+: 2x points */
@@ -2021,35 +2188,38 @@ async function resolveBoard(swapPos) {
     showFloatScore(stepScore, clearCells);
     /* Play effects: Candy Crush bubble pop (pitch climbs with the cascade) + praise word + jingle on chained cascades */
     AudioEng.sfx("candyPop", { cascade: cascade });
-    if (cascade >= 2) { showPraiseText(cascade); AudioEng.sfx("praiseJingle", { cascade: cascade }); }
+    if (cascade >= 2) { if (!quiet) showPraiseText(cascade); AudioEng.sfx("praiseJingle", { cascade: cascade }); }
     if (expanded.effects.indexOf("rainbow") >= 0) AudioEng.sfx("rainbow");
     else if (expanded.effects.indexOf("wrapped") >= 0) AudioEng.sfx("wrapped");
     else if (expanded.effects.indexOf("striped") >= 0) AudioEng.sfx("striped");
     /* Every match gets visuals: 3-match sparkles + lightning, 4+ big boom, 5+ big lightning */
     var biggest = 0;
     found.runs.forEach(function(run) {
-      matchBeam(run); /* chain beam along the run's row/column */
+      if (!quiet) matchBeam(run); /* chain beam along the run's row/column */
       if (run.len > biggest) biggest = run.len;
       var cell0 = run.cells[0];
       var tl0 = state.board[cell0[0]] && state.board[cell0[0]][cell0[1]];
       var type = tl0 ? tl0.type : "fox";
-      if (run.len >= 4) {
-        explosionAt(run.cells, type);
-        if (run.len >= 5) {
-          lightningTo([run.cells[0], run.cells[Math.floor(run.cells.length / 2)], run.cells[run.cells.length - 1]]);
+      /* v31.93: cascade lang — khong tia/bong bong/hat them (chi pop) */
+      if (!quiet) {
+        if (run.len >= 4) {
+          explosionAt(run.cells, type);
+          if (run.len >= 5) {
+            lightningTo([run.cells[0], run.cells[Math.floor(run.cells.length / 2)], run.cells[run.cells.length - 1]]);
+          } else {
+            lightningTo([run.cells[0], run.cells[run.cells.length - 1]]);
+          }
         } else {
-          lightningTo([run.cells[0], run.cells[run.cells.length - 1]]);
+          smallMatchFx(run.cells, type);
+          tripleBeam(run.cells, type, run.horiz); /* v31.53: 3 tia theo dung huong o */
         }
-      } else {
-        smallMatchFx(run.cells, type);
-        tripleBeam(run.cells, type, run.horiz); /* v31.53: 3 tia theo dung huong o */
       }
     });
     /* Water chime: matched tiles ring like a glass harp the moment they find each other.
        Pitch rises with match size; each cascade round climbs one step higher. */
     AudioEng.sfx("chime", { biggest: biggest, wrapped: found.wrapped.length > 0, cascade: cascade });
     /* Water-bubble burst: every matched tile pops like a water bubble. */
-    bubbleBurst(clearCells);
+    if (!quiet) bubbleBurst(clearCells); /* v31.93: cascade lang — bong bong + giot nuoc moi o la phan nang nhat */
     /* Giant head zoom for 4+ matches (and L/T): that animal's head swells up, zooms
        out at the player and explodes in a huge bang. Plain 3-matches never trigger it.
        If several 4+ runs meet at once, the biggest one gets the spotlight. */
@@ -2060,17 +2230,17 @@ async function resolveBoard(swapPos) {
      its striped/rainbow/wrapped special. If this stays smooth, the giant
      was the lag; if it still lags, the tall board itself is too heavy. */
     /* Cells cleared by special effects burst in their own tile colors too */
-    if (extraCells.length) burstCells(extraCells.map(function(k){ return k.split(",").map(Number); }), 10, BURST_CAP);
+    if (!quiet && extraCells.length) burstCells(extraCells.map(function(k){ return k.split(",").map(Number); }), 10, BURST_CAP);
     /* Striped beams sweep their row/column; rainbow lightning arcs to its targets.
        Per-tile numbers use the real points for that tile (its run rate, else 60). */
     var tilePts = {};
     found.runs.forEach(function(run) { run.cells.forEach(function(cell) { tilePts[cell[0] + "," + cell[1]] = rateFor(run.len); }); });
     extraCells.forEach(function(k) { if (!tilePts[k]) tilePts[k] = 60; });
     var ptsFor = function(cell) { return tilePts[cell[0] + "," + cell[1]] || 60; };
-    expanded.beams.forEach(function(bm) { stripedBeam(bm, ptsFor); });
-    expanded.rainbows.forEach(function(rb) { rainbowLightning(rb.from, rb.cells, ptsFor); });
+    if (!quiet) expanded.beams.forEach(function(bm) { stripedBeam(bm, ptsFor); });
+    if (!quiet) expanded.rainbows.forEach(function(rb) { rainbowLightning(rb.from, rb.cells, ptsFor); });
     /* Big bright beam when one clear step eats many tiles at once (8+). */
-    if (Object.keys(expanded.cells).length >= 8) bigBeam(Object.keys(expanded.cells).map(function(k) { return expanded.cells[k]; }));
+    if (!quiet && Object.keys(expanded.cells).length >= 8) bigBeam(Object.keys(expanded.cells).map(function(k) { return expanded.cells[k]; }));
     /* Screen shake removed: it gave An eye strain and headaches. No shake
        anywhere in the game now; flashes, confetti and sounds stay. */
     /* Special activations strike lightning at the special tiles (at least 2 bolts) */
@@ -2079,7 +2249,7 @@ async function resolveBoard(swapPos) {
       if (boltCells.length < 2 && clearCells.length) {
         boltCells.push(clearCells[Math.floor(Math.random() * clearCells.length)]);
       }
-      lightningTo(boltCells);
+      if (!quiet) lightningTo(boltCells); /* v31.93: cascade lang */
     }
     /* Bounce the matched tiles happily, then pop them */
     var keys = Object.keys(expanded.cells);
@@ -2087,14 +2257,16 @@ async function resolveBoard(swapPos) {
     keys.forEach(function(k) {
       var cell = expanded.cells[k];
       var tl = state.board[cell[0]][cell[1]];
-      if (tl) { removeTileEl(tl.id); state.board[cell[0]][cell[1]] = null; }
+      if (tl) { countClearedCell(cell[0], cell[1], tl); removeTileEl(tl.id); state.board[cell[0]][cell[1]] = null; }
     });
+    updateHUD(); /* v31.89: nhiem vu + boss cap nhat lien */
     /* Place the new specials */
     specialsToMake.forEach(function(s) {
       var cell = s.cell;
       var tl = state.board[cell[0]][cell[1]];
       if (tl) {
         tl.special = s.kind;
+        if (s.kind === "rainbow") { state.counts.rainbows = (state.counts.rainbows || 0) + 1; } /* v31.89: dem cau vong cho nhiem vu */
         if (s.kind === "rainbow") tl.type = "rainbow";
         refreshTileEl(tl, cell[0], cell[1]);
       }
@@ -2112,17 +2284,20 @@ async function resolveBoard(swapPos) {
           if (inBoard(nr, nc) && state.board[nr][nc]) second.push([nr, nc]);
         }
       });
+      /* v31.89: deo trong vung no lan 2 cung nut truoc khi vo. */
+      second = splitJellyCells(second).clear;
       if (second.length) {
         var s2 = second.length * 60 * mult * state.scoreMult; /* L8+: 2x points */
         total += s2; state.score += s2; updateHUD();
         showFloatScore(s2, second);
         AudioEng.sfx("wrapped");
-        explosionAt(expanded.wrappedHits, "fox", { text: false, count: 10, color: "#ffd23f" });
+        if (!quiet) explosionAt(expanded.wrappedHits, "fox", { text: false, count: 10, color: "#ffd23f" });
         await bounceThenPop(second);
         second.forEach(function(cell) {
           var tl = state.board[cell[0]][cell[1]];
-          if (tl) { removeTileEl(tl.id); state.board[cell[0]][cell[1]] = null; }
+          if (tl) { countClearedCell(cell[0], cell[1], tl); removeTileEl(tl.id); state.board[cell[0]][cell[1]] = null; }
         });
+        updateHUD(); /* v31.89: nhiem vu + boss cap nhat lien */
         dropAndRefill();
         renderBoard(false);
         await sleep(240);
@@ -2242,6 +2417,11 @@ async function doRainbowSwap(r1, c1, r2, c2) {
   }
   var uniq = {}, list = [];
   clearCells.forEach(function(cell) { var k = cell[0] + "," + cell[1]; if (!uniq[k]) { uniq[k] = true; list.push(cell); } });
+  /* v31.89: deo trong vung cau vong nut truoc; 2 o doi cho (cau vong + o kia)
+     luon bi tieu thu ke ca khi dang o tren o deo. */
+  var __keep = {}; __keep[rb[0] + "," + rb[1]] = true; __keep[other[0] + "," + other[1]] = true;
+  list = splitJellyCells(list.filter(function(cell) { return !__keep[cell[0] + "," + cell[1]]; })).clear.concat([rb, other]);
+  if (state.level === 10) damageBoss(3); /* kich hoat cau vong: +3 sat thuong boss */
   var pts = list.length * 60 * state.scoreMult; /* L8+: 2x points */
   state.score += pts; updateHUD();
   showFloatScore(pts, list);
@@ -2255,7 +2435,7 @@ async function doRainbowSwap(r1, c1, r2, c2) {
   await sleep(210);
   list.forEach(function(cell) {
     var tl = state.board[cell[0]][cell[1]];
-    if (tl) { removeTileEl(tl.id); state.board[cell[0]][cell[1]] = null; }
+    if (tl) { countClearedCell(cell[0], cell[1], tl); removeTileEl(tl.id); state.board[cell[0]][cell[1]] = null; }
   });
   dropAndRefill();
   renderBoard(false);
@@ -2314,7 +2494,15 @@ async function trySwap(r1, c1, r2, c2) {
 
 function afterTurn() {
   updateHUD();
-  if (state.score >= state.target) { endLevel(true); return; }
+  /* v31.89 demo: man 1-10 thang can DU DIEM + XONG NHIEM VU; neu du diem
+     ma chua xong nhiem vu thi choi tiep (luot/dong ho van gioi han). */
+  if (state.score >= state.target) {
+    if (questDone()) { endLevel(true); return; }
+    if (!state.questToastShown) {
+      state.questToastShown = true;
+      showToast(LANG === "vi" ? "Đủ điểm rồi — hoàn thành nhiệm vụ để thắng!" : "Target reached — finish the quest to win!");
+    }
+  }
   if (state.timeLeft <= 0) { endLevel(false); return; }
   if (state.moves <= 0) { endLevel(false); return; }
   resetHintTimer();
@@ -2391,6 +2579,7 @@ async function detonateBomb(target, from) {
   state.busy = true;
   clearHint();
   resetHintTimer();
+  state.counts.bombs = (state.counts.bombs || 0) + 1; /* v31.89: dem bom cho nhiem vu */
   /* Color-bomb rule: the bomb explodes EVERY tile of the animal it was dropped on.
      Specials use their own animal type; a rainbow, another bomb or a typeless tile
      falls back to the most common animal type on the board. Never nothing. */
@@ -2415,6 +2604,9 @@ async function detonateBomb(target, from) {
     if (tl && tl.type === type) addCell(r, c);
   }
   addCell(from[0], from[1]); /* the bomb itself is consumed */
+  /* v31.89: deo trong vung no nut truoc; chinh qua bom luon bi tieu thu. */
+  var __bf = from[0] + "," + from[1];
+  list = splitJellyCells(list.filter(function(cell) { return cell[0] + "," + cell[1] !== __bf; })).clear.concat([from]);
   var pts = list.length * 60 * state.scoreMult; /* L8+: 2x points, 60 per cleared tile, no flat bonus */
   state.score += pts;
   updateHUD();
@@ -2430,7 +2622,7 @@ async function detonateBomb(target, from) {
   await sleep(280);
   list.forEach(function(cell) {
     var tl = state.board[cell[0]][cell[1]];
-    if (tl) { removeTileEl(tl.id); state.board[cell[0]][cell[1]] = null; }
+    if (tl) { countClearedCell(cell[0], cell[1], tl); removeTileEl(tl.id); state.board[cell[0]][cell[1]] = null; }
   });
   lastBombTime = Date.now(); /* next bomb at least 25s after this one */
   dropAndRefill();
@@ -2528,7 +2720,8 @@ async function detonateEagleFull() {
     if (wave.length > 4) boltTargets.push(wave[Math.floor(wave.length / 2)]);
     if (w === 0) { thunderStrikes(boltTargets); AudioEng.sfx("eagleThunder"); } /* dot dau: set + 1 lan chop + tieng sam that TO (An 2026-11-14) */
     else eagleBolts(boltTargets); /* cac dot sau: chi tia set, khong chop */
-    burstCells(wave, 10, BURST_CAP);
+    burstCells(wave, 4, 48); /* v31.91: 32 hat/dot thay vi 80 — set dai bang bi lag vi ~350 hat song cung luc (moi dot song 900-1400ms, cach nhau 120ms); moi o van no */
+    wave = splitJellyCells(wave).clear; /* v31.89: deo song qua dot set (nut truoc) */
     var pts = wave.length * 60 * state.scoreMult;
     state.score += pts;
     updateHUD();
@@ -2537,14 +2730,18 @@ async function detonateEagleFull() {
     await sleep(120);
     wave.forEach(function(cell) {
       var tl = state.board[cell[0]][cell[1]];
-      if (tl) { removeTileEl(tl.id); state.board[cell[0]][cell[1]] = null; }
+      if (tl) { countClearedCell(cell[0], cell[1], tl); removeTileEl(tl.id); state.board[cell[0]][cell[1]] = null; }
     });
   }
   lastEagleTime = Date.now();
   dropAndRefill();
-  renderBoard(false);
+  /* v31.93: An — khung luc ban RƠI LẠI sau set (2026-11-14 20:46), khong phai luc
+     set danh. Chia roi lai thanh 2 nua (32 o/khung) + cascade chay "lang". */
+  renderBoard(false, 0, 4);
+  await nextFrame();
+  renderBoard(false, 4, 8);
   await sleep(260);
-  await resolveBoard(null);
+  await resolveBoard(null, true);
 }
 </script>
 <script>
@@ -2644,6 +2841,19 @@ function refreshTileEl(tl, r, c) {
     b.textContent = badge;
     inner.appendChild(b);
   }
+  /* v31.89: lop phu keo deo (2 HP = day, 1 HP = nut, co vet nut) */
+  var oldJelly = inner.querySelector(".jelly");
+  if (oldJelly) oldJelly.remove();
+  var jhp = state.jelly ? state.jelly[r + "," + c] : 0;
+  if (jhp) {
+    var j = document.createElement("div");
+    j.className = "jelly hp" + jhp;
+    var jn = document.createElement("span");
+    jn.className = "jelly-hp";
+    jn.textContent = jhp;
+    j.appendChild(jn);
+    inner.appendChild(j);
+  }
   var img = inner.querySelector("img");
   if (img) img.src = tl.type === "rainbow" ? IMG.fox : tl.type === "bomb" ? IMG.wolf : IMG[tl.type];
   inner.style.background = tl.type === "rainbow" ? "linear-gradient(135deg,#ff9a9e,#fecfef,#a18cd1,#84fab0,#8fd3f4)" : "";
@@ -2651,12 +2861,15 @@ function refreshTileEl(tl, r, c) {
 function positionEl(el, r, c) {
   el.style.transform = "translate(" + (c * 100) + "%, " + (r * 100) + "%)";
 }
-function renderBoard(full) {
-  /* sync DOM to model */
+function renderBoard(full, c0, c1) {
+  /* sync DOM to model; v31.93: c0/c1 gioi han cot de chia roi lai thanh 2 nua */
+  var colStart = (typeof c0 === "number") ? c0 : 0;
+  var colEnd = (typeof c1 === "number") ? c1 : COLS;
+  var partial = (colStart !== 0 || colEnd !== COLS);
   var seen = {};
   var newTiles = [];
   for (var r = 0; r < ROWS; r++) {
-    for (var c = 0; c < COLS; c++) {
+    for (var c = colStart; c < colEnd; c++) {
       var tl = state.board[r][c];
       if (!tl) continue;
       seen[tl.id] = true;
@@ -2682,11 +2895,13 @@ function renderBoard(full) {
       positionEl(nt.el, nt.r, nt.c);
     });
   }
-  Object.keys(elsById).forEach(function(id) {
-    if (!seen[id]) removeTileEl(id);
-  });
-  if (full) {
-    /* snap without transition on a full rebuild */
+  if (!partial) { /* chi don dep o "khong thay" khi ve toan bang — nua dau chua thay het cac o */
+    Object.keys(elsById).forEach(function(id) {
+      if (!seen[id]) removeTileEl(id);
+    });
+  }
+  if (full && !partial) {
+    /* snap without transition on a full rebuild (chi khi ve toan bang) */
     Object.keys(elsById).forEach(function(id) {
       var el = elsById[id];
       el.style.transition = "none";
@@ -3594,6 +3809,13 @@ function updateHUD() {
   document.getElementById("movesNum").textContent = Math.max(0, state.moves);
   var pct = Math.min(100, Math.round(state.score / state.target * 100));
   document.getElementById("progressFill").style.width = pct + "%";
+  /* v31.89: dong nhiem vu + thanh HP boss (chi man 1-10) */
+  var ql = document.getElementById("questLine");
+  if (ql) {
+    if (state.quest) { ql.classList.remove("hidden"); ql.textContent = questText(); }
+    else ql.classList.add("hidden");
+  }
+  updateBossPanel();
 }
 
 /* ================= Input: click + drag ================= */
@@ -3908,11 +4130,12 @@ function renderMap() {
     var isCurrent = lv === state.maxLevel;
     node.className = "map-node" + (locked ? " locked" : isCurrent ? " current" : " done");
     node.setAttribute("data-level", lv);
-    /* v31.63: the button IS its land's cake picture (An approved the
-       BELLABLUES cake set) — the slice of the sprite matching its land. */
+    /* v31.94: the button IS its level's hand-drawn glass orb (An
+       approved the 50-orb set) — the slice of the sprite matching
+       its level. */
     var pic = document.createElement("span");
     pic.className = "map-land-img";
-    pic.style.backgroundPosition = (nodeImg(lv) / 6 * 100) + "% center";
+    pic.style.backgroundPosition = (nodeImg(lv) / 49 * 100) + "% center"; /* v31.94: 50 cells -> step 1/49 */
     node.appendChild(pic);
     var num = document.createElement("span");
     num.className = "map-num";
@@ -4248,6 +4471,13 @@ function startLevel(level) {
   state.busy = false;
   state.selected = null;
   state.board = createBoard();
+  /* v31.89 demo: deo + nhiem vu + boss (chi man 1-10) */
+  state.jelly = {};
+  jellyCellsForLevel(level).forEach(function(p) { state.jelly[p[0] + "," + p[1]] = 2; });
+  state.counts = { shark: 0, otter: 0, rabbit: 0, mouse: 0, jellyfish: 0, fox: 0, jelly: 0, bombs: 0, rainbows: 0 };
+  state.quest = QUESTS[level] || null;
+  state.bossHP = level === 10 ? 12 : 0;
+  state.questToastShown = false;
   /* v31.49: dat bom soi + keo cau vong mien phi vao cac o KHAC NHAU
      (khong de 2 qua trung 1 o). L5+: 1 bom; L15+: 2 bom; L25+: 1 keo cau vong. */
   var __usedCells = {};
@@ -4264,6 +4494,10 @@ function startLevel(level) {
   renderBoard(true);
   updateHUD();
   updatePerkLine();
+  /* v31.89: anh boss lay tu IMG (khong them ref anh moi) + mua keo man 1-10 */
+  var __bi = document.getElementById("bossImg");
+  if (__bi) __bi.src = IMG.jellyfish;
+  startCandyRain();
   document.getElementById("startScreen").classList.add("hidden");
   document.getElementById("endScreen").classList.add("hidden");
   stopBoings();
@@ -4303,6 +4537,7 @@ function endLevel(won) {
   state.over = true;
   stopTimer();
   stopHintTimer();
+  stopCandyRain(); /* v31.89: dung mua keo khi het man */
   var isBest = state.score > state.best;
   if (isBest) {
     state.best = state.score;
