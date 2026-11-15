@@ -163,9 +163,10 @@ button:disabled { opacity:.55; cursor:default; }
 .tile .jelly.hp1::after { content:""; position:absolute; left:18%; right:18%; top:50%; height:2px; background:rgba(255,255,255,.85); transform:rotate(-18deg); border-radius:2px; }
 .tile .jelly-hp { position:absolute; left:2px; bottom:2px; width:18px; height:18px; line-height:18px; text-align:center; font-size:12px; font-weight:800; color:#fff; background:#ff5c8a; border:2px solid #fff; border-radius:50%; pointer-events:none; }
 .quest-line { font-size:14px; font-weight:800; color:#b26a00; text-align:center; padding:3px 8px; background:#fff3d6; border:2px dashed #ffbf47; border-radius:999px; margin-top:2px; }
-#bossPanel { display:flex; align-items:center; gap:10px; width:100%; background:#fffdf5; border-radius:18px; padding:8px 12px; box-shadow:0 4px 14px rgba(0,0,0,.15); }
+#bossPanel { display:flex; align-items:center; gap:10px; flex-wrap:wrap; width:100%; background:#fffdf5; border-radius:18px; padding:8px 12px; box-shadow:0 4px 14px rgba(0,0,0,.15); }
 #bossPanel.hidden { display:none; }
 #bossImg { width:56px; height:56px; border-radius:14px; flex-shrink:0; }
+#bossCrown { flex:1 1 100%; width:100%; max-width:280px; margin:0 auto 6px; display:block; } /* v31.96: vuong mien banh kem (An chot mau 14, 3 keo mut xoan) — anh lon tren panel boss L10, giua, thay ro 6 ban dong vat */
 .boss-info { flex:1; min-width:0; }
 #bossName { font-weight:800; color:#7c3fd4; font-size:16px; }
 .boss-hp { height:14px; background:#efe6f7; border-radius:999px; overflow:hidden; margin:4px 0; border:2px solid #c1a6ed; }
@@ -233,6 +234,7 @@ button:disabled { opacity:.55; cursor:default; }
 .tile.t-mouse img { filter: drop-shadow(0 -3px 4px rgba(185,190,195,.95)) drop-shadow(0 0 7px rgba(154,160,166,.60)); }
 .tile.t-jellyfish img { filter: drop-shadow(0 -3px 4px rgba(210,185,250,.95)) drop-shadow(0 0 7px rgba(193,166,237,.65)); }
 .tile.t-fox img { filter: drop-shadow(0 -3px 4px rgba(255,170,65,.95)) drop-shadow(0 0 7px rgba(255,140,26,.60)); }
+.tile.t-gift img { filter: drop-shadow(0 -3px 4px rgba(255,90,90,.95)) drop-shadow(0 0 7px rgba(255,190,60,.65)); } /* v31.96: hop qua — do + vang */
 .tile img { width:105%; height:105%; margin:-2.5%; object-fit:cover; display:block; pointer-events:none; animation: tileSway 2.6s ease-in-out infinite; transform-origin: 50% 88%; } /* v31.76: dong dua/lac lu nhe (An 2026-11-14) — xoay ±2° quanh chan duoi, 2.6s, nhe nhang, khong chop/khong rung man hinh. v31.80: mat cac be TO HON NUA (An 2026-11-14, dong y cat vien trong suot) — phong to anh 120% trong o thay vi cat file goc (cat se cat mat tai/vay; phong to thi mat chiem ~91% o, vien trong suot hap thu phan tran nen khong de len o ke. v31.86: An gui anh iPad — dau to qua, de len dau ban ke — thu nho xuong 110% (mat ~0.81 o, van to hon v31.79) cho anh rong nhat (ca map/chuot) vua khit trong o, khong de. v31.87: An choi ban live — dau van hoi to — thu nho them xiu xuong 105% (mat ~0.77 o, van to hon v31.79), anh rong nhat gio nam 2.75%..97.25% trong o, co khoang ho ro rang. v31.88: tren iPad van to — do o iPad ~87px nen khe ho o 105% chi ~5px — rieng may tinh bang (600-1024px) xuong 100% (khe ho ~9px, mat ~64px van to ro), dien thoai giu 105%. */
 /* v31.88: An — tren iPad dau van to sau khi refresh — thu nho rieng cho may tinh bang (600-1024px): dau 100% (mat ~0.73 o, khe ho giua cac dau ~9px tren o ~87px), dien thoai giu 105%. v31.92: An — tren PC/laptop dau van to de len nhau — mo rong 100% ra moi man hinh >=600px. */
 @media (min-width: 600px) { .tile img { width:100%; height:100%; margin:0; } } /* v31.92: An — tren PC/laptop dau van to de len dau ban ke — mo rong luat 100% tu chi-may-tinh-bang (600-1024px) ra moi man hinh >=600px ke ca desktop: khe ho ~9.5px tren o ~95px hap thu duoc do lac tileSway, dien thoai (<600px) giu 105%. */
@@ -586,8 +588,8 @@ button:disabled { opacity:.55; cursor:default; }
 .map-total, .map-sub { text-shadow:0 1px 3px rgba(255,255,255,.95), 0 0 8px rgba(255,255,255,.85); }
 .map-total { text-align:center; font-weight:800; color:#b26a00; font-size:1rem; }
 .map-sub { text-align:center; font-size:.85rem; opacity:.75; color:#22405a; margin:2px 0 6px; }
-.map-scroll { flex:1; overflow-y:auto; position:relative; border-radius:18px; background:rgba(255,255,255,.08); padding:8px 0 16px; -webkit-overflow-scrolling:touch; } /* v31.95: overlay trang .15 -> .08 cho nut ro hon (An 2026-11-14: nut mo); v31.72: KHONG lam mo nua — nen moi giua trong */
-#mapPath { position:relative; padding-top:72px; } /* v31.60: room above node 1 so the party (standing above its node) is fully visible, not hidden behind the header */
+.map-scroll { flex:1; overflow-y:auto; position:relative; border-radius:18px; background:rgba(255,255,255,.08); padding:8px 0 96px; -webkit-overflow-scrolling:touch; } /* v31.96: dem duoi 16->96px de hang cuoi khong bi thanh nut duoi che; v31.95: overlay trang .15 -> .08 cho nut ro hon (An 2026-11-14: nut mo); v31.72: KHONG lam mo nua — nen moi giua trong */
+#mapPath { position:relative; padding-top:84px; } /* v31.96: tang tu 72px de be ca dung cao hon van hien tron dau (nhay len khong bi cat); v31.60: room above node 1 so the party (standing above its node) is fully visible, not hidden behind the header */
 #mapRoad { position:absolute; inset:0; width:100%; height:100%; pointer-events:none; z-index:0; filter:drop-shadow(0 0 6px rgba(255, 200, 80, .8)) drop-shadow(0 0 16px rgba(255, 190, 60, .4)); } /* v31.73: duong cau vong phat sang RO hon (test v31.71: glow cu 5px/.55 qua mo, mat thuong khong thay) */
 .map-row { height:110px; position:relative; z-index:1; } /* v31.68: row cao hon cho nut 72px + ten dat vua */
 .map-tree { position:absolute; top:42px; transform:translate(-50%,-50%); width:26px; height:33px; line-height:0; pointer-events:none; filter:drop-shadow(0 2px 2px rgba(34,64,90,.25)); z-index:0; } .map-tree svg { display:block; width:26px; height:33px; } /* v31.74: cay ve tay doc 2 ben duong — ngay tam nut (42px), bam theo duong */
@@ -595,23 +597,23 @@ button:disabled { opacity:.55; cursor:default; }
 .map-node::before { content:""; position:absolute; top:6px; left:10px; width:32px; height:19px; border-radius:50%; background:rgba(255,255,255,.55); filter:blur(1px); transform:rotate(-18deg); pointer-events:none; }
 .map-node:active, .map-node.pressed { transform:translateY(5px); box-shadow:0 1px 0 rgba(0,0,0,.16), 0 3px 8px rgba(34,64,90,.3), inset 0 2px 0 rgba(255,255,255,.6), inset 0 -5px 0 rgba(0,0,0,.12); } /* v31.71: lom xuong nhu phim ban phim (An 2026-11-14) — nut chim 5px, bong day gan nhu bien mat */
 .map-node.done { background:linear-gradient(180deg,#5ee0a0 0%,#2ed573 70%,#1da85c 100%); }
-.map-node.current { background:linear-gradient(180deg,#ff5c7a 0%,#ff2d55 55%,#ff9500 100%); animation:mapPulse 1.2s ease-in-out infinite; }
+.map-node.current { background:linear-gradient(180deg,#ffe066 0%,#ffb700 55%,#ff9500 100%); outline:3px solid #ffd23f; outline-offset:2px; animation:mapPulse 1.2s ease-in-out infinite; } /* v31.96: nut hien tai — vang chi con la VIEN vang (+ 👑 + nhip dap), khong con lop vang phu orb (An 2026-11-14: nut man 1 mo vi lop vang + be ca che) */
 @keyframes mapPulse { 0%,100% { scale:1; } 50% { scale:1.12; } } /* v31.75: dung thuoc-tinh scale thay cho transform — animation mapPulse khong con chan transform:translateY(5px) cua :active/.pressed, nut man hien tai (do, dang nhap nhay) gio lom xuong duoc khi an (test v31.74: giu nut man 2 khong thay lom) */
 /* v31.55: doan be ca + cac be khoi vuong buoc di tren ban do (anh AI, nen trong suot). */
 /* v31.57: doan di — be ca map (mau cua game) dan dau, sau la 5 be
    dong vat KHOI VUONG (o tile cua game), vua di vua bouncy: moi be nay
    len lech nhau (stagger) nhu doan tau nay. */
-#mapParty { position:absolute; z-index:3; width:64px; pointer-events:none; transform:translate(-50%,-100%); display:flex; align-items:flex-end; justify-content:center; } /* v31.61: only the shark girl walks now, so the party is just her */
+#mapParty { position:absolute; z-index:3; width:52px; pointer-events:none; transform:translate(-50%,-100%); display:flex; align-items:flex-end; justify-content:center; } /* v31.96: be ca nho lai (64->52px) de khong che orb nut hien tai; v31.61: only the shark girl walks now, so the party is just her */
 /* v31.69: anh sang vang theo be ca — vong sang tron mo o duoi chan be (tren duong, sau be), di den dau sang den do; nhip nhe, khong chop. */
-#mapParty::before { content:""; position:absolute; left:50%; top:100%; width:150px; height:150px; transform:translate(-50%,-50%); border-radius:50%; background:radial-gradient(circle, rgba(255, 240, 150, .85) 0%, rgba(255, 210, 90, .45) 38%, rgba(255, 200, 100, 0) 68%); pointer-events:none; z-index:-1; animation:mapLightPulse 2.2s ease-in-out infinite alternate; }
+#mapParty::before { content:""; position:absolute; left:50%; top:100%; width:104px; height:104px; transform:translate(-50%,-50%); border-radius:50%; background:radial-gradient(circle, rgba(255, 240, 150, .5) 0%, rgba(255, 210, 90, .25) 32%, rgba(255, 200, 100, 0) 60%); pointer-events:none; z-index:-1; animation:mapLightPulse 2.2s ease-in-out infinite alternate; } /* v31.96: vong sang nho + mo hon (150px/.85 -> 104px/.5) de khong rua trang orb nut hien tai */
 @keyframes mapLightPulse { from { opacity:.72; } to { opacity:.95; } }
 .map-candy { position:absolute; z-index:2; font-size:20px; line-height:1; pointer-events:none; transform:translate(-50%,-50%); filter:drop-shadow(0 2px 2px rgba(34,64,90,.3)); } /* v31.61: candies gliding on the road after the shark girl */
 #mapParty .map-party-baby { display:block; flex:0 0 auto; margin-left:-3px; filter:drop-shadow(0 3px 4px rgba(34,64,90,.3)); animation:partyHop .5s ease-in-out infinite alternate; }
 #mapParty .map-party-baby img { display:block; width:100%; height:auto; }
 /* v31.67: be ca MAP DI BO — sprite wave 10 khung tu video An gui (tiles/shark-girl-walk.png 960x182, khung 96x182, hien 48x91px). Span trong chi doi khung wave (100ms/khung, steps(1) de khung dung yen khong truot); bounce (partyHop/partyBob) van o span ngoai .map-party-baby. */
-#mapParty .map-walk-sprite { display:block; width:56px; height:106px; /* v31.68: to hon theo nut 72px */ background:url("tiles/shark-girl-walk.png") 0 0/1000% 100% no-repeat; animation:walkCycle 1s steps(1) infinite; }
+#mapParty .map-walk-sprite { display:block; width:46px; height:87px; /* v31.96: nho lai (56x106 -> 46x87) de khong che orb; v31.68: to hon theo nut 72px */ background:url("tiles/shark-girl-walk.png") 0 0/1000% 100% no-repeat; animation:walkCycle 1s steps(1) infinite; }
 @keyframes walkCycle { 0% { background-position:0% 0; } 10% { background-position:11.111% 0; } 20% { background-position:22.222% 0; } 30% { background-position:33.333% 0; } 40% { background-position:44.444% 0; } 50% { background-position:55.555% 0; } 60% { background-position:66.666% 0; } 70% { background-position:77.777% 0; } 80% { background-position:88.888% 0; } 90%,100% { background-position:100% 0; } }
-#mapParty .map-party-baby.leader { width:56px; margin-left:0; z-index:2; }
+#mapParty .map-party-baby.leader { width:46px; margin-left:0; z-index:2; }
 #mapParty .map-party-baby.follower { width:28px; }
 #mapParty .map-party-baby:nth-child(1) { animation-delay:0s; }
 #mapParty .map-party-baby:nth-child(2) { animation-delay:.08s; }
@@ -624,12 +626,17 @@ button:disabled { opacity:.55; cursor:default; }
 @keyframes partyHop { from { transform:translateY(0); } to { transform:translateY(-7px); } }
 @keyframes partyBob { from { transform:translateY(0); } to { transform:translateY(-3px); } }
 .map-node.locked { background:linear-gradient(180deg,#c3ccd6 0%,#8b95a5 70%,#6f7987 100%); cursor:not-allowed; font-size:1.1rem; }
-.map-node .crown { position:absolute; top:-16px; left:50%; transform:translateX(-50%); font-size:1.1rem; }
+.map-node .crown { position:absolute; top:-28px; left:calc(50% + 34px); transform:translateX(-50%); font-size:.95rem; z-index:5; pointer-events:none; filter:drop-shadow(0 2px 2px rgba(34,64,90,.35)); } /* 2026-11-14 22:03: 👑 nut hien tai bi be ca che — doi sang phai + cao hon, z-index 5 (tren #mapParty z-index 3) */
+.map-node .boss-crown { position:absolute; top:-18px; left:50%; transform:translateX(-50%) rotate(-3deg); width:24px; height:22px; z-index:4; pointer-events:none; filter:drop-shadow(0 2px 2px rgba(34,64,90,.35)); } /* v31.96: vuong mien keo (SVG) cho man boss 10/20/30/40/50 — vang + ngoc keo deo nhieu mau + keo mut o dinh; nam tren dinh nut, khong che so man hay orb */
+.map-node .boss-crown svg { display:block; width:100%; height:100%; }
+.map-node.duo .crown { left:calc(50% - 34px); font-size:.95rem; } /* v31.96: man vua hien tai vua boss — 👑 lech trai, vuong mien keo lech phai, khong chong nhau, khong che be ca */
+.map-node.duo .boss-crown { left:calc(50% + 13px); }
 .map-node .lock { font-size:1.2rem; }
 .map-node .lock-badge { position:absolute; right:-7px; bottom:-7px; font-size:.95rem; line-height:1; } /* v31.60: locked nodes keep their number; the lock becomes a small corner badge */
 .map-node .map-land-img { position:absolute; inset:3px; border-radius:50%; background-image:url(map-nodes/glass-orbs-nodes.jpg); background-size:5000% 100%; background-repeat:no-repeat; filter:saturate(1.55) contrast(1.12); } /* v31.95: saturate 1.45->1.55, contrast 1.07->1.12 (An: nut mo); v31.94: the node IS its level's hand-drawn glass orb (An approved the 50-orb set 2026-11-14); inset 3px so the state colour still shows as a ring */
 .map-node .map-land-img::after { content:""; position:absolute; inset:0; border-radius:50%; pointer-events:none; background:radial-gradient(circle at 30% 20%, rgba(255,255,255,1) 0%, rgba(255,255,255,.55) 14%, rgba(255,255,255,.12) 26%, rgba(255,255,255,0) 35%), radial-gradient(circle at 50% 118%, rgba(255,255,255,.55) 0%, rgba(255,255,255,0) 42%); box-shadow:inset 0 -6px 10px rgba(0,0,0,.22), inset 0 4px 6px rgba(255,255,255,.35); } /* v31.95: specular nho gon + sac net hon (tan het o 35% thay vi 55%), vien sang duoi manh hon .4->.55, bong trang tren giam .55->.35 (An 2026-11-14: nut mo); v31.90: glass-mirror dome — round & shiny like a glass lollipop */
 .map-node.locked .map-land-img { filter:grayscale(1) contrast(1.12); opacity:.68; } /* v31.95: locked opacity .55->.68 + contrast 1.12 cho hinh khoa ro hon (van xam + vong xam + khoa, van nhan ra la khoa); locked: the orb picture is greyed out */
+.map-node.current .map-land-img { filter:saturate(1.55) contrast(1.12); opacity:1; } /* v31.96: orb nut hien tai hien day du do bong nhu nut khoa (khong bi lop vang lam nhat) */
 .map-node .map-num { position:absolute; top:-7px; left:-7px; min-width:22px; height:22px; padding:0 4px; border-radius:10px; background:#22405a; color:#fff; font-size:.72rem; font-weight:900; display:flex; align-items:center; justify-content:center; border:2px solid #fff; box-sizing:border-box; } /* v31.62: level number as a small corner badge */
 .map-node .map-story { position:absolute; top:-8px; right:-8px; font-size:.9rem; }
 .map-stars { position:absolute; top:52px; left:50%; transform:translateX(-50%); font-size:.85rem; letter-spacing:1px; color:#ffd23f; text-shadow:0 1px 2px rgba(0,0,0,.35), 0 0 3px rgba(255,255,255,.6); white-space:nowrap; }
@@ -833,7 +840,7 @@ input[type=text]:focus { border-color:#ff5c8a; }
 #devCredit { position:absolute; left:0; right:0; bottom:0.32cm; text-align:center; font-size:10px; font-weight:600; letter-spacing:.2px; color:rgba(255,255,255,.92); text-shadow:0 1px 3px rgba(0,0,0,.35); pointer-events:none; z-index:5; }
 /* v31.40: cá heo Flow pastel đưa lại vào game (An yêu cầu 2026-11-14) */
 /* v31.51: moi man la 1 vung dat rieng — man + qua toi man 25, glow tung o, truyen viet lai (An 2026-11-14). LIVE. */
-/* v31.74: cay VE TAY doc 2 ben DUONG (An sua 2026-11-14) — cay bam theo duong (nut ±16%), khong phai hang cay vien background; bo emoji. LIVE v31.95. */
+/* v31.74: cay VE TAY doc 2 ben DUONG (An sua 2026-11-14) — cay bam theo duong (nut ±16%), khong phai hang cay vien background; bo emoji. LIVE v31.96. */
 /* v30: story chapters — full-screen card before levels 1/3/5/8.
    z-index 60 sits above the transition overlay (55); the level timer
    only starts after the player taps Play, so reading costs no time. */
@@ -942,15 +949,37 @@ input[type=text]:focus { border-color:#ff5c8a; }
   <p class="tagline" id="tagline"></p>
   <button id="playBtn" class="rainbow"><span class="mini-bubble b1"></span><span class="mini-bubble b2"></span><span class="play-label"></span></button>
   <button id="mapBtn" class="map-start-btn"></button>
+  <div class="card daily-card" id="dailyCard">
+    <h3>🎁 Quà mỗi ngày</h3>
+    <div class="daily-days" id="dailyDays"></div>
+    <button class="green daily-claim" id="dailyClaimBtn"></button>
+    <p class="daily-inv" id="dailyInv"></p>
+    <p class="daily-stamps" id="dailyStamps"></p>
+  </div>
+  <style>
+  .daily-card { margin-top:10px; }
+  .daily-card h3 { margin:2px 0 8px; font-size:1.05rem; color:#22405a; }
+  .daily-days { display:flex; gap:5px; justify-content:center; flex-wrap:wrap; }
+  .daily-day { flex:1 1 0; min-width:38px; max-width:52px; padding:6px 2px; border-radius:10px; background:#fff8e6; border:2px solid #ffe1a1; text-align:center; font-size:.72rem; color:#7a5b00; }
+  .daily-day b { display:block; font-size:.68rem; }
+  .daily-day span { font-size:1rem; }
+  .daily-day.done { background:#e8f9ee; border-color:#7ed6a5; color:#1c7a45; }
+  .daily-day.today { background:#fff0b3; border-color:#ffb700; box-shadow:0 0 0 2px #ffd23f; }
+  .daily-claim { margin-top:8px; padding:10px 18px; border-radius:999px; border:none; font-weight:800; font-size:.95rem; cursor:pointer; }
+  .daily-claim:disabled { background:#c9d2dc; box-shadow:none; cursor:default; }
+  .daily-inv, .daily-stamps { margin:6px 0 0; font-size:.85rem; color:#22405a; font-weight:700; }
+  </style>
   <div class="card howto" id="howto"></div>
   <p class="visit-count" id="visitCount"></p>
   <p class="best-line" id="bestLine"></p>
   <p class="level-info" id="levelInfo"></p>
+  <p class="best-line" id="stickerLine"></p>
   <div class="card" id="startLb"></div>
   <div class="hud-btns">
     <button class="icon-btn" id="langBtnStart">VI | EN</button>
     <button class="icon-btn" id="musicBtnStart">🔊</button>
     <button class="icon-btn" id="storyBtnStart">📖</button>
+    <button class="icon-btn" id="stickerBtnStart">📕</button>
   </div>
   <button class="reset-btn" id="resetBtn">↺ Chơi lại từ Màn 1</button>
 </div>
@@ -983,8 +1012,10 @@ input[type=text]:focus { border-color:#ff5c8a; }
     </div>
     <div class="hud-perk-row"><div class="perk-line" id="perkLine"></div><div class="progress"><div id="progressFill"></div></div></div>
     <div id="questLine" class="quest-line hidden"></div>
+    <div id="ingLine" class="quest-line hidden"></div>
   </div>
   <div id="bossPanel" class="hidden">
+    <img id="bossCrown" src="tiles/boss-crown-cake-lollipops.png" alt="Vương miện bánh kem">
     <img id="bossImg" alt="Quái Kẹo Dẻo">
     <div class="boss-info">
       <div id="bossName">👾 Quái Kẹo Dẻo</div>
@@ -1110,7 +1141,8 @@ var IMG = {
   jellyfish: "tiles/jellyfish.png",
   fox: "tiles/fox.png",
   wolf: "tiles/wolf.png",
-  eagle: "tiles/eagle.png"
+  eagle: "tiles/eagle.png",
+  gift: "tiles/ingredient-gift.png"
 };
 var ANIMALS = ["shark","otter","rabbit","mouse","jellyfish","fox"];
 /* v26: bomb + PERF fix (2026-11-13): bomb particles 650->180,
@@ -1688,7 +1720,19 @@ var QUESTS = {
   7: { kind: "type", type: "fox", target: 18, icon: "🦊", label: { vi: "Ăn cáo", en: "Clear foxes" } },
   8: { kind: "jelly", target: 6, icon: "🍮", label: { vi: "Phá kẹo dẻo", en: "Clear jelly" } },
   9: { kind: "bomb", target: 2, icon: "💣", label: { vi: "Nổ bom sói", en: "Detonate wolf bombs" } },
-  10: { kind: "boss", target: 12, icon: "👾", label: { vi: "Đánh bại Quái Kẹo Dẻo", en: "Defeat the Jelly Monster" } }
+  10: { kind: "boss", target: 12, icon: "👾", label: { vi: "Đánh bại Quái Kẹo Dẻo", en: "Defeat the Jelly Monster" } },
+  /* v31.96: nhiem vu man 11-20 (Order — thu du mon theo vung dat). Man 12/18/24 la
+     nhiem vu nguyen lieu (tha qua xuong day) thay cho nhiem vu thu thuong. */
+  11: { kind: "type", type: "mouse", target: 12, icon: "🐭", label: { vi: "Ăn chuột", en: "Clear mice" } },
+  12: { kind: "ingredient", target: 2, icon: "🎁", label: { vi: "Thả quà xuống đáy", en: "Drop gifts to the bottom" } },
+  13: { kind: "type", type: "otter", target: 14, icon: "🦦", label: { vi: "Ăn rái cá", en: "Clear otters" } },
+  14: { kind: "type", type: "jellyfish", target: 15, icon: "🎐", label: { vi: "Ăn sứa", en: "Clear jellyfish" } },
+  15: { kind: "bomb", target: 2, icon: "💣", label: { vi: "Nổ bom sói", en: "Detonate wolf bombs" } },
+  16: { kind: "type", type: "shark", target: 14, icon: "🦈", label: { vi: "Ăn cá mập", en: "Clear sharks" } },
+  17: { kind: "rainbow", target: 1, icon: "🌈", label: { vi: "Tạo cầu vồng", en: "Create rainbows" } },
+  18: { kind: "ingredient", target: 3, icon: "🎁", label: { vi: "Thả quà xuống đáy", en: "Drop gifts to the bottom" } },
+  19: { kind: "type", type: "fox", target: 16, icon: "🦊", label: { vi: "Ăn cáo", en: "Clear foxes" } },
+  20: { kind: "type", type: "rabbit", target: 15, icon: "🐰", label: { vi: "Ăn thỏ", en: "Clear rabbits" } }
 };
 function jellyCellsForLevel(level) {
   if (level === 8) return [[3,2],[3,3],[3,4],[4,2],[4,3],[4,4]];
@@ -1713,10 +1757,11 @@ function questProgress() {
   if (q.kind === "bomb") return state.counts.bombs || 0;
   if (q.kind === "rainbow") return state.counts.rainbows || 0;
   if (q.kind === "boss") return Math.max(0, 12 - state.bossHP);
+  if (q.kind === "ingredient") return state.ingDropped || 0;
   return 0;
 }
 function questDone() {
-  if (state.level > 10 || !state.quest) return true;
+  if (!state.quest) return true; /* v31.96: nhiem vu mo rong toi man 20 (truoc chi toi man 10) */
   return questProgress() >= state.quest.target;
 }
 function questText() {
@@ -1870,7 +1915,10 @@ var state = {
   counts: { shark: 0, otter: 0, rabbit: 0, mouse: 0, jellyfish: 0, fox: 0, jelly: 0, bombs: 0, rainbows: 0 },
   quest: null,
   bossHP: 0,
-  questToastShown: false
+  questToastShown: false,
+  /* v31.96: qua nguyen lieu (man 12/18/24) — roi xuong day de thu */
+  ingDropped: 0,
+  ingTotal: 0
 };
 var sleep = function(ms) { return new Promise(function(res){ setTimeout(res, ms); }); };
 /* v31.93: cho 1 khung hinh ve xong (2 rAF) — dung de chia nho dot bien tao layer khi roi lai sau set dai bang. */
@@ -1911,7 +1959,7 @@ function findMatches(b) {
     c = 0;
     while (c < COLS) {
       var t0 = b[r][c];
-      if (!t0 || t0.type === "rainbow" || t0.type === "bomb" || t0.type === "eagle") { c++; continue; }
+      if (!t0 || t0.type === "rainbow" || t0.type === "bomb" || t0.type === "eagle" || t0.type === "gift") { c++; continue; } /* v31.96: hop qua khong ghep duoc */
       len = 1;
       while (c + len < COLS && b[r][c+len] && b[r][c+len].type === t0.type) len++;
       if (len >= 3) {
@@ -1926,7 +1974,7 @@ function findMatches(b) {
     r = 0;
     while (r < ROWS) {
       var t1 = b[r][c];
-      if (!t1 || t1.type === "rainbow" || t1.type === "bomb" || t1.type === "eagle") { r++; continue; }
+      if (!t1 || t1.type === "rainbow" || t1.type === "bomb" || t1.type === "eagle" || t1.type === "gift") { r++; continue; } /* v31.96: hop qua khong ghep duoc */
       len = 1;
       while (r + len < ROWS && b[r+len][c] && b[r+len][c].type === t1.type) len++;
       if (len >= 3) {
@@ -1968,7 +2016,8 @@ function hasValidMove(b) {
       var r2 = r + dirs[d][0], c2 = c + dirs[d][1];
       if (!inBoard(r2, c2)) continue;
       var a = b[r][c], bb = b[r2][c2];
-      if (!a || !bb || a.type === "bomb" || bb.type === "bomb" || a.type === "eagle" || bb.type === "eagle") continue;
+      if (a && bb && a.special && bb.special) return true; /* v31.96: hai keo dac biet canh nhau luon doi duoc (combo) */
+      if (!a || !bb || a.type === "bomb" || bb.type === "bomb" || a.type === "eagle" || bb.type === "eagle" || a.type === "gift" || bb.type === "gift") continue;
       b[r][c] = bb; b[r2][c2] = a;
       var m = findMatches(b).runs.length > 0;
       b[r][c] = a; b[r2][c2] = bb;
@@ -2000,12 +2049,12 @@ function findHintMove(b) {
   var dirs = [[0,1],[1,0]];
   for (var r = 0; r < ROWS; r++) for (var c = 0; c < COLS; c++) {
     var t0 = b[r][c];
-    if (!t0 || t0.type === "bomb" || t0.type === "rainbow" || t0.type === "eagle") continue;
+    if (!t0 || t0.type === "bomb" || t0.type === "rainbow" || t0.type === "eagle" || t0.type === "gift") continue;
     for (var d = 0; d < 2; d++) {
       var r2 = r + dirs[d][0], c2 = c + dirs[d][1];
       if (!inBoard(r2, c2)) continue;
       var t1 = b[r2][c2];
-      if (!t1 || t1.type === "bomb" || t1.type === "rainbow" || t1.type === "eagle") continue;
+      if (!t1 || t1.type === "bomb" || t1.type === "rainbow" || t1.type === "gift" || t1.type === "eagle") continue;
       b[r][c] = t1; b[r2][c2] = t0;
       var m = findMatches(b).runs.length > 0;
       b[r][c] = t0; b[r2][c2] = t1;
@@ -2052,7 +2101,7 @@ function rateFor(len) { return len === 3 ? 60 : len === 4 ? 120 : 200; }
 /* Expand a clear set with special effects. Returns {cells:Set(keys), wrappedHits:[[r,c]], effects:[names], strikes:[[r,c]], beams:[{dir,line,from}], rainbows:[{from,cells}]} */
 function expandClear(initialCells) {
   var cells = {}, queue = [], wrappedHits = [], effects = [], strikes = [], beams = [], rainbows = [];
-  initialCells.forEach(function(cell) { cells[cell[0] + "," + cell[1]] = cell; queue.push(cell); });
+  initialCells.forEach(function(cell) { var __st = state.board[cell[0]] && state.board[cell[0]][cell[1]]; if (__st && __st.type === "gift") return; cells[cell[0] + "," + cell[1]] = cell; queue.push(cell); }); /* v31.96: hop qua khong bi hieu ung cuon theo */
   var processed = {};
   while (queue.length) {
     var cell = queue.shift();
@@ -2064,22 +2113,22 @@ function expandClear(initialCells) {
     if (tl.special === "h") {
       effects.push("striped");
       beams.push({ dir: "h", line: r, from: [r, c] });
-      for (var cc = 0; cc < COLS; cc++) { var k = r + "," + cc; if (!cells[k]) { cells[k] = [r, cc]; queue.push([r, cc]); } }
+      for (var cc = 0; cc < COLS; cc++) { var __gt = state.board[r][cc]; if (__gt && __gt.type === "gift") continue; var k = r + "," + cc; if (!cells[k]) { cells[k] = [r, cc]; queue.push([r, cc]); } }
     } else if (tl.special === "v") {
       effects.push("striped");
       beams.push({ dir: "v", line: c, from: [r, c] });
-      for (var rr = 0; rr < ROWS; rr++) { var k2 = rr + "," + c; if (!cells[k2]) { cells[k2] = [rr, c]; queue.push([rr, c]); } }
+      for (var rr = 0; rr < ROWS; rr++) { var __gt2 = state.board[rr][c]; if (__gt2 && __gt2.type === "gift") continue; var k2 = rr + "," + c; if (!cells[k2]) { cells[k2] = [rr, c]; queue.push([rr, c]); } }
     } else if (tl.special === "wrapped") {
       effects.push("wrapped");
       wrappedHits.push([r, c]);
       for (var dr = -1; dr <= 1; dr++) for (var dc = -1; dc <= 1; dc++) {
         var nr = r + dr, nc = c + dc;
-        if (inBoard(nr, nc)) { var k3 = nr + "," + nc; if (!cells[k3]) { cells[k3] = [nr, nc]; queue.push([nr, nc]); } }
+        if (inBoard(nr, nc)) { var __gt3 = state.board[nr][nc]; if (__gt3 && __gt3.type === "gift") continue; var k3 = nr + "," + nc; if (!cells[k3]) { cells[k3] = [nr, nc]; queue.push([nr, nc]); } }
       }
     } else if (tl.special === "rainbow") {
       effects.push("rainbow");
       var counts = {};
-      state.board.forEach(function(row) { row.forEach(function(t2) { if (t2 && t2.type !== "rainbow") counts[t2.type] = (counts[t2.type] || 0) + 1; }); });
+      state.board.forEach(function(row) { row.forEach(function(t2) { if (t2 && t2.type !== "rainbow" && t2.type !== "gift") counts[t2.type] = (counts[t2.type] || 0) + 1; }); });
       var bestType = null, bestN = 0;
       Object.keys(counts).forEach(function(ty) { if (counts[ty] > bestN) { bestN = counts[ty]; bestType = ty; } });
       if (bestType) {
@@ -2118,6 +2167,7 @@ async function bounceThenPop(cells) {
 async function resolveBoard(swapPos, quiet) {
   var total = 0, cascade = 0;
   while (true) {
+    if (await collectGifts()) continue; /* v31.96: hop qua vua roi xuong day — thu roi nap lai truoc khi tim match */
     var found = findMatches(state.board);
     if (found.runs.length === 0) break;
     cascade++;
@@ -2330,7 +2380,7 @@ function pickRefillType(r, c) {
     var opts = [];
     [[r+1,c],[r+2,c],[r,c-1],[r,c-2]].forEach(function(p) {
       var tl = inBoard(p[0], p[1]) && b[p[0]][p[1]];
-      if (tl && tl.type !== "rainbow" && tl.type !== "bomb" && tl.type !== "eagle") opts.push(tl.type);
+      if (tl && tl.type !== "rainbow" && tl.type !== "bomb" && tl.type !== "eagle" && tl.type !== "gift") opts.push(tl.type); /* v31.96: khong nap them hop qua */
     });
     for (var i = opts.length - 1; i > 0; i--) {
       var j = Math.floor(Math.random() * (i + 1));
@@ -2400,16 +2450,33 @@ async function doRainbowSwap(r1, c1, r2, c2) {
   var rb = state.board[r1][c1] && state.board[r1][c1].special === "rainbow" ? [r1, c1] : [r2, c2];
   var other = (rb[0] === r1 && rb[1] === c1) ? [r2, c2] : [r1, c1];
   var otherTile = state.board[other[0]][other[1]];
+  /* v31.96: cau vong + cau vong — ca ban no sach theo dot (khong dai bang, khong sam) */
+  if (otherTile && otherTile.special === "rainbow") { await detonateRainbowPair(); return; }
   var targetType = otherTile ? otherTile.type : null;
-  var clearCells = [rb, other];
-  if (targetType && targetType !== "rainbow") {
+  var clearCells = (otherTile && otherTile.type === "gift") ? [rb] : [rb, other]; /* v31.96: hop qua khong bi cau vong an — chi cau vong bien mat */
+  var __pairClear = clearCells.slice();
+  /* v31.96: hop qua khong phai mau keo — cau vong khong cuon qua theo */
+  if (targetType && targetType !== "rainbow" && ANIMALS.indexOf(targetType) >= 0) {
     for (var r = 0; r < ROWS; r++) for (var c = 0; c < COLS; c++) {
       var tl = state.board[r][c];
       if (tl && tl.type === targetType) clearCells.push([r, c]);
     }
   }
   var chainedBeams = [];
-  if (otherTile && otherTile.special && otherTile.special !== "rainbow") {
+  if (otherTile && (otherTile.special === "h" || otherTile.special === "v")) {
+    /* v31.96: cau vong + soc — moi o cung mau bien thanh soc roi cung no */
+    var __dir = otherTile.special;
+    var __seeds = [];
+    for (var __r = 0; __r < ROWS; __r++) for (var __c = 0; __c < COLS; __c++) {
+      var __t = state.board[__r][__c];
+      if (__t && __t.type === targetType && !__t.special) { __t.special = __dir; __seeds.push([__r, __c]); }
+    }
+    __seeds.push(other);
+    renderBoard(false); /* cho thay cac o doi mau thanh soc truoc khi no */
+    var __exp = expandClear(__seeds);
+    Object.keys(__exp.cells).forEach(function(k) { clearCells.push(__exp.cells[k]); });
+    chainedBeams = __exp.beams;
+  } else if (otherTile && otherTile.special && otherTile.special !== "rainbow") {
     /* rainbow + special: also trigger that special's effect */
     var exp = expandClear([other]);
     Object.keys(exp.cells).forEach(function(k) { clearCells.push(exp.cells[k]); });
@@ -2420,7 +2487,7 @@ async function doRainbowSwap(r1, c1, r2, c2) {
   /* v31.89: deo trong vung cau vong nut truoc; 2 o doi cho (cau vong + o kia)
      luon bi tieu thu ke ca khi dang o tren o deo. */
   var __keep = {}; __keep[rb[0] + "," + rb[1]] = true; __keep[other[0] + "," + other[1]] = true;
-  list = splitJellyCells(list.filter(function(cell) { return !__keep[cell[0] + "," + cell[1]]; })).clear.concat([rb, other]);
+  list = splitJellyCells(list.filter(function(cell) { return !__keep[cell[0] + "," + cell[1]]; })).clear.concat(__pairClear);
   if (state.level === 10) damageBoss(3); /* kich hoat cau vong: +3 sat thuong boss */
   var pts = list.length * 60 * state.scoreMult; /* L8+: 2x points */
   state.score += pts; updateHUD();
@@ -2450,6 +2517,7 @@ async function trySwap(r1, c1, r2, c2) {
   var a = state.board[r1][c1], b = state.board[r2][c2];
   if (!a || !b) return;
   if (a.type === "bomb" || b.type === "bomb") return; /* only the wolf bomb is dragged, never swapped; the eagle IS swapped (it clears the whole board) */
+  if (a.type === "gift" || b.type === "gift") return; /* v31.96: hop qua khong doi cho duoc */
   state.busy = true;
   state.selected = null; renderSelection();
   /* animate the swap */
@@ -2463,6 +2531,15 @@ async function trySwap(r1, c1, r2, c2) {
     state.moves--;
     updateHUD();
     await detonateEagleFull();
+    afterTurn();
+    state.busy = false;
+    return;
+  }
+  /* v31.96: hai keo dac biet doi nhau — combo (soc/soc, soc/goi, goi/goi) */
+  if (a.special && b.special && a.special !== "rainbow" && b.special !== "rainbow") {
+    state.moves--;
+    updateHUD();
+    await doSpecialCombo(r1, c1, r2, c2);
     afterTurn();
     state.busy = false;
     return;
@@ -2497,10 +2574,10 @@ function afterTurn() {
   /* v31.89 demo: man 1-10 thang can DU DIEM + XONG NHIEM VU; neu du diem
      ma chua xong nhiem vu thi choi tiep (luot/dong ho van gioi han). */
   if (state.score >= state.target) {
-    if (questDone()) { endLevel(true); return; }
+    if (questDone() && ingDone()) { endLevel(true); return; } /* v31.96: thang can du diem + xong nhiem vu + tha het qua */
     if (!state.questToastShown) {
       state.questToastShown = true;
-      showToast(LANG === "vi" ? "Đủ điểm rồi — hoàn thành nhiệm vụ để thắng!" : "Target reached — finish the quest to win!");
+      showToast(!ingDone() ? (LANG === "vi" ? "Đủ điểm rồi — thả hết quà xuống đáy để thắng!" : "Target reached — drop all gifts to the bottom to win!") : (LANG === "vi" ? "Đủ điểm rồi — hoàn thành nhiệm vụ để thắng!" : "Target reached — finish the quest to win!"));
     }
   }
   if (state.timeLeft <= 0) { endLevel(false); return; }
@@ -2604,6 +2681,21 @@ async function detonateBomb(target, from) {
     if (tl && tl.type === type) addCell(r, c);
   }
   addCell(from[0], from[1]); /* the bomb itself is consumed */
+  /* v31.96: bom soi + keo dac biet — moi o cung mau bien thanh keo dac biet do roi cung no */
+  if (targetTl && (targetTl.special === "h" || targetTl.special === "v" || targetTl.special === "wrapped" || targetTl.special === "rainbow")) {
+    var __conv = targetTl.special === "rainbow" ? "h" : targetTl.special;
+    var __bseeds = [];
+    for (var __br = 0; __br < ROWS; __br++) for (var __bc = 0; __bc < COLS; __bc++) {
+      var __bt = state.board[__br][__bc];
+      if (__bt && __bt.type === type && !__bt.special) { __bt.special = __conv; __bseeds.push([__br, __bc]); }
+    }
+    if (targetTl.special) __bseeds.push([target[0], target[1]]);
+    renderBoard(false); /* cho thay cac o doi mau truoc khi no */
+    var __bexp = expandClear(__bseeds);
+    Object.keys(__bexp.cells).forEach(function(k) { addCell(__bexp.cells[k][0], __bexp.cells[k][1]); });
+    __bexp.beams.forEach(function(bm) { stripedBeam(bm, function() { return 60; }); });
+    if (state.level === 10) damageBoss(3);
+  }
   /* v31.89: deo trong vung no nut truoc; chinh qua bom luon bi tieu thu. */
   var __bf = from[0] + "," + from[1];
   list = splitJellyCells(list.filter(function(cell) { return cell[0] + "," + cell[1] !== __bf; })).clear.concat([from]);
@@ -2710,6 +2802,7 @@ async function detonateEagleFull() {
     var j = Math.floor(Math.random() * (i + 1));
     var tmp = cells[i]; cells[i] = cells[j]; cells[j] = tmp;
   }
+  cells = cells.filter(function(cell) { var __et = state.board[cell[0]] && state.board[cell[0]][cell[1]]; return !__et || __et.type !== "gift"; }); /* v31.96: set khong danh hop qua — qua chi thu khi roi xuong day */
   var waves = [], perWave = 8;
   for (var k = 0; k < cells.length; k += perWave) waves.push(cells.slice(k, k + perWave));
   showEagleFly(); /* dai bang bay vuot qua bang truoc khi set danh */
@@ -2768,6 +2861,7 @@ function specialClass(tl) {
 }
 function badgeFor(tl) {
   if (tl.type === "eagle") return "⚡";
+  if (tl.type === "gift") return "🎁"; /* v31.96: hop qua co nhan rieng */
   if (tl.special === "h") return "↔";
   if (tl.special === "v") return "↕";
   if (tl.special === "wrapped") return "🎀";
@@ -3810,10 +3904,18 @@ function updateHUD() {
   var pct = Math.min(100, Math.round(state.score / state.target * 100));
   document.getElementById("progressFill").style.width = pct + "%";
   /* v31.89: dong nhiem vu + thanh HP boss (chi man 1-10) */
+  /* v31.96: man co qua nguyen lieu — dong qua thay cho dong nhiem vu */
   var ql = document.getElementById("questLine");
-  if (ql) {
-    if (state.quest) { ql.classList.remove("hidden"); ql.textContent = questText(); }
-    else ql.classList.add("hidden");
+  var il = document.getElementById("ingLine");
+  if (state.ingTotal) {
+    if (il) { il.classList.remove("hidden"); il.textContent = "🎁 " + (LANG === "vi" ? "Thả quà" : "Drop gifts") + ": " + Math.min(state.ingDropped, state.ingTotal) + "/" + state.ingTotal + (ingDone() ? " ✅" : ""); }
+    if (ql) ql.classList.add("hidden");
+  } else {
+    if (il) il.classList.add("hidden");
+    if (ql) {
+      if (state.quest) { ql.classList.remove("hidden"); ql.textContent = questText(); }
+      else ql.classList.add("hidden");
+    }
   }
   updateBossPanel();
 }
@@ -3982,7 +4084,7 @@ function placeParty(x, y) {
   var p = document.getElementById("mapParty");
   if (!p) return;
   p.style.left = x + "px";
-  p.style.top = (y - 14) + "px"; /* chan dung ngay tren tam nut */
+  p.style.top = (y - 26) + "px"; /* v31.96: chan dung ngay tren DINH nut (tren tam 26px) — be ca dung tren qua bong chu khong che orb; truoc -14px chan nam giua nut */
 }
 /* v31.61: candy trail — the shark girl's recent positions, so the
    candies can glide along the road exactly where she just walked. */
@@ -4128,7 +4230,8 @@ function renderMap() {
     node.style.left = "calc(" + off + "% - 36px)"; /* v31.68: -36px = nua nut 72px */
     var locked = lv > state.maxLevel;
     var isCurrent = lv === state.maxLevel;
-    node.className = "map-node" + (locked ? " locked" : isCurrent ? " current" : " done");
+    var isBoss = BOSS_LEVELS.indexOf(lv) >= 0;
+    node.className = "map-node" + (locked ? " locked" : isCurrent ? " current" : " done") + (isCurrent && isBoss ? " duo" : "");
     node.setAttribute("data-level", lv);
     /* v31.94: the button IS its level's hand-drawn glass orb (An
        approved the 50-orb set) — the slice of the sprite matching
@@ -4149,6 +4252,12 @@ function renderMap() {
       var cr = document.createElement("span");
       cr.className = "crown"; cr.textContent = "👑";
       node.appendChild(cr);
+    }
+    if (isBoss) {
+      var bc = document.createElement("span");
+      bc.className = "boss-crown";
+      bc.innerHTML = BOSS_CROWN_SVG;
+      node.appendChild(bc);
     }
     if (STORY[lv]) {
       var b = document.createElement("span");
@@ -4419,6 +4528,308 @@ function showStoryViewer() {
   ov.classList.remove("hidden");
   close.onclick = function() { ov.classList.add("hidden"); if (inGame) resumeTimer(); };
 }
+
+/* ================= v31.96: 4 tinh nang kieu Candy Crush (An 2026-11-14: lam het tru dua voi me) =================
+   A. Combo keo dac biet (doi 2 keo dac biet voi nhau). B. Nhiem vu moi: tha qua
+   nguyen lieu (man 12/18/24) + quest man 11-20. C. Qua moi ngay + tem.
+   D. So sticker theo chuong truyen. E. Vuong mien keo cho man boss (An gui
+   anh ban do Candy Crush 2026-11-14). */
+
+/* --- E. Man boss (10/20/30/40/50) — vuong mien keo tren dinh nut ban do --- */
+var BOSS_LEVELS = [10, 20, 30, 40, 50];
+var BOSS_CROWN_SVG = '<svg viewBox="0 0 24 22" xmlns="http://www.w3.org/2000/svg" aria-label="Man boss"><path d="M2 17 L2 9 L7 12 L12 5 L17 12 L22 9 L22 17 Z" fill="#ffc93c" stroke="#e8890c" stroke-width="1" stroke-linejoin="round"/><circle cx="12" cy="2.6" r="2.4" fill="#ff9ecf" stroke="#e75480" stroke-width=".8"/><line x1="12" y1="5" x2="12" y2="8" stroke="#ffffff" stroke-width="1.4"/><circle cx="2.4" cy="8.4" r="1.3" fill="#ffe066" stroke="#e8890c" stroke-width=".7"/><circle cx="21.6" cy="8.4" r="1.3" fill="#ffe066" stroke="#e8890c" stroke-width=".7"/><circle cx="7" cy="14" r="1.9" fill="#ff5c7a"/><circle cx="12" cy="14.5" r="1.9" fill="#2ed573"/><circle cx="17" cy="14" r="1.9" fill="#38bdf8"/></svg>';
+
+/* --- B. Nguyen lieu: so hop qua moi man --- */
+var INGREDIENT_LEVELS = { 12: 2, 18: 3, 24: 4 };
+function ingDone() {
+  if (!state.ingTotal) return true;
+  return state.ingDropped >= state.ingTotal;
+}
+/* Thu hop qua dang o hang day (row 7). Tra true neu thu duoc it nhat 1 hop. */
+async function collectGifts() {
+  if (!state.ingTotal) return false;
+  var got = [];
+  for (var c = 0; c < COLS; c++) {
+    var tl = state.board[ROWS - 1][c];
+    if (tl && tl.type === "gift") got.push([ROWS - 1, c]);
+  }
+  if (!got.length) return false;
+  AudioEng.sfx("candyPop", { cascade: 1 });
+  got.forEach(function(cell) { var el = tileEl(cell[0], cell[1]); if (el) el.classList.add("pop"); });
+  await sleep(150);
+  got.forEach(function(cell) {
+    var tl2 = state.board[cell[0]][cell[1]];
+    if (tl2 && tl2.type === "gift") { removeTileEl(tl2.id); state.board[cell[0]][cell[1]] = null; }
+  });
+  state.ingDropped += got.length;
+  updateHUD();
+  dropAndRefill();
+  renderBoard(false);
+  return true;
+}
+
+/* --- A. Combo keo dac biet — tinh vung no (thuan, de test) ---
+   cross: soc+soc = hang + cot. cross3: soc+goi = 3 hang + 3 cot.
+   blast5: goi+goi = 5x5. */
+function comboPlan(sa, sb, r, c) {
+  var cells = {}, list = [];
+  function add(rr, cc) {
+    if (rr < 0 || rr >= ROWS || cc < 0 || cc >= COLS) return;
+    var k = rr + "," + cc;
+    if (!cells[k]) { cells[k] = [rr, cc]; list.push([rr, cc]); }
+  }
+  var beams = [], kind = "";
+  function striped(s) { return s === "h" || s === "v"; }
+  if (striped(sa) && striped(sb)) {
+    kind = "cross";
+    for (var cc = 0; cc < COLS; cc++) add(r, cc);
+    for (var rr = 0; rr < ROWS; rr++) add(rr, c);
+    beams.push({ dir: "h", line: r, from: [r, c] });
+    beams.push({ dir: "v", line: c, from: [r, c] });
+  } else if ((striped(sa) && sb === "wrapped") || (sa === "wrapped" && striped(sb))) {
+    kind = "cross3";
+    for (var d = -1; d <= 1; d++) {
+      for (var cc2 = 0; cc2 < COLS; cc2++) add(r + d, cc2);
+      for (var rr2 = 0; rr2 < ROWS; rr2++) add(rr2, c + d);
+    }
+    for (var d2 = -1; d2 <= 1; d2++) {
+      if (r + d2 >= 0 && r + d2 < ROWS) beams.push({ dir: "h", line: r + d2, from: [r + d2, c] });
+      if (c + d2 >= 0 && c + d2 < COLS) beams.push({ dir: "v", line: c + d2, from: [r, c + d2] });
+    }
+  } else if (sa === "wrapped" && sb === "wrapped") {
+    kind = "blast5";
+    for (var dr = -2; dr <= 2; dr++) for (var dc = -2; dc <= 2; dc++) add(r + dr, c + dc);
+  }
+  return { kind: kind, cells: list, beams: beams };
+}
+async function doSpecialCombo(r1, c1, r2, c2) {
+  var a = state.board[r1][c1], b = state.board[r2][c2];
+  if (!a || !b) return;
+  var plan = comboPlan(a.special, b.special, r2, c2);
+  if (!plan.kind) return;
+  /* hop qua trong vung no van song (chi thu khi roi xuong day) */
+  var list = plan.cells.filter(function(cell) {
+    var g = state.board[cell[0]] && state.board[cell[0]][cell[1]];
+    return !g || g.type !== "gift";
+  });
+  var __keep = {};
+  __keep[r1 + "," + c1] = true; __keep[r2 + "," + c2] = true;
+  list = splitJellyCells(list.filter(function(cell) { return !__keep[cell[0] + "," + cell[1]]; })).clear.concat([[r1, c1], [r2, c2]]);
+  if (state.level === 10) damageBoss(3);
+  var pts = list.length * 60 * state.scoreMult;
+  state.score += pts; updateHUD();
+  showFloatScore(pts, list);
+  if (plan.kind === "blast5") AudioEng.sfx("wrapped"); else AudioEng.sfx("striped");
+  plan.beams.forEach(function(bm) { stripedBeam(bm, function() { return 60; }); });
+  if (plan.kind !== "cross") explosionAt(list, "fox", { count: 25, max: 180, text: false });
+  burstCells(list, 10, BURST_CAP);
+  await bounceThenPop(list);
+  list.forEach(function(cell) {
+    var tl = state.board[cell[0]][cell[1]];
+    if (tl) { countClearedCell(cell[0], cell[1], tl); removeTileEl(tl.id); state.board[cell[0]][cell[1]] = null; }
+  });
+  dropAndRefill();
+  renderBoard(false);
+  await sleep(240);
+  await resolveBoard(null);
+}
+/* Cau vong + cau vong: ca ban no sach theo 8 dot (kieu dai bang nhung KHONG
+   co dai bang bay qua, khong sam, khong chop man hinh). */
+async function detonateRainbowPair() {
+  clearHint();
+  resetHintTimer();
+  var cells = [];
+  for (var r = 0; r < ROWS; r++) for (var c = 0; c < COLS; c++) {
+    var __t = state.board[r][c];
+    if (__t && __t.type === "gift") continue;
+    cells.push([r, c]);
+  }
+  for (var i = cells.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var tmp = cells[i]; cells[i] = cells[j]; cells[j] = tmp;
+  }
+  var waves = [], perWave = 8;
+  for (var k = 0; k < cells.length; k += perWave) waves.push(cells.slice(k, k + perWave));
+  AudioEng.sfx("rainbow");
+  if (state.level === 10) damageBoss(3);
+  for (var w = 0; w < waves.length; w++) {
+    var wave = waves[w];
+    burstCells(wave, 4, 40);
+    wave = splitJellyCells(wave).clear;
+    var pts = wave.length * 60 * state.scoreMult;
+    state.score += pts;
+    updateHUD();
+    showFloatScore(pts, wave);
+    wave.forEach(function(cell) { var el = tileEl(cell[0], cell[1]); if (el) el.classList.add("pop"); });
+    await sleep(120);
+    wave.forEach(function(cell) {
+      var tl = state.board[cell[0]][cell[1]];
+      if (tl) { countClearedCell(cell[0], cell[1], tl); removeTileEl(tl.id); state.board[cell[0]][cell[1]] = null; }
+    });
+  }
+  dropAndRefill();
+  renderBoard(false);
+  await sleep(260);
+  await resolveBoard(null);
+}
+
+/* --- C. Qua moi ngay + tem --- */
+var DAILY_GIFTS = [
+  { bomb: 1 },              /* Ngay 1: 1 bom soi */
+  { rainbow: 1 },           /* Ngay 2: 1 cau vong */
+  { moves: 5 },             /* Ngay 3: +5 luot man ke */
+  { eagle: 1 },             /* Ngay 4: 1 dai bang */
+  { bomb: 2 },              /* Ngay 5: 2 bom soi */
+  { rainbow: 2 },           /* Ngay 6: 2 cau vong */
+  { eagle: 1, rainbow: 2 }  /* Ngay 7: 1 dai bang + 2 cau vong */
+];
+var DAILY_LABELS = ["💣", "🌈", "+5", "⚡", "💣×2", "🌈×2", "⚡+🌈"];
+function __dateStr(d) { return d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate(); }
+function __todayStr() { return __dateStr(new Date()); }
+function __yesterdayStr() { var d = new Date(); d.setDate(d.getDate() - 1); return __dateStr(d); }
+function getDaily() {
+  return {
+    last: localStorage.getItem("ac_daily_last") || "",
+    streak: parseInt(localStorage.getItem("ac_daily_streak") || "0", 10) || 0
+  };
+}
+/* Hom nay nhan duoc ngay nao? Nghi 1 ngay la quay ve Ngay 1; het 7 ngay quay lai Ngay 1. */
+function dailyAvailable() {
+  var dd = getDaily();
+  if (dd.last === __todayStr()) return { can: false, day: dd.streak || 1 };
+  var day = (dd.last === __yesterdayStr() && dd.streak >= 1) ? dd.streak + 1 : 1;
+  if (day > 7) day = 1;
+  return { can: true, day: day };
+}
+function getDailyInv() {
+  try { var v = JSON.parse(localStorage.getItem("ac_daily_gifts") || "{}"); return v && typeof v === "object" ? v : {}; } catch (e) { return {}; }
+}
+function saveDailyInv(inv) { localStorage.setItem("ac_daily_gifts", JSON.stringify(inv)); }
+function claimDaily() {
+  var av = dailyAvailable();
+  if (!av.can) return;
+  var g = DAILY_GIFTS[av.day - 1];
+  var inv = getDailyInv();
+  Object.keys(g).forEach(function(k) { inv[k] = (inv[k] || 0) + g[k]; });
+  saveDailyInv(inv);
+  localStorage.setItem("ac_daily_last", __todayStr());
+  localStorage.setItem("ac_daily_streak", String(av.day));
+  AudioEng.sfx("applause");
+  showToast(LANG === "vi" ? "🎁 Đã nhận quà ngày " + av.day + "!" : "🎁 Day " + av.day + " gift claimed!");
+  renderDaily();
+}
+function renderDaily() {
+  var card = document.getElementById("dailyCard");
+  if (!card) return;
+  var dd = getDaily();
+  var av = dailyAvailable();
+  var claimedUpTo = av.can ? av.day - 1 : (dd.streak || 0);
+  var html = "";
+  for (var i = 0; i < 7; i++) {
+    var cls = "daily-day";
+    if (i + 1 <= claimedUpTo) cls += " done";
+    if (av.can && i + 1 === av.day) cls += " today";
+    html += '<div class="' + cls + '"><b>' + (LANG === "vi" ? "Ngày " : "Day ") + (i + 1) + '</b><span>' + DAILY_LABELS[i] + '</span></div>';
+  }
+  document.getElementById("dailyDays").innerHTML = html;
+  var btn = document.getElementById("dailyClaimBtn");
+  if (btn) {
+    btn.disabled = !av.can;
+    btn.textContent = av.can ? ("🎁 " + (LANG === "vi" ? "Nhận quà ngày " + av.day : "Claim Day " + av.day + " gift")) : (LANG === "vi" ? "✅ Đã nhận hôm nay" : "✅ Claimed today");
+  }
+  var inv = getDailyInv();
+  var parts = [];
+  if (inv.bomb) parts.push("💣×" + inv.bomb);
+  if (inv.rainbow) parts.push("🌈×" + inv.rainbow);
+  if (inv.eagle) parts.push("⚡×" + inv.eagle);
+  if (inv.moves) parts.push("+" + inv.moves + " " + (LANG === "vi" ? "lượt" : "moves"));
+  var invEl = document.getElementById("dailyInv");
+  if (invEl) invEl.textContent = parts.length ? ((LANG === "vi" ? "Túi quà: " : "Gift bag: ") + parts.join("  ")) : "";
+  var stamps = parseInt(localStorage.getItem("ac_stamps") || "0", 10) || 0;
+  var st = "";
+  for (var s = 0; s < 6; s++) st += s < stamps ? "📮" : "▫️";
+  var stEl = document.getElementById("dailyStamps");
+  if (stEl) stEl.textContent = (LANG === "vi" ? "Tem mỗi ngày: " : "Daily stamps: ") + st + " " + stamps + "/6";
+  var sl = document.getElementById("stickerLine");
+  if (sl) sl.textContent = "📕 " + (LANG === "vi" ? "Sticker: " : "Stickers: ") + getStickers().length + "/16";
+}
+/* Thang 1 man moi ngay duoc 1 tem; du 6 tem mo ruong (2 cau vong + 2 bom soi + 1 dai bang). */
+function awardStamp() {
+  var today = __todayStr();
+  if (localStorage.getItem("ac_stamp_last") === today) return false;
+  var n = (parseInt(localStorage.getItem("ac_stamps") || "0", 10) || 0) + 1;
+  if (n >= 6) {
+    n = 0;
+    var inv = getDailyInv();
+    inv.rainbow = (inv.rainbow || 0) + 2;
+    inv.bomb = (inv.bomb || 0) + 2;
+    inv.eagle = (inv.eagle || 0) + 1;
+    saveDailyInv(inv);
+    showToast(LANG === "vi" ? "📮 Đủ 6 tem — mở rương: +2 🌈 +2 💣 +1 ⚡!" : "📮 6 stamps — chest opened: +2 🌈 +2 💣 +1 ⚡!");
+  }
+  localStorage.setItem("ac_stamps", String(n));
+  localStorage.setItem("ac_stamp_last", today);
+  return true;
+}
+function bombsOnBoard() {
+  var n = 0;
+  for (var r = 0; r < ROWS; r++) for (var c = 0; c < COLS; c++) {
+    var tl = state.board[r] && state.board[r][c];
+    if (tl && tl.type === "bomb") n++;
+  }
+  return n;
+}
+function rainbowsOnBoard() {
+  var n = 0;
+  for (var r = 0; r < ROWS; r++) for (var c = 0; c < COLS; c++) {
+    var tl = state.board[r] && state.board[r][c];
+    if (tl && tl.type === "rainbow") n++;
+  }
+  return n;
+}
+/* --- D. So sticker: mo bang cach thang man co chuong truyen --- */
+function getStickers() {
+  try { var v = JSON.parse(localStorage.getItem("ac_stickers") || "[]"); return Array.isArray(v) ? v : []; } catch (e) { return []; }
+}
+function stickerUnlock(level) {
+  if (STORY_LEVELS.indexOf(level) < 0) return false;
+  var s = getStickers();
+  if (s.indexOf(level) >= 0) return false;
+  s.push(level);
+  localStorage.setItem("ac_stickers", JSON.stringify(s));
+  return true;
+}
+function showStickerBook() {
+  var ov = document.getElementById("storyScreen");
+  var inGame = !document.getElementById("gameScreen").classList.contains("hidden");
+  if (inGame) stopTimer();
+  var got = getStickers();
+  var html = "";
+  for (var i = 0; i < STORY_LEVELS.length; i++) {
+    var lv = STORY_LEVELS[i];
+    var ch = STORY[lv];
+    if (got.indexOf(lv) >= 0) {
+      html += '<div class="story-item"><img src="' + ch.img + '" alt=""><div><b>' + ch.title[LANG] + '</b><p>' + ch.body[LANG] + '</p></div></div>';
+    } else {
+      html += '<div class="story-item"><div style="font-size:2rem; width:64px; min-width:64px; height:64px; display:flex; align-items:center; justify-content:center; background:#e8ecf1; border-radius:12px;">🔒</div><div><b>' + (LANG === "vi" ? "Sticker chương " + (i + 1) : "Chapter " + (i + 1) + " sticker") + '</b><p>' + (LANG === "vi" ? "Thắng màn " + lv + " để mở sticker này." : "Win level " + lv + " to unlock this sticker.") + '</p></div></div>';
+    }
+  }
+  document.getElementById("storyList").innerHTML = html;
+  document.getElementById("storyList").classList.remove("hidden");
+  document.getElementById("storyImg").classList.add("hidden");
+  var _st = document.getElementById("storyTitle");
+  _st.textContent = "📕 " + (LANG === "vi" ? "Sổ sticker" : "Sticker book") + " — " + got.length + "/16";
+  _st.classList.remove("hidden");
+  document.getElementById("storyBody").classList.add("hidden");
+  document.getElementById("storyPlayBtn").classList.add("hidden");
+  var close = document.getElementById("storyCloseBtn");
+  close.textContent = t("storyClose");
+  close.classList.remove("hidden");
+  ov.classList.remove("hidden");
+  close.onclick = function() { ov.classList.add("hidden"); if (inGame) resumeTimer(); };
+}
+/* ================= /v31.96 ================= */
+
 function storySeenAny() {
   try { var s = JSON.parse(localStorage.getItem("ac_story_seen") || "[]"); return s.length > 0; } catch (e) { return false; }
 }
@@ -4432,6 +4843,8 @@ function maybeShowStory(level, proceed) {
   showStoryCard(level, proceed);
 }
 document.getElementById("storyBtnStart").addEventListener("click", function() { AudioEng.unlock(); showStoryViewer(); });
+document.getElementById("stickerBtnStart").addEventListener("click", function() { AudioEng.unlock(); showStickerBook(); }); /* v31.96: so sticker */
+document.getElementById("dailyClaimBtn").addEventListener("click", function() { AudioEng.unlock(); claimDaily(); }); /* v31.96: nhan qua moi ngay */
 /* v30.1: 📖 button in the game HUD — read the story mid-level, too. */
 document.getElementById("storyBtn").addEventListener("click", function() { AudioEng.unlock(); showStoryViewer(); });
 /* v30.3: reset button on the start screen — An asked to replay from
@@ -4487,8 +4900,28 @@ function startLevel(level) {
     __usedCells[r2 + "," + c2] = true;
     state.board[r2][c2] = makeTile(type, special);
   }
+  /* v31.96: hop qua nguyen lieu (man 12/18/24) — dat o 3 hang tren cung de roi xuong */
+  state.ingDropped = 0;
+  state.ingTotal = 0;
+  var __ingN = INGREDIENT_LEVELS[level] || 0;
+  for (var __gi = 0; __gi < __ingN; __gi++) {
+    var __gr, __gc, __gt = 0;
+    do { __gr = Math.floor(Math.random() * 3); __gc = Math.floor(Math.random() * COLS); __gt++; } while (__usedCells[__gr + "," + __gc] && __gt < 40);
+    if (__gt >= 40) break;
+    __usedCells[__gr + "," + __gc] = true;
+    state.board[__gr][__gc] = makeTile("gift");
+    state.ingTotal++;
+  }
   for (var bi = 0; bi < perks.freeBombs; bi++) __placeSpecial("bomb");
   if (perks.freeRainbow) __placeSpecial("rainbow", "rainbow");
+  /* v31.96: qua moi ngay trong tui — dat len ban dau man, ton gioi han san co */
+  var __inv = getDailyInv();
+  var __invChanged = false;
+  if (__inv.eagle > 0 && !eagleOnBoard()) { __placeSpecial("eagle"); __inv.eagle--; __invChanged = true; }
+  while (__inv.bomb > 0 && bombsOnBoard() < 2) { __placeSpecial("bomb"); __inv.bomb--; __invChanged = true; }
+  while (__inv.rainbow > 0 && rainbowsOnBoard() < 2) { __placeSpecial("rainbow", "rainbow"); __inv.rainbow--; __invChanged = true; }
+  if (__inv.moves > 0) { state.moves += __inv.moves; __inv.moves = 0; __invChanged = true; }
+  if (__invChanged) saveDailyInv(__inv);
   boardEl.innerHTML = "";
   elsById = {};
   renderBoard(true);
@@ -4553,6 +4986,8 @@ function endLevel(won) {
     }
     localStorage.setItem("animalCrushLevel", String(state.level + 1));
     showToast(t("nice"));
+    if (stickerUnlock(state.level)) showToast("📕 " + (LANG === "vi" ? "Sticker mới đã mở!" : "New sticker unlocked!"));
+    awardStamp(); /* v31.96: thang 1 man/ngay duoc 1 tem; du 6 tem mo ruong */
   } else {
     AudioEng.sfx("lose");
   }
@@ -4733,6 +5168,7 @@ function applyLang() {
   var known = parseInt(localStorage.getItem("animalCrushVisits") || "0", 10);
   if (known) document.getElementById("visitCount").textContent = "🐠 " + t("visits").replace("{n}", known);
   renderStartLb();
+  renderDaily(); /* v31.96: cap nhat lich qua + tem + so sticker tren man hinh bat dau */
 }
 function setLang(l) {
   LANG = l;
