@@ -42,7 +42,7 @@
   <h1><span>🦈</span> Fishy gaming <span>🦈</span></h1>
   <p class="sub">Bấm vào game nào là chơi game đó liền nha!</p>
   <div class="grid">
-    <a class="card" href="https://miatrann97-source.github.io/animal-crush/animal-crush.html?v=374" target="_blank" rel="noopener">
+    <a class="card" href="https://miatrann97-source.github.io/animal-crush/animal-crush.html?v=375" target="_blank" rel="noopener">
       <span class="emoji">🦈</span>
       <div class="name">Animal Crush</div>
       <div class="desc">Xếp 3 bạn thú giống nhau để nổ tung! Càng xếp càng nhiều điểm.</div>
@@ -60,13 +60,13 @@
 <script>
 /* ?reset=1 — An asked to start Animal Crush over from Level 1.
    Clears her saved Animal Crush progress on THIS browser only
-   (level, best, story-seen flags), then strips the param from the
+   (level, best, story-seen flags, map stars), then strips the param from the
    URL so reopening the page does not reset again. Keeps language,
    music and visit-counter settings. */
 (function () {
   try {
     if (new URLSearchParams(location.search).get("reset") !== "1") return;
-    ["animalCrushLevel", "animalCrushBest", "animalCrushMaxLevel", "ac_story_seen"].forEach(function (k) { localStorage.removeItem(k); });
+    ["animalCrushLevel", "animalCrushBest", "animalCrushMaxLevel", "ac_story_seen", "ac_stars"].forEach(function (k) { localStorage.removeItem(k); });
     history.replaceState(null, "", location.pathname);
     var n = document.createElement("p");
     n.textContent = "Đã reset Animal Crush về Màn 1 — mở game chơi lại từ đầu nha! 💙";
