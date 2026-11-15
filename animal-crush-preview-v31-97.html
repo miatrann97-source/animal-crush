@@ -130,7 +130,7 @@ button:disabled { opacity:.55; cursor:default; }
   background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22120%22%20height%3D%22120%22%20viewBox%3D%220%200%20120%20120%22%3E%0A%3Cg%20opacity%3D%220.55%22%3E%0A%20%20%3Cg%20fill%3D%22%23ff9ecf%22%3E%3Cellipse%20cx%3D%2216%22%20cy%3D%2224%22%20rx%3D%224%22%20ry%3D%223.2%22%2F%3E%3Ccircle%20cx%3D%2210.5%22%20cy%3D%2218.5%22%20r%3D%221.8%22%2F%3E%3Ccircle%20cx%3D%2214%22%20cy%3D%2216.5%22%20r%3D%221.8%22%2F%3E%3Ccircle%20cx%3D%2217.5%22%20cy%3D%2216.5%22%20r%3D%221.8%22%2F%3E%3Ccircle%20cx%3D%2221%22%20cy%3D%2218.5%22%20r%3D%221.8%22%2F%3E%3C%2Fg%3E%0A%20%20%3Cg%20fill%3D%22%234db8ff%22%3E%3Cpath%20d%3D%22M66%2014%20Q74%208%2082%2014%20Q74%2020%2066%2014%20Z%22%2F%3E%3Cpath%20d%3D%22M82%2014%20L88%2010%20L88%2018%20Z%22%2F%3E%3C%2Fg%3E%0A%20%20%3Cg%20fill%3D%22%23ffb347%22%3E%3Cpath%20d%3D%22M102%2046%20L104%2051%20L109%2051.5%20L105%2055%20L106.5%2060%20L102%2057.5%20L97.5%2060%20L99%2055%20L95%2051.5%20L100%2051%20Z%22%2F%3E%3C%2Fg%3E%0A%20%20%3Cg%20fill%3D%22%23ff9ecf%22%3E%3Cellipse%20cx%3D%2226%22%20cy%3D%2272%22%20rx%3D%222.6%22%20ry%3D%225.5%22%2F%3E%3Cellipse%20cx%3D%2233%22%20cy%3D%2272%22%20rx%3D%222.6%22%20ry%3D%225.5%22%2F%3E%3Ccircle%20cx%3D%2229.5%22%20cy%3D%2282%22%20r%3D%225%22%2F%3E%3C%2Fg%3E%0A%20%20%3Cg%20fill%3D%22%234db8ff%22%3E%3Cpath%20d%3D%22M62%2092%20Q70%2078%2078%2090%20Q70%2094%2062%2092%20Z%22%2F%3E%3C%2Fg%3E%0A%20%20%3Cg%20fill%3D%22%23ff5c8a%22%3E%3Cpath%20d%3D%22M104%20100%20C100%2096%2098%2093.5%2098%2091.5%20C98%2089.5%2099.5%2088%20101.5%2088%20C102.8%2088%20103.8%2088.8%20104%2090%20C104.2%2088.8%20105.2%2088%20106.5%2088%20C108.5%2088%20110%2089.5%20110%2091.5%20C110%2093.5%20108%2096%20104%20100%20Z%22%2F%3E%3C%2Fg%3E%0A%20%20%3Cg%20fill%3D%22%23b06bff%22%3E%3Cpath%20d%3D%22M46%2044%20A7%207%200%200%201%2060%2044%20Z%22%2F%3E%3Cpath%20d%3D%22M49%2044%20Q49%2049%2048%2051%20M53%2044%20Q53%2049%2053%2051%20M57%2044%20Q57%2049%2058%2051%22%20stroke%3D%22%23b06bff%22%20stroke-width%3D%221.6%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%2F%3E%3C%2Fg%3E%0A%3C%2Fg%3E%0A%3C%2Fsvg%3E");
   background-size: 120px 120px;
   border-radius: 24px; position:relative;
-  padding: 5px 8px 6px; box-shadow: 0 8px 24px rgba(0,0,0,.18);
+  padding: 4px 8px 5px; box-shadow: 0 8px 24px rgba(0,0,0,.18);
   display:flex; flex-direction:column; gap:2px; touch-action:none;
 }
 .hud-doodle { position:absolute; pointer-events:none; line-height:0; z-index:1; }
@@ -145,11 +145,12 @@ button:disabled { opacity:.55; cursor:default; }
   background:#fff; color:#5a4632; box-shadow: 0 3px 0 #e0d8d0;
 }
 #hud .icon-btn { font-family: 'Baloo 2', "Comic Sans MS", "Chalkboard SE", sans-serif; font-weight:700; border: 2px solid #ff5c8a; }
+#hud .icon-btn.mini { padding:1px 4px; font-size:10px; min-width:22px; border-radius:9px; box-shadow:0 2px 0 #e0d8d0; } /* v31.97d: nut nho gon trong hang — khong rieng 1 hang nua */
 /* v17: big back button, top-left corner of the start screen — easy to tap */
 .back-btn-big { position:absolute; top:12px; left:12px; width:52px; height:52px; font-size:30px; line-height:1; display:flex; align-items:center; justify-content:center; background:#fff; color:#5a4632; border:none; border-radius:16px; box-shadow: 0 4px 0 #e0d8d0, 0 6px 16px rgba(0,0,0,.18); cursor:pointer; z-index:5; font-family: 'Baloo 2', "Comic Sans MS", "Chalkboard SE", sans-serif; font-weight:700; }
 .back-btn-big:active { transform: translateY(2px); box-shadow: 0 2px 0 #e0d8d0, 0 3px 10px rgba(0,0,0,.15); }
 /* v17: game-HUD back button made bigger — easier to tap while playing */
-#hubBtn { padding:4px 9px; font-size:16px; min-width:38px; } /* v27: was the tallest row */
+#hubBtn { padding:1px 7px; font-size:13px; min-width:28px; } /* v27: was the tallest row; v31.97d: nho lai, len hang Man */
 #hud .icon-btn.blue { border-color: #00b4ff; }
 #hud .icon-btn.green { border-color: #2ed573; }
 .progress { height:6px; background:#f0e6da; border-radius:999px; overflow:hidden; border: 2px solid #ffd23f; }
@@ -163,14 +164,15 @@ button:disabled { opacity:.55; cursor:default; }
 .tile .jelly.hp1::after { content:""; position:absolute; left:18%; right:18%; top:50%; height:2px; background:rgba(255,255,255,.85); transform:rotate(-18deg); border-radius:2px; }
 .tile .jelly-hp { position:absolute; left:2px; bottom:2px; width:18px; height:18px; line-height:18px; text-align:center; font-size:12px; font-weight:800; color:#fff; background:#ff5c8a; border:2px solid #fff; border-radius:50%; pointer-events:none; }
 .quest-line { font-size:14px; font-weight:800; color:#b26a00; text-align:center; padding:3px 8px; background:#fff3d6; border:2px dashed #ffbf47; border-radius:999px; margin-top:2px; }
-#bossRow { display:flex; align-items:center; gap:8px; padding:2px 4px; } /* v31.97c: boss gom vao bang tinh diem — 1 hang gon, tra khong gian cho ban choi */
+#bossRow { display:flex; align-items:center; gap:6px; padding:1px 3px; } /* v31.97c: boss gom vao bang tinh diem — 1 hang gon, tra khong gian cho ban choi; v31.97d: nho them + gop nhiem vu vao cung hang */
 #bossRow.hidden { display:none; }
-#bossImg { width:38px; height:38px; border-radius:10px; flex-shrink:0; }
-#hudCrown { height:36px; width:auto; flex-shrink:0; align-self:center; } /* v31.97: vuong mien banh kem (An chot mau 14, 3 keo mut xoan) — NHO trong bang tinh diem, canh tieu de Man 10, chi hien o man boss (An che ban cu to qua chiem het o) */
+#bossImg { width:32px; height:32px; border-radius:8px; flex-shrink:0; }
+#hudCrown { height:28px; width:auto; flex-shrink:0; align-self:center; } /* v31.97: vuong mien banh kem (An chot mau 14, 3 keo mut xoan) — NHO trong bang tinh diem, canh tieu de Man 10, chi hien o man boss (An che ban cu to qua chiem het o) */
 #bossName { font-weight:800; color:#7c3fd4; font-size:14px; white-space:nowrap; }
 .boss-hp { flex:1; height:10px; background:#efe6f7; border-radius:999px; overflow:hidden; margin:0; border:2px solid #c1a6ed; }
 #bossHpFill { height:100%; width:100%; background:linear-gradient(90deg,#c1a6ed,#7c3fd4); transition:width .3s ease; }
 #bossHpText { font-size:12px; color:#7c3fd4; font-weight:700; white-space:nowrap; }
+.boss-quest { font-size:11px; font-weight:800; color:#b26a00; background:#fff3d6; border:2px dashed #ffbf47; border-radius:999px; padding:0 6px; white-space:nowrap; flex-shrink:0; } /* v31.97d: tien do nhiem vu boss (sat thuong da gay) gop vao hang boss */
 #candyRain { position:absolute; inset:0; overflow:hidden; pointer-events:none; z-index:5; }
 #candyRain.hidden { display:none; }
 .candy-drop { position:absolute; top:-14px; border-radius:50%; opacity:.75; animation: candyFall linear infinite; }
@@ -192,7 +194,7 @@ button:disabled { opacity:.55; cursor:default; }
 /* Compact HUD on narrow phones (iPhone 16 Pro): smaller padding/fonts/buttons
    so the HUD fits fully and leaves room for the full-size board. */
 @media (max-width:430px) {
-  #hud { padding:3px 6px 5px; gap:2px; border-radius:16px; }
+  #hud { padding:2px 6px 4px; gap:1px; border-radius:16px; }
   .hud-stat { font-size:11px; }
   .hud-stat b { font-size:15px; }
   .hud-row { gap:3px; }
@@ -1017,23 +1019,23 @@ var __previewStore = {
       <img id="hudCrown" class="hidden" src="https://miatrann97-source.github.io/animal-crush/tiles/boss-crown-cake-lollipops.png" alt="Vương miện boss">
       <div class="hud-stat"><span id="lblScore"></span> <b id="scoreNum">0</b></div>
       <div class="hud-stat"><span id="lblBest"></span> <b id="bestNum">0</b></div>
-      <div class="hud-btns">
-        <button class="icon-btn" id="langBtn">VI | EN</button>
-        <button class="icon-btn blue" id="musicBtn">🔊</button>
-        <button class="icon-btn green" id="homeBtn">🏠</button>
-        <button class="icon-btn" id="storyBtn" title="Đọc truyện">📖</button>
-      </div>
+      <button class="icon-btn mini" id="hubBtn" title="Về trang tổng hợp game">&#8592;</button>
     </div>
     <div class="hud-row">
       <div class="hud-stat"><span id="lblTarget"></span> <b class="target" id="targetNum">12000</b></div>
       <div class="hud-stat"><span id="lblMoves"></span> <b id="movesNum">90</b></div>
       <div class="hud-stat"><span id="lblTime"></span> <b id="timeNum">8:00</b></div>
-      <button class="icon-btn" id="hubBtn" title="Về trang tổng hợp game">&#8592;</button>
+      <div class="hud-btns">
+        <button class="icon-btn mini" id="langBtn">VI | EN</button>
+        <button class="icon-btn mini blue" id="musicBtn">🔊</button>
+        <button class="icon-btn mini green" id="homeBtn">🏠</button>
+        <button class="icon-btn mini" id="storyBtn" title="Đọc truyện">📖</button>
+      </div>
     </div>
     <div class="hud-perk-row"><div class="perk-line" id="perkLine"></div><div class="progress"><div id="progressFill"></div></div></div>
     <div id="questLine" class="quest-line hidden"></div>
     <div id="ingLine" class="quest-line hidden"></div>
-    <div id="bossRow" class="hidden"><img id="bossImg" alt="Quái Kẹo Dẻo"><div id="bossName">👾 Quái Kẹo Dẻo</div><div class="boss-hp"><div id="bossHpFill"></div></div><div id="bossHpText">HP 12/12</div></div>
+    <div id="bossRow" class="hidden"><img id="bossImg" alt="Quái Kẹo Dẻo"><div id="bossName">👾 Quái Kẹo Dẻo</div><div class="boss-hp"><div id="bossHpFill"></div></div><div id="bossHpText">HP 12/12</div><span id="bossQuestText" class="boss-quest">⚔ 0/12</span></div>
   </div>
   <div id="boardWrap">
     <div id="board"></div>
@@ -1793,6 +1795,8 @@ function updateBossPanel() {
     if (fill) fill.style.width = Math.max(0, state.bossHP / 12 * 100) + "%";
     var tx = document.getElementById("bossHpText");
     if (tx) tx.textContent = "HP " + Math.max(0, state.bossHP) + "/12";
+    var bq = document.getElementById("bossQuestText");
+    if (bq) { var dmg = Math.max(0, 12 - state.bossHP); bq.textContent = "⚔ " + dmg + "/12" + (dmg >= 12 ? " ✅" : ""); }
   } else bp.classList.add("hidden");
 }
 function damageBoss(n) {
@@ -3927,7 +3931,7 @@ function updateHUD() {
   } else {
     if (il) il.classList.add("hidden");
     if (ql) {
-      if (state.quest) { ql.classList.remove("hidden"); ql.textContent = questText(); }
+      if (state.quest && state.level !== 10) { ql.classList.remove("hidden"); ql.textContent = questText(); } /* v31.97d: man 10 — nhiem vu boss hien trong hang boss (bossQuestText), khong rieng 1 dong nua */
       else ql.classList.add("hidden");
     }
   }
