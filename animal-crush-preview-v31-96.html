@@ -163,9 +163,10 @@ button:disabled { opacity:.55; cursor:default; }
 .tile .jelly.hp1::after { content:""; position:absolute; left:18%; right:18%; top:50%; height:2px; background:rgba(255,255,255,.85); transform:rotate(-18deg); border-radius:2px; }
 .tile .jelly-hp { position:absolute; left:2px; bottom:2px; width:18px; height:18px; line-height:18px; text-align:center; font-size:12px; font-weight:800; color:#fff; background:#ff5c8a; border:2px solid #fff; border-radius:50%; pointer-events:none; }
 .quest-line { font-size:14px; font-weight:800; color:#b26a00; text-align:center; padding:3px 8px; background:#fff3d6; border:2px dashed #ffbf47; border-radius:999px; margin-top:2px; }
-#bossPanel { display:flex; align-items:center; gap:10px; width:100%; background:#fffdf5; border-radius:18px; padding:8px 12px; box-shadow:0 4px 14px rgba(0,0,0,.15); }
+#bossPanel { display:flex; align-items:center; gap:10px; flex-wrap:wrap; width:100%; background:#fffdf5; border-radius:18px; padding:8px 12px; box-shadow:0 4px 14px rgba(0,0,0,.15); }
 #bossPanel.hidden { display:none; }
 #bossImg { width:56px; height:56px; border-radius:14px; flex-shrink:0; }
+#bossCrown { flex:1 1 100%; width:100%; max-width:280px; margin:0 auto 6px; display:block; } /* v31.96: vuong mien banh kem (An chot mau 14, 3 keo mut xoan) — anh lon tren panel boss L10, giua, thay ro 6 ban dong vat */
 .boss-info { flex:1; min-width:0; }
 #bossName { font-weight:800; color:#7c3fd4; font-size:16px; }
 .boss-hp { height:14px; background:#efe6f7; border-radius:999px; overflow:hidden; margin:4px 0; border:2px solid #c1a6ed; }
@@ -1034,6 +1035,7 @@ var __previewStore = {
     <div id="ingLine" class="quest-line hidden"></div>
   </div>
   <div id="bossPanel" class="hidden">
+    <img id="bossCrown" src="https://miatrann97-source.github.io/animal-crush/tiles/boss-crown-cake-lollipops.png" alt="Vương miện bánh kem">
     <img id="bossImg" alt="Quái Kẹo Dẻo">
     <div class="boss-info">
       <div id="bossName">👾 Quái Kẹo Dẻo</div>
