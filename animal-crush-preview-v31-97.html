@@ -5322,6 +5322,24 @@ document.addEventListener("pointerdown", startMusicOnFirstTap);
   updateVisits();
   renderStartLb();
 })();
+/* PREVIEW ONLY — ?level=N debug jump (strip on ship) */
+(function previewLevelJump() {
+  /* An (2026-11-14 23:15): she does not want to play through to L10 just to
+     see the L10 fix — open ?level=N (1-50) to jump straight to that level.
+     Goes through the NORMAL flow: story card first if the chapter is unseen
+     (she taps "Choi ngay" once), then startLevel(N). Invalid N (out of
+     range / not a plain integer) = load normally. */
+  var m = /[?&]level=(\d+)(?:&|$)/.exec(location.search);
+  if (!m) return;
+  var n = parseInt(m[1], 10);
+  if (isNaN(n) || n < 1 || n > 50) return;
+  if (n > state.maxLevel) {
+    state.maxLevel = n;
+    __previewStore.setItem("animalCrushMaxLevel", String(n));
+  }
+  maybeShowStory(n, function() { startLevel(n); });
+})();
+/* END PREVIEW ONLY — ?level=N debug jump */
 </script>
 </body>
 </html>
