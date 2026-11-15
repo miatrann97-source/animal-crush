@@ -151,8 +151,6 @@ button:disabled { opacity:.55; cursor:default; }
 .back-btn-big:active { transform: translateY(2px); box-shadow: 0 2px 0 #e0d8d0, 0 3px 10px rgba(0,0,0,.15); }
 /* v17: game-HUD back button made bigger — easier to tap while playing */
 #hubBtn { padding:1px 7px; font-size:13px; min-width:28px; } /* v27: was the tallest row; v31.97d: nho lai, len hang Man */
-#hud .icon-btn.blue { border-color: #00b4ff; }
-#hud .icon-btn.green { border-color: #2ed573; }
 .progress { height:6px; background:#f0e6da; border-radius:999px; overflow:hidden; border: 2px solid #ffd23f; }
 .perk-line { margin-top:0; font-size:.7rem; font-weight:700; color:#b3541e; background:#fff3d6; border:2px dashed #ffbf47; border-radius:999px; padding:1px 6px; display:inline-block; white-space:nowrap; flex-shrink:0; }
 .hud-perk-row { display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
@@ -1025,12 +1023,7 @@ var __previewStore = {
       <div class="hud-stat"><span id="lblTarget"></span> <b class="target" id="targetNum">12000</b></div>
       <div class="hud-stat"><span id="lblMoves"></span> <b id="movesNum">90</b></div>
       <div class="hud-stat"><span id="lblTime"></span> <b id="timeNum">8:00</b></div>
-      <div class="hud-btns">
-        <button class="icon-btn mini" id="langBtn">VI | EN</button>
-        <button class="icon-btn mini blue" id="musicBtn">🔊</button>
-        <button class="icon-btn mini green" id="homeBtn">🏠</button>
-        <button class="icon-btn mini" id="storyBtn" title="Đọc truyện">📖</button>
-      </div>
+      <!-- v31.97e: 4 nut cai dat (VI|EN, loa, nha, truyen) da bo khoi HUD — cai dat truoc khi vao game o man hinh bat dau (langBtnStart/musicBtnStart/storyBtnStart) -->
     </div>
     <div class="hud-perk-row"><div class="perk-line" id="perkLine"></div><div class="progress"><div id="progressFill"></div></div></div>
     <div id="questLine" class="quest-line hidden"></div>
@@ -4864,7 +4857,6 @@ document.getElementById("storyBtnStart").addEventListener("click", function() { 
 document.getElementById("stickerBtnStart").addEventListener("click", function() { AudioEng.unlock(); showStickerBook(); }); /* v31.96: so sticker */
 document.getElementById("dailyClaimBtn").addEventListener("click", function() { AudioEng.unlock(); claimDaily(); }); /* v31.96: nhan qua moi ngay */
 /* v30.1: 📖 button in the game HUD — read the story mid-level, too. */
-document.getElementById("storyBtn").addEventListener("click", function() { AudioEng.unlock(); showStoryViewer(); });
 /* v30.3: reset button on the start screen — An asked to replay from
    Level 1. Uses an in-page confirm card (NOT window.confirm: automated
    browsers swallow the native dialog, so it could never be verified —
@@ -5193,12 +5185,10 @@ function setLang(l) {
   __previewStore.setItem("animalCrushLang", l);
   applyLang();
 }
-document.getElementById("langBtn").addEventListener("click", function() { setLang(LANG === "vi" ? "en" : "vi"); updatePerkLine(); });
 document.getElementById("langBtnStart").addEventListener("click", function() { setLang(LANG === "vi" ? "en" : "vi"); updatePerkLine(); });
 function syncMusicBtns() {
   var icon = AudioEng.isMusicOn() ? "🔊" : "🔇";
-  document.getElementById("musicBtn").textContent = icon;
-  document.getElementById("musicBtnStart").textContent = icon;
+  document.getElementById("musicBtnStart").textContent = icon; /* v31.97e: musicBtn (HUD) removed — start-screen toggle only */
 }
 /* The speaker button should START the music when tapped on the start screen,
    not mute it: on a fresh page the first tap anywhere starts the music via the
@@ -5217,22 +5207,9 @@ function speakerClick() {
   }
   syncMusicBtns();
 }
-document.getElementById("musicBtn").addEventListener("pointerdown", recordMusicStateBeforeTap);
-document.getElementById("musicBtn").addEventListener("click", speakerClick);
 document.getElementById("musicBtnStart").addEventListener("pointerdown", recordMusicStateBeforeTap);
 document.getElementById("musicBtnStart").addEventListener("click", speakerClick);
-document.getElementById("homeBtn").addEventListener("click", function() {
-  state.over = true;
-  stopTimer();
-  stopHintTimer();
-  /* music keeps playing on the start screen: it is the game's background music */
-  document.getElementById("gameScreen").classList.add("hidden");
-  document.getElementById("endScreen").classList.add("hidden");
-  stopBoings();
-  document.getElementById("transitionScreen").classList.add("hidden");
-  document.getElementById("startScreen").classList.remove("hidden");
-  applyLang();
-});
+/* v31.97e: homeBtn removed — settings buttons gone from the HUD; use hubBtn (←) to exit to the hub. */
 /* v17 (An's request): back to the game hub — same tab, so switching games
    never needs closing a tab. 🏠 above goes to this game's start screen;
    ← here goes to the hub (the list of all games). */
