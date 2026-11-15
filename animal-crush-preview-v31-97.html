@@ -163,15 +163,14 @@ button:disabled { opacity:.55; cursor:default; }
 .tile .jelly.hp1::after { content:""; position:absolute; left:18%; right:18%; top:50%; height:2px; background:rgba(255,255,255,.85); transform:rotate(-18deg); border-radius:2px; }
 .tile .jelly-hp { position:absolute; left:2px; bottom:2px; width:18px; height:18px; line-height:18px; text-align:center; font-size:12px; font-weight:800; color:#fff; background:#ff5c8a; border:2px solid #fff; border-radius:50%; pointer-events:none; }
 .quest-line { font-size:14px; font-weight:800; color:#b26a00; text-align:center; padding:3px 8px; background:#fff3d6; border:2px dashed #ffbf47; border-radius:999px; margin-top:2px; }
-#bossPanel { display:flex; align-items:center; gap:10px; flex-wrap:wrap; width:100%; background:#fffdf5; border-radius:18px; padding:8px 12px; box-shadow:0 4px 14px rgba(0,0,0,.15); }
-#bossPanel.hidden { display:none; }
-#bossImg { width:56px; height:56px; border-radius:14px; flex-shrink:0; }
+#bossRow { display:flex; align-items:center; gap:8px; padding:2px 4px; } /* v31.97c: boss gom vao bang tinh diem — 1 hang gon, tra khong gian cho ban choi */
+#bossRow.hidden { display:none; }
+#bossImg { width:38px; height:38px; border-radius:10px; flex-shrink:0; }
 #hudCrown { height:36px; width:auto; flex-shrink:0; align-self:center; } /* v31.97: vuong mien banh kem (An chot mau 14, 3 keo mut xoan) — NHO trong bang tinh diem, canh tieu de Man 10, chi hien o man boss (An che ban cu to qua chiem het o) */
-.boss-info { flex:1; min-width:0; }
-#bossName { font-weight:800; color:#7c3fd4; font-size:16px; }
-.boss-hp { height:14px; background:#efe6f7; border-radius:999px; overflow:hidden; margin:4px 0; border:2px solid #c1a6ed; }
+#bossName { font-weight:800; color:#7c3fd4; font-size:14px; white-space:nowrap; }
+.boss-hp { flex:1; height:10px; background:#efe6f7; border-radius:999px; overflow:hidden; margin:0; border:2px solid #c1a6ed; }
 #bossHpFill { height:100%; width:100%; background:linear-gradient(90deg,#c1a6ed,#7c3fd4); transition:width .3s ease; }
-#bossHpText { font-size:13px; color:#7c3fd4; font-weight:700; }
+#bossHpText { font-size:12px; color:#7c3fd4; font-weight:700; white-space:nowrap; }
 #candyRain { position:absolute; inset:0; overflow:hidden; pointer-events:none; z-index:5; }
 #candyRain.hidden { display:none; }
 .candy-drop { position:absolute; top:-14px; border-radius:50%; opacity:.75; animation: candyFall linear infinite; }
@@ -1034,14 +1033,7 @@ var __previewStore = {
     <div class="hud-perk-row"><div class="perk-line" id="perkLine"></div><div class="progress"><div id="progressFill"></div></div></div>
     <div id="questLine" class="quest-line hidden"></div>
     <div id="ingLine" class="quest-line hidden"></div>
-  </div>
-  <div id="bossPanel" class="hidden">
-    <img id="bossImg" alt="Quái Kẹo Dẻo">
-    <div class="boss-info">
-      <div id="bossName">👾 Quái Kẹo Dẻo</div>
-      <div class="boss-hp"><div id="bossHpFill"></div></div>
-      <div id="bossHpText">HP 12/12</div>
-    </div>
+    <div id="bossRow" class="hidden"><img id="bossImg" alt="Quái Kẹo Dẻo"><div id="bossName">👾 Quái Kẹo Dẻo</div><div class="boss-hp"><div id="bossHpFill"></div></div><div id="bossHpText">HP 12/12</div></div>
   </div>
   <div id="boardWrap">
     <div id="board"></div>
@@ -1791,7 +1783,7 @@ function questText() {
   return q.icon + " " + lbl + ": " + p + "/" + q.target + (p >= q.target ? " ✅" : "");
 }
 function updateBossPanel() {
-  var bp = document.getElementById("bossPanel");
+  var bp = document.getElementById("bossRow");
   var hc = document.getElementById("hudCrown");
   if (hc) hc.classList.toggle("hidden", state.level !== 10);
   if (!bp) return;
