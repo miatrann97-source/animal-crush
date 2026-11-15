@@ -130,7 +130,7 @@ button:disabled { opacity:.55; cursor:default; }
   background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22120%22%20height%3D%22120%22%20viewBox%3D%220%200%20120%20120%22%3E%0A%3Cg%20opacity%3D%220.55%22%3E%0A%20%20%3Cg%20fill%3D%22%23ff9ecf%22%3E%3Cellipse%20cx%3D%2216%22%20cy%3D%2224%22%20rx%3D%224%22%20ry%3D%223.2%22%2F%3E%3Ccircle%20cx%3D%2210.5%22%20cy%3D%2218.5%22%20r%3D%221.8%22%2F%3E%3Ccircle%20cx%3D%2214%22%20cy%3D%2216.5%22%20r%3D%221.8%22%2F%3E%3Ccircle%20cx%3D%2217.5%22%20cy%3D%2216.5%22%20r%3D%221.8%22%2F%3E%3Ccircle%20cx%3D%2221%22%20cy%3D%2218.5%22%20r%3D%221.8%22%2F%3E%3C%2Fg%3E%0A%20%20%3Cg%20fill%3D%22%234db8ff%22%3E%3Cpath%20d%3D%22M66%2014%20Q74%208%2082%2014%20Q74%2020%2066%2014%20Z%22%2F%3E%3Cpath%20d%3D%22M82%2014%20L88%2010%20L88%2018%20Z%22%2F%3E%3C%2Fg%3E%0A%20%20%3Cg%20fill%3D%22%23ffb347%22%3E%3Cpath%20d%3D%22M102%2046%20L104%2051%20L109%2051.5%20L105%2055%20L106.5%2060%20L102%2057.5%20L97.5%2060%20L99%2055%20L95%2051.5%20L100%2051%20Z%22%2F%3E%3C%2Fg%3E%0A%20%20%3Cg%20fill%3D%22%23ff9ecf%22%3E%3Cellipse%20cx%3D%2226%22%20cy%3D%2272%22%20rx%3D%222.6%22%20ry%3D%225.5%22%2F%3E%3Cellipse%20cx%3D%2233%22%20cy%3D%2272%22%20rx%3D%222.6%22%20ry%3D%225.5%22%2F%3E%3Ccircle%20cx%3D%2229.5%22%20cy%3D%2282%22%20r%3D%225%22%2F%3E%3C%2Fg%3E%0A%20%20%3Cg%20fill%3D%22%234db8ff%22%3E%3Cpath%20d%3D%22M62%2092%20Q70%2078%2078%2090%20Q70%2094%2062%2092%20Z%22%2F%3E%3C%2Fg%3E%0A%20%20%3Cg%20fill%3D%22%23ff5c8a%22%3E%3Cpath%20d%3D%22M104%20100%20C100%2096%2098%2093.5%2098%2091.5%20C98%2089.5%2099.5%2088%20101.5%2088%20C102.8%2088%20103.8%2088.8%20104%2090%20C104.2%2088.8%20105.2%2088%20106.5%2088%20C108.5%2088%20110%2089.5%20110%2091.5%20C110%2093.5%20108%2096%20104%20100%20Z%22%2F%3E%3C%2Fg%3E%0A%20%20%3Cg%20fill%3D%22%23b06bff%22%3E%3Cpath%20d%3D%22M46%2044%20A7%207%200%200%201%2060%2044%20Z%22%2F%3E%3Cpath%20d%3D%22M49%2044%20Q49%2049%2048%2051%20M53%2044%20Q53%2049%2053%2051%20M57%2044%20Q57%2049%2058%2051%22%20stroke%3D%22%23b06bff%22%20stroke-width%3D%221.6%22%20fill%3D%22none%22%20stroke-linecap%3D%22round%22%2F%3E%3C%2Fg%3E%0A%3C%2Fg%3E%0A%3C%2Fsvg%3E");
   background-size: 120px 120px;
   border-radius: 24px; position:relative;
-  padding: 5px 8px 6px; box-shadow: 0 8px 24px rgba(0,0,0,.18);
+  padding: 4px 8px 5px; box-shadow: 0 8px 24px rgba(0,0,0,.18);
   display:flex; flex-direction:column; gap:2px; touch-action:none;
 }
 .hud-doodle { position:absolute; pointer-events:none; line-height:0; z-index:1; }
@@ -145,13 +145,12 @@ button:disabled { opacity:.55; cursor:default; }
   background:#fff; color:#5a4632; box-shadow: 0 3px 0 #e0d8d0;
 }
 #hud .icon-btn { font-family: 'Baloo 2', "Comic Sans MS", "Chalkboard SE", sans-serif; font-weight:700; border: 2px solid #ff5c8a; }
+#hud .icon-btn.mini { padding:1px 4px; font-size:10px; min-width:22px; border-radius:9px; box-shadow:0 2px 0 #e0d8d0; } /* v31.97d: nut nho gon trong hang — khong rieng 1 hang nua */
 /* v17: big back button, top-left corner of the start screen — easy to tap */
 .back-btn-big { position:absolute; top:12px; left:12px; width:52px; height:52px; font-size:30px; line-height:1; display:flex; align-items:center; justify-content:center; background:#fff; color:#5a4632; border:none; border-radius:16px; box-shadow: 0 4px 0 #e0d8d0, 0 6px 16px rgba(0,0,0,.18); cursor:pointer; z-index:5; font-family: 'Baloo 2', "Comic Sans MS", "Chalkboard SE", sans-serif; font-weight:700; }
 .back-btn-big:active { transform: translateY(2px); box-shadow: 0 2px 0 #e0d8d0, 0 3px 10px rgba(0,0,0,.15); }
 /* v17: game-HUD back button made bigger — easier to tap while playing */
-#hubBtn { padding:4px 9px; font-size:16px; min-width:38px; } /* v27: was the tallest row */
-#hud .icon-btn.blue { border-color: #00b4ff; }
-#hud .icon-btn.green { border-color: #2ed573; }
+#hubBtn { padding:1px 7px; font-size:13px; min-width:28px; } /* v27: was the tallest row; v31.97d: nho lai, len hang Man */
 .progress { height:6px; background:#f0e6da; border-radius:999px; overflow:hidden; border: 2px solid #ffd23f; }
 .perk-line { margin-top:0; font-size:.7rem; font-weight:700; color:#b3541e; background:#fff3d6; border:2px dashed #ffbf47; border-radius:999px; padding:1px 6px; display:inline-block; white-space:nowrap; flex-shrink:0; }
 .hud-perk-row { display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
@@ -163,15 +162,15 @@ button:disabled { opacity:.55; cursor:default; }
 .tile .jelly.hp1::after { content:""; position:absolute; left:18%; right:18%; top:50%; height:2px; background:rgba(255,255,255,.85); transform:rotate(-18deg); border-radius:2px; }
 .tile .jelly-hp { position:absolute; left:2px; bottom:2px; width:18px; height:18px; line-height:18px; text-align:center; font-size:12px; font-weight:800; color:#fff; background:#ff5c8a; border:2px solid #fff; border-radius:50%; pointer-events:none; }
 .quest-line { font-size:14px; font-weight:800; color:#b26a00; text-align:center; padding:3px 8px; background:#fff3d6; border:2px dashed #ffbf47; border-radius:999px; margin-top:2px; }
-#bossPanel { display:flex; align-items:center; gap:10px; flex-wrap:wrap; width:100%; background:#fffdf5; border-radius:18px; padding:8px 12px; box-shadow:0 4px 14px rgba(0,0,0,.15); }
-#bossPanel.hidden { display:none; }
-#bossImg { width:56px; height:56px; border-radius:14px; flex-shrink:0; }
-#bossCrown { flex:1 1 100%; width:100%; max-width:280px; margin:0 auto 6px; display:block; } /* v31.96: vuong mien banh kem (An chot mau 14, 3 keo mut xoan) — anh lon tren panel boss L10, giua, thay ro 6 ban dong vat */
-.boss-info { flex:1; min-width:0; }
-#bossName { font-weight:800; color:#7c3fd4; font-size:16px; }
-.boss-hp { height:14px; background:#efe6f7; border-radius:999px; overflow:hidden; margin:4px 0; border:2px solid #c1a6ed; }
+#bossRow { display:flex; align-items:center; gap:6px; padding:1px 3px; } /* v31.97c: boss gom vao bang tinh diem — 1 hang gon, tra khong gian cho ban choi; v31.97d: nho them + gop nhiem vu vao cung hang */
+#bossRow.hidden { display:none; }
+#bossImg { width:32px; height:32px; border-radius:8px; flex-shrink:0; }
+#hudCrown { height:28px; width:auto; flex-shrink:0; align-self:center; } /* v31.97: vuong mien banh kem (An chot mau 14, 3 keo mut xoan) — NHO trong bang tinh diem, canh tieu de Man 10, chi hien o man boss (An che ban cu to qua chiem het o) */
+#bossName { font-weight:800; color:#7c3fd4; font-size:14px; white-space:nowrap; }
+.boss-hp { flex:1; height:10px; background:#efe6f7; border-radius:999px; overflow:hidden; margin:0; border:2px solid #c1a6ed; }
 #bossHpFill { height:100%; width:100%; background:linear-gradient(90deg,#c1a6ed,#7c3fd4); transition:width .3s ease; }
-#bossHpText { font-size:13px; color:#7c3fd4; font-weight:700; }
+#bossHpText { font-size:12px; color:#7c3fd4; font-weight:700; white-space:nowrap; }
+.boss-quest { font-size:11px; font-weight:800; color:#b26a00; background:#fff3d6; border:2px dashed #ffbf47; border-radius:999px; padding:0 6px; white-space:nowrap; flex-shrink:0; } /* v31.97d: tien do nhiem vu boss (sat thuong da gay) gop vao hang boss */
 #candyRain { position:absolute; inset:0; overflow:hidden; pointer-events:none; z-index:5; }
 #candyRain.hidden { display:none; }
 .candy-drop { position:absolute; top:-14px; border-radius:50%; opacity:.75; animation: candyFall linear infinite; }
@@ -193,7 +192,7 @@ button:disabled { opacity:.55; cursor:default; }
 /* Compact HUD on narrow phones (iPhone 16 Pro): smaller padding/fonts/buttons
    so the HUD fits fully and leaves room for the full-size board. */
 @media (max-width:430px) {
-  #hud { padding:3px 6px 5px; gap:2px; border-radius:16px; }
+  #hud { padding:2px 6px 4px; gap:1px; border-radius:16px; }
   .hud-stat { font-size:11px; }
   .hud-stat b { font-size:15px; }
   .hud-row { gap:3px; }
@@ -234,7 +233,7 @@ button:disabled { opacity:.55; cursor:default; }
 .tile.t-mouse img { filter: drop-shadow(0 -3px 4px rgba(185,190,195,.95)) drop-shadow(0 0 7px rgba(154,160,166,.60)); }
 .tile.t-jellyfish img { filter: drop-shadow(0 -3px 4px rgba(210,185,250,.95)) drop-shadow(0 0 7px rgba(193,166,237,.65)); }
 .tile.t-fox img { filter: drop-shadow(0 -3px 4px rgba(255,170,65,.95)) drop-shadow(0 0 7px rgba(255,140,26,.60)); }
-.tile.t-gift img { filter: drop-shadow(0 -3px 4px rgba(255,90,90,.95)) drop-shadow(0 0 7px rgba(255,190,60,.65)); } /* v31.96: hop qua — do + vang */
+.tile.t-gift img { filter: drop-shadow(0 -3px 4px rgba(255,90,90,.95)) drop-shadow(0 0 7px rgba(255,190,60,.65)); } /* v31.97: hop qua — do + vang */
 .tile img { width:105%; height:105%; margin:-2.5%; object-fit:cover; display:block; pointer-events:none; animation: tileSway 2.6s ease-in-out infinite; transform-origin: 50% 88%; } /* v31.76: dong dua/lac lu nhe (An 2026-11-14) — xoay ±2° quanh chan duoi, 2.6s, nhe nhang, khong chop/khong rung man hinh. v31.80: mat cac be TO HON NUA (An 2026-11-14, dong y cat vien trong suot) — phong to anh 120% trong o thay vi cat file goc (cat se cat mat tai/vay; phong to thi mat chiem ~91% o, vien trong suot hap thu phan tran nen khong de len o ke. v31.86: An gui anh iPad — dau to qua, de len dau ban ke — thu nho xuong 110% (mat ~0.81 o, van to hon v31.79) cho anh rong nhat (ca map/chuot) vua khit trong o, khong de. v31.87: An choi ban live — dau van hoi to — thu nho them xiu xuong 105% (mat ~0.77 o, van to hon v31.79), anh rong nhat gio nam 2.75%..97.25% trong o, co khoang ho ro rang. v31.88: tren iPad van to — do o iPad ~87px nen khe ho o 105% chi ~5px — rieng may tinh bang (600-1024px) xuong 100% (khe ho ~9px, mat ~64px van to ro), dien thoai giu 105%. */
 /* v31.88: An — tren iPad dau van to sau khi refresh — thu nho rieng cho may tinh bang (600-1024px): dau 100% (mat ~0.73 o, khe ho giua cac dau ~9px tren o ~87px), dien thoai giu 105%. v31.92: An — tren PC/laptop dau van to de len nhau — mo rong 100% ra moi man hinh >=600px. */
 @media (min-width: 600px) { .tile img { width:100%; height:100%; margin:0; } } /* v31.92: An — tren PC/laptop dau van to de len dau ban ke — mo rong luat 100% tu chi-may-tinh-bang (600-1024px) ra moi man hinh >=600px ke ca desktop: khe ho ~9.5px tren o ~95px hap thu duoc do lac tileSway, dien thoai (<600px) giu 105%. */
@@ -588,8 +587,8 @@ button:disabled { opacity:.55; cursor:default; }
 .map-total, .map-sub { text-shadow:0 1px 3px rgba(255,255,255,.95), 0 0 8px rgba(255,255,255,.85); }
 .map-total { text-align:center; font-weight:800; color:#b26a00; font-size:1rem; }
 .map-sub { text-align:center; font-size:.85rem; opacity:.75; color:#22405a; margin:2px 0 6px; }
-.map-scroll { flex:1; overflow-y:auto; position:relative; border-radius:18px; background:rgba(255,255,255,.08); padding:8px 0 96px; -webkit-overflow-scrolling:touch; } /* v31.96: dem duoi 16->96px de hang cuoi khong bi thanh nut duoi che; v31.95: overlay trang .15 -> .08 cho nut ro hon (An 2026-11-14: nut mo); v31.72: KHONG lam mo nua — nen moi giua trong */
-#mapPath { position:relative; padding-top:84px; } /* v31.96: tang tu 72px de be ca dung cao hon van hien tron dau (nhay len khong bi cat); v31.60: room above node 1 so the party (standing above its node) is fully visible, not hidden behind the header */
+.map-scroll { flex:1; overflow-y:auto; position:relative; border-radius:18px; background:rgba(255,255,255,.08); padding:8px 0 96px; -webkit-overflow-scrolling:touch; } /* v31.97: dem duoi 16->96px de hang cuoi khong bi thanh nut duoi che; v31.95: overlay trang .15 -> .08 cho nut ro hon (An 2026-11-14: nut mo); v31.72: KHONG lam mo nua — nen moi giua trong */
+#mapPath { position:relative; padding-top:84px; } /* v31.97: tang tu 72px de be ca dung cao hon van hien tron dau (nhay len khong bi cat); v31.60: room above node 1 so the party (standing above its node) is fully visible, not hidden behind the header */
 #mapRoad { position:absolute; inset:0; width:100%; height:100%; pointer-events:none; z-index:0; filter:drop-shadow(0 0 6px rgba(255, 200, 80, .8)) drop-shadow(0 0 16px rgba(255, 190, 60, .4)); } /* v31.73: duong cau vong phat sang RO hon (test v31.71: glow cu 5px/.55 qua mo, mat thuong khong thay) */
 .map-row { height:110px; position:relative; z-index:1; } /* v31.68: row cao hon cho nut 72px + ten dat vua */
 .map-tree { position:absolute; top:42px; transform:translate(-50%,-50%); width:26px; height:33px; line-height:0; pointer-events:none; filter:drop-shadow(0 2px 2px rgba(34,64,90,.25)); z-index:0; } .map-tree svg { display:block; width:26px; height:33px; } /* v31.74: cay ve tay doc 2 ben duong — ngay tam nut (42px), bam theo duong */
@@ -597,21 +596,21 @@ button:disabled { opacity:.55; cursor:default; }
 .map-node::before { content:""; position:absolute; top:6px; left:10px; width:32px; height:19px; border-radius:50%; background:rgba(255,255,255,.55); filter:blur(1px); transform:rotate(-18deg); pointer-events:none; }
 .map-node:active, .map-node.pressed { transform:translateY(5px); box-shadow:0 1px 0 rgba(0,0,0,.16), 0 3px 8px rgba(34,64,90,.3), inset 0 2px 0 rgba(255,255,255,.6), inset 0 -5px 0 rgba(0,0,0,.12); } /* v31.71: lom xuong nhu phim ban phim (An 2026-11-14) — nut chim 5px, bong day gan nhu bien mat */
 .map-node.done { background:linear-gradient(180deg,#5ee0a0 0%,#2ed573 70%,#1da85c 100%); }
-.map-node.current { background:linear-gradient(180deg,#ffe066 0%,#ffb700 55%,#ff9500 100%); outline:3px solid #ffd23f; outline-offset:2px; animation:mapPulse 1.2s ease-in-out infinite; } /* v31.96: nut hien tai — vang chi con la VIEN vang (+ 👑 + nhip dap), khong con lop vang phu orb (An 2026-11-14: nut man 1 mo vi lop vang + be ca che) */
+.map-node.current { background:linear-gradient(180deg,#ffe066 0%,#ffb700 55%,#ff9500 100%); outline:3px solid #ffd23f; outline-offset:2px; animation:mapPulse 1.2s ease-in-out infinite; } /* v31.97: nut hien tai — vang chi con la VIEN vang (+ 👑 + nhip dap), khong con lop vang phu orb (An 2026-11-14: nut man 1 mo vi lop vang + be ca che) */
 @keyframes mapPulse { 0%,100% { scale:1; } 50% { scale:1.12; } } /* v31.75: dung thuoc-tinh scale thay cho transform — animation mapPulse khong con chan transform:translateY(5px) cua :active/.pressed, nut man hien tai (do, dang nhap nhay) gio lom xuong duoc khi an (test v31.74: giu nut man 2 khong thay lom) */
 /* v31.55: doan be ca + cac be khoi vuong buoc di tren ban do (anh AI, nen trong suot). */
 /* v31.57: doan di — be ca map (mau cua game) dan dau, sau la 5 be
    dong vat KHOI VUONG (o tile cua game), vua di vua bouncy: moi be nay
    len lech nhau (stagger) nhu doan tau nay. */
-#mapParty { position:absolute; z-index:3; width:52px; pointer-events:none; transform:translate(-50%,-100%); display:flex; align-items:flex-end; justify-content:center; } /* v31.96: be ca nho lai (64->52px) de khong che orb nut hien tai; v31.61: only the shark girl walks now, so the party is just her */
+#mapParty { position:absolute; z-index:3; width:52px; pointer-events:none; transform:translate(-50%,-100%); display:flex; align-items:flex-end; justify-content:center; } /* v31.97: be ca nho lai (64->52px) de khong che orb nut hien tai; v31.61: only the shark girl walks now, so the party is just her */
 /* v31.69: anh sang vang theo be ca — vong sang tron mo o duoi chan be (tren duong, sau be), di den dau sang den do; nhip nhe, khong chop. */
-#mapParty::before { content:""; position:absolute; left:50%; top:100%; width:104px; height:104px; transform:translate(-50%,-50%); border-radius:50%; background:radial-gradient(circle, rgba(255, 240, 150, .5) 0%, rgba(255, 210, 90, .25) 32%, rgba(255, 200, 100, 0) 60%); pointer-events:none; z-index:-1; animation:mapLightPulse 2.2s ease-in-out infinite alternate; } /* v31.96: vong sang nho + mo hon (150px/.85 -> 104px/.5) de khong rua trang orb nut hien tai */
+#mapParty::before { content:""; position:absolute; left:50%; top:100%; width:104px; height:104px; transform:translate(-50%,-50%); border-radius:50%; background:radial-gradient(circle, rgba(255, 240, 150, .5) 0%, rgba(255, 210, 90, .25) 32%, rgba(255, 200, 100, 0) 60%); pointer-events:none; z-index:-1; animation:mapLightPulse 2.2s ease-in-out infinite alternate; } /* v31.97: vong sang nho + mo hon (150px/.85 -> 104px/.5) de khong rua trang orb nut hien tai */
 @keyframes mapLightPulse { from { opacity:.72; } to { opacity:.95; } }
 .map-candy { position:absolute; z-index:2; font-size:20px; line-height:1; pointer-events:none; transform:translate(-50%,-50%); filter:drop-shadow(0 2px 2px rgba(34,64,90,.3)); } /* v31.61: candies gliding on the road after the shark girl */
 #mapParty .map-party-baby { display:block; flex:0 0 auto; margin-left:-3px; filter:drop-shadow(0 3px 4px rgba(34,64,90,.3)); animation:partyHop .5s ease-in-out infinite alternate; }
 #mapParty .map-party-baby img { display:block; width:100%; height:auto; }
 /* v31.67: be ca MAP DI BO — sprite wave 10 khung tu video An gui (tiles/shark-girl-walk.png 960x182, khung 96x182, hien 48x91px). Span trong chi doi khung wave (100ms/khung, steps(1) de khung dung yen khong truot); bounce (partyHop/partyBob) van o span ngoai .map-party-baby. */
-#mapParty .map-walk-sprite { display:block; width:46px; height:87px; /* v31.96: nho lai (56x106 -> 46x87) de khong che orb; v31.68: to hon theo nut 72px */ background:url("tiles/shark-girl-walk.png") 0 0/1000% 100% no-repeat; animation:walkCycle 1s steps(1) infinite; }
+#mapParty .map-walk-sprite { display:block; width:46px; height:87px; /* v31.97: nho lai (56x106 -> 46x87) de khong che orb; v31.68: to hon theo nut 72px */ background:url("tiles/shark-girl-walk.png") 0 0/1000% 100% no-repeat; animation:walkCycle 1s steps(1) infinite; }
 @keyframes walkCycle { 0% { background-position:0% 0; } 10% { background-position:11.111% 0; } 20% { background-position:22.222% 0; } 30% { background-position:33.333% 0; } 40% { background-position:44.444% 0; } 50% { background-position:55.555% 0; } 60% { background-position:66.666% 0; } 70% { background-position:77.777% 0; } 80% { background-position:88.888% 0; } 90%,100% { background-position:100% 0; } }
 #mapParty .map-party-baby.leader { width:46px; margin-left:0; z-index:2; }
 #mapParty .map-party-baby.follower { width:28px; }
@@ -627,16 +626,16 @@ button:disabled { opacity:.55; cursor:default; }
 @keyframes partyBob { from { transform:translateY(0); } to { transform:translateY(-3px); } }
 .map-node.locked { background:linear-gradient(180deg,#c3ccd6 0%,#8b95a5 70%,#6f7987 100%); cursor:not-allowed; font-size:1.1rem; }
 .map-node .crown { position:absolute; top:-28px; left:calc(50% + 34px); transform:translateX(-50%); font-size:.95rem; z-index:5; pointer-events:none; filter:drop-shadow(0 2px 2px rgba(34,64,90,.35)); } /* 2026-11-14 22:03: 👑 nut hien tai bi be ca che — doi sang phai + cao hon, z-index 5 (tren #mapParty z-index 3) */
-.map-node .boss-crown { position:absolute; top:-18px; left:50%; transform:translateX(-50%) rotate(-3deg); width:24px; height:22px; z-index:4; pointer-events:none; filter:drop-shadow(0 2px 2px rgba(34,64,90,.35)); } /* v31.96: vuong mien keo (SVG) cho man boss 10/20/30/40/50 — vang + ngoc keo deo nhieu mau + keo mut o dinh; nam tren dinh nut, khong che so man hay orb */
+.map-node .boss-crown { position:absolute; top:-18px; left:50%; transform:translateX(-50%) rotate(-3deg); width:24px; height:22px; z-index:4; pointer-events:none; filter:drop-shadow(0 2px 2px rgba(34,64,90,.35)); } /* v31.97: vuong mien keo (SVG) cho man boss 10/20/30/40/50 — vang + ngoc keo deo nhieu mau + keo mut o dinh; nam tren dinh nut, khong che so man hay orb */
 .map-node .boss-crown svg { display:block; width:100%; height:100%; }
-.map-node.duo .crown { left:calc(50% - 34px); font-size:.95rem; } /* v31.96: man vua hien tai vua boss — 👑 lech trai, vuong mien keo lech phai, khong chong nhau, khong che be ca */
+.map-node.duo .crown { left:calc(50% - 34px); font-size:.95rem; } /* v31.97: man vua hien tai vua boss — 👑 lech trai, vuong mien keo lech phai, khong chong nhau, khong che be ca */
 .map-node.duo .boss-crown { left:calc(50% + 13px); }
 .map-node .lock { font-size:1.2rem; }
 .map-node .lock-badge { position:absolute; right:-7px; bottom:-7px; font-size:.95rem; line-height:1; } /* v31.60: locked nodes keep their number; the lock becomes a small corner badge */
 .map-node .map-land-img { position:absolute; inset:3px; border-radius:50%; background-image:url(map-nodes/glass-orbs-nodes.jpg); background-size:5000% 100%; background-repeat:no-repeat; filter:saturate(1.55) contrast(1.12); } /* v31.95: saturate 1.45->1.55, contrast 1.07->1.12 (An: nut mo); v31.94: the node IS its level's hand-drawn glass orb (An approved the 50-orb set 2026-11-14); inset 3px so the state colour still shows as a ring */
 .map-node .map-land-img::after { content:""; position:absolute; inset:0; border-radius:50%; pointer-events:none; background:radial-gradient(circle at 30% 20%, rgba(255,255,255,1) 0%, rgba(255,255,255,.55) 14%, rgba(255,255,255,.12) 26%, rgba(255,255,255,0) 35%), radial-gradient(circle at 50% 118%, rgba(255,255,255,.55) 0%, rgba(255,255,255,0) 42%); box-shadow:inset 0 -6px 10px rgba(0,0,0,.22), inset 0 4px 6px rgba(255,255,255,.35); } /* v31.95: specular nho gon + sac net hon (tan het o 35% thay vi 55%), vien sang duoi manh hon .4->.55, bong trang tren giam .55->.35 (An 2026-11-14: nut mo); v31.90: glass-mirror dome — round & shiny like a glass lollipop */
 .map-node.locked .map-land-img { filter:grayscale(1) contrast(1.12); opacity:.68; } /* v31.95: locked opacity .55->.68 + contrast 1.12 cho hinh khoa ro hon (van xam + vong xam + khoa, van nhan ra la khoa); locked: the orb picture is greyed out */
-.map-node.current .map-land-img { filter:saturate(1.55) contrast(1.12); opacity:1; } /* v31.96: orb nut hien tai hien day du do bong nhu nut khoa (khong bi lop vang lam nhat) */
+.map-node.current .map-land-img { filter:saturate(1.55) contrast(1.12); opacity:1; } /* v31.97: orb nut hien tai hien day du do bong nhu nut khoa (khong bi lop vang lam nhat) */
 .map-node .map-num { position:absolute; top:-7px; left:-7px; min-width:22px; height:22px; padding:0 4px; border-radius:10px; background:#22405a; color:#fff; font-size:.72rem; font-weight:900; display:flex; align-items:center; justify-content:center; border:2px solid #fff; box-sizing:border-box; } /* v31.62: level number as a small corner badge */
 .map-node .map-story { position:absolute; top:-8px; right:-8px; font-size:.9rem; }
 .map-stars { position:absolute; top:52px; left:50%; transform:translateX(-50%); font-size:.85rem; letter-spacing:1px; color:#ffd23f; text-shadow:0 1px 2px rgba(0,0,0,.35), 0 0 3px rgba(255,255,255,.6); white-space:nowrap; }
@@ -840,7 +839,7 @@ input[type=text]:focus { border-color:#ff5c8a; }
 #devCredit { position:absolute; left:0; right:0; bottom:0.32cm; text-align:center; font-size:10px; font-weight:600; letter-spacing:.2px; color:rgba(255,255,255,.92); text-shadow:0 1px 3px rgba(0,0,0,.35); pointer-events:none; z-index:5; }
 /* v31.40: cá heo Flow pastel đưa lại vào game (An yêu cầu 2026-11-14) */
 /* v31.51: moi man la 1 vung dat rieng — man + qua toi man 25, glow tung o, truyen viet lai (An 2026-11-14). LIVE. */
-/* v31.74: cay VE TAY doc 2 ben DUONG (An sua 2026-11-14) — cay bam theo duong (nut ±16%), khong phai hang cay vien background; bo emoji. LIVE v31.96. */
+/* v31.74: cay VE TAY doc 2 ben DUONG (An sua 2026-11-14) — cay bam theo duong (nut ±16%), khong phai hang cay vien background; bo emoji. LIVE v31.97. */
 /* v30: story chapters — full-screen card before levels 1/3/5/8.
    z-index 60 sits above the transition overlay (55); the level timer
    only starts after the player taps Play, so reading costs no time. */
@@ -995,33 +994,21 @@ input[type=text]:focus { border-color:#ff5c8a; }
     <span class="hud-doodle" style="top:42%; right:-6px;"><svg width="16" height="16" viewBox="0 0 24 24"><path d="M12 2 L13 10 L21 11 L14 15 L16 23 L12 18 L8 23 L10 15 L3 11 L11 10 Z" fill="#2ed573"/></svg></span>
     <div class="hud-row">
       <div class="hud-stat"><span id="lblLevel"></span> <b id="levelNum">1</b> <span id="landName"></span></div>
+      <img id="hudCrown" class="hidden" src="tiles/boss-crown-cake-lollipops.png" alt="Vương miện boss">
       <div class="hud-stat"><span id="lblScore"></span> <b id="scoreNum">0</b></div>
       <div class="hud-stat"><span id="lblBest"></span> <b id="bestNum">0</b></div>
-      <div class="hud-btns">
-        <button class="icon-btn" id="langBtn">VI | EN</button>
-        <button class="icon-btn blue" id="musicBtn">🔊</button>
-        <button class="icon-btn green" id="homeBtn">🏠</button>
-        <button class="icon-btn" id="storyBtn" title="Đọc truyện">📖</button>
-      </div>
+      <button class="icon-btn mini" id="hubBtn" title="Về trang tổng hợp game">&#8592;</button>
     </div>
     <div class="hud-row">
       <div class="hud-stat"><span id="lblTarget"></span> <b class="target" id="targetNum">12000</b></div>
       <div class="hud-stat"><span id="lblMoves"></span> <b id="movesNum">90</b></div>
       <div class="hud-stat"><span id="lblTime"></span> <b id="timeNum">8:00</b></div>
-      <button class="icon-btn" id="hubBtn" title="Về trang tổng hợp game">&#8592;</button>
+      <!-- v31.97e: 4 nut cai dat (VI|EN, loa, nha, truyen) da bo khoi HUD — cai dat truoc khi vao game o man hinh bat dau (langBtnStart/musicBtnStart/storyBtnStart) -->
     </div>
     <div class="hud-perk-row"><div class="perk-line" id="perkLine"></div><div class="progress"><div id="progressFill"></div></div></div>
     <div id="questLine" class="quest-line hidden"></div>
     <div id="ingLine" class="quest-line hidden"></div>
-  </div>
-  <div id="bossPanel" class="hidden">
-    <img id="bossCrown" src="tiles/boss-crown-cake-lollipops.png" alt="Vương miện bánh kem">
-    <img id="bossImg" alt="Quái Kẹo Dẻo">
-    <div class="boss-info">
-      <div id="bossName">👾 Quái Kẹo Dẻo</div>
-      <div class="boss-hp"><div id="bossHpFill"></div></div>
-      <div id="bossHpText">HP 12/12</div>
-    </div>
+    <div id="bossRow" class="hidden"><img id="bossImg" alt="Quái Kẹo Dẻo"><div id="bossName">👾 Quái Kẹo Dẻo</div><div class="boss-hp"><div id="bossHpFill"></div></div><div id="bossHpText">HP 12/12</div><span id="bossQuestText" class="boss-quest">⚔ 0/12</span></div>
   </div>
   <div id="boardWrap">
     <div id="board"></div>
@@ -1721,7 +1708,7 @@ var QUESTS = {
   8: { kind: "jelly", target: 6, icon: "🍮", label: { vi: "Phá kẹo dẻo", en: "Clear jelly" } },
   9: { kind: "bomb", target: 2, icon: "💣", label: { vi: "Nổ bom sói", en: "Detonate wolf bombs" } },
   10: { kind: "boss", target: 12, icon: "👾", label: { vi: "Đánh bại Quái Kẹo Dẻo", en: "Defeat the Jelly Monster" } },
-  /* v31.96: nhiem vu man 11-20 (Order — thu du mon theo vung dat). Man 12/18/24 la
+  /* v31.97: nhiem vu man 11-20 (Order — thu du mon theo vung dat). Man 12/18/24 la
      nhiem vu nguyen lieu (tha qua xuong day) thay cho nhiem vu thu thuong. */
   11: { kind: "type", type: "mouse", target: 12, icon: "🐭", label: { vi: "Ăn chuột", en: "Clear mice" } },
   12: { kind: "ingredient", target: 2, icon: "🎁", label: { vi: "Thả quà xuống đáy", en: "Drop gifts to the bottom" } },
@@ -1761,7 +1748,7 @@ function questProgress() {
   return 0;
 }
 function questDone() {
-  if (!state.quest) return true; /* v31.96: nhiem vu mo rong toi man 20 (truoc chi toi man 10) */
+  if (!state.quest) return true; /* v31.97: nhiem vu mo rong toi man 20 (truoc chi toi man 10) */
   return questProgress() >= state.quest.target;
 }
 function questText() {
@@ -1771,7 +1758,9 @@ function questText() {
   return q.icon + " " + lbl + ": " + p + "/" + q.target + (p >= q.target ? " ✅" : "");
 }
 function updateBossPanel() {
-  var bp = document.getElementById("bossPanel");
+  var bp = document.getElementById("bossRow");
+  var hc = document.getElementById("hudCrown");
+  if (hc) hc.classList.toggle("hidden", state.level !== 10);
   if (!bp) return;
   if (state.level === 10) {
     bp.classList.remove("hidden");
@@ -1779,6 +1768,8 @@ function updateBossPanel() {
     if (fill) fill.style.width = Math.max(0, state.bossHP / 12 * 100) + "%";
     var tx = document.getElementById("bossHpText");
     if (tx) tx.textContent = "HP " + Math.max(0, state.bossHP) + "/12";
+    var bq = document.getElementById("bossQuestText");
+    if (bq) { var dmg = Math.max(0, 12 - state.bossHP); bq.textContent = "⚔ " + dmg + "/12" + (dmg >= 12 ? " ✅" : ""); }
   } else bp.classList.add("hidden");
 }
 function damageBoss(n) {
@@ -1841,8 +1832,8 @@ var LANDS = [
   { vi: "Đồi Kẹo Bông", en: "Cotton Candy Hills" },
   { vi: "Đỉnh Cầu Vồng", en: "Rainbow Peak" },
   { vi: "Vườn Kẹo Hoa", en: "Candy Flower Garden" },
-  { vi: "Suối Kẹo Chanh", en: "Lemon Candy Stream" },
   { vi: "Cầu Kẹo Dẻo", en: "Gummy Bridge" },
+  { vi: "Suối Kẹo Chanh", en: "Lemon Candy Stream" },
   { vi: "Thảo Nguyên Kẹo Mút", en: "Lollipop Meadow" },
   { vi: "Rừng Kẹo Que", en: "Candy Cane Forest" },
   { vi: "Hồ Kẹo Bạc Hà", en: "Mint Candy Lake" },
@@ -1916,7 +1907,7 @@ var state = {
   quest: null,
   bossHP: 0,
   questToastShown: false,
-  /* v31.96: qua nguyen lieu (man 12/18/24) — roi xuong day de thu */
+  /* v31.97: qua nguyen lieu (man 12/18/24) — roi xuong day de thu */
   ingDropped: 0,
   ingTotal: 0
 };
@@ -1959,7 +1950,7 @@ function findMatches(b) {
     c = 0;
     while (c < COLS) {
       var t0 = b[r][c];
-      if (!t0 || t0.type === "rainbow" || t0.type === "bomb" || t0.type === "eagle" || t0.type === "gift") { c++; continue; } /* v31.96: hop qua khong ghep duoc */
+      if (!t0 || t0.type === "rainbow" || t0.type === "bomb" || t0.type === "eagle" || t0.type === "gift") { c++; continue; } /* v31.97: hop qua khong ghep duoc */
       len = 1;
       while (c + len < COLS && b[r][c+len] && b[r][c+len].type === t0.type) len++;
       if (len >= 3) {
@@ -1974,7 +1965,7 @@ function findMatches(b) {
     r = 0;
     while (r < ROWS) {
       var t1 = b[r][c];
-      if (!t1 || t1.type === "rainbow" || t1.type === "bomb" || t1.type === "eagle" || t1.type === "gift") { r++; continue; } /* v31.96: hop qua khong ghep duoc */
+      if (!t1 || t1.type === "rainbow" || t1.type === "bomb" || t1.type === "eagle" || t1.type === "gift") { r++; continue; } /* v31.97: hop qua khong ghep duoc */
       len = 1;
       while (r + len < ROWS && b[r+len][c] && b[r+len][c].type === t1.type) len++;
       if (len >= 3) {
@@ -2016,7 +2007,7 @@ function hasValidMove(b) {
       var r2 = r + dirs[d][0], c2 = c + dirs[d][1];
       if (!inBoard(r2, c2)) continue;
       var a = b[r][c], bb = b[r2][c2];
-      if (a && bb && a.special && bb.special) return true; /* v31.96: hai keo dac biet canh nhau luon doi duoc (combo) */
+      if (a && bb && a.special && bb.special) return true; /* v31.97: hai keo dac biet canh nhau luon doi duoc (combo) */
       if (!a || !bb || a.type === "bomb" || bb.type === "bomb" || a.type === "eagle" || bb.type === "eagle" || a.type === "gift" || bb.type === "gift") continue;
       b[r][c] = bb; b[r2][c2] = a;
       var m = findMatches(b).runs.length > 0;
@@ -2101,7 +2092,7 @@ function rateFor(len) { return len === 3 ? 60 : len === 4 ? 120 : 200; }
 /* Expand a clear set with special effects. Returns {cells:Set(keys), wrappedHits:[[r,c]], effects:[names], strikes:[[r,c]], beams:[{dir,line,from}], rainbows:[{from,cells}]} */
 function expandClear(initialCells) {
   var cells = {}, queue = [], wrappedHits = [], effects = [], strikes = [], beams = [], rainbows = [];
-  initialCells.forEach(function(cell) { var __st = state.board[cell[0]] && state.board[cell[0]][cell[1]]; if (__st && __st.type === "gift") return; cells[cell[0] + "," + cell[1]] = cell; queue.push(cell); }); /* v31.96: hop qua khong bi hieu ung cuon theo */
+  initialCells.forEach(function(cell) { var __st = state.board[cell[0]] && state.board[cell[0]][cell[1]]; if (__st && __st.type === "gift") return; cells[cell[0] + "," + cell[1]] = cell; queue.push(cell); }); /* v31.97: hop qua khong bi hieu ung cuon theo */
   var processed = {};
   while (queue.length) {
     var cell = queue.shift();
@@ -2167,7 +2158,7 @@ async function bounceThenPop(cells) {
 async function resolveBoard(swapPos, quiet) {
   var total = 0, cascade = 0;
   while (true) {
-    if (await collectGifts()) continue; /* v31.96: hop qua vua roi xuong day — thu roi nap lai truoc khi tim match */
+    if (await collectGifts()) continue; /* v31.97: hop qua vua roi xuong day — thu roi nap lai truoc khi tim match */
     var found = findMatches(state.board);
     if (found.runs.length === 0) break;
     cascade++;
@@ -2380,7 +2371,7 @@ function pickRefillType(r, c) {
     var opts = [];
     [[r+1,c],[r+2,c],[r,c-1],[r,c-2]].forEach(function(p) {
       var tl = inBoard(p[0], p[1]) && b[p[0]][p[1]];
-      if (tl && tl.type !== "rainbow" && tl.type !== "bomb" && tl.type !== "eagle" && tl.type !== "gift") opts.push(tl.type); /* v31.96: khong nap them hop qua */
+      if (tl && tl.type !== "rainbow" && tl.type !== "bomb" && tl.type !== "eagle" && tl.type !== "gift") opts.push(tl.type); /* v31.97: khong nap them hop qua */
     });
     for (var i = opts.length - 1; i > 0; i--) {
       var j = Math.floor(Math.random() * (i + 1));
@@ -2450,12 +2441,12 @@ async function doRainbowSwap(r1, c1, r2, c2) {
   var rb = state.board[r1][c1] && state.board[r1][c1].special === "rainbow" ? [r1, c1] : [r2, c2];
   var other = (rb[0] === r1 && rb[1] === c1) ? [r2, c2] : [r1, c1];
   var otherTile = state.board[other[0]][other[1]];
-  /* v31.96: cau vong + cau vong — ca ban no sach theo dot (khong dai bang, khong sam) */
+  /* v31.97: cau vong + cau vong — ca ban no sach theo dot (khong dai bang, khong sam) */
   if (otherTile && otherTile.special === "rainbow") { await detonateRainbowPair(); return; }
   var targetType = otherTile ? otherTile.type : null;
-  var clearCells = (otherTile && otherTile.type === "gift") ? [rb] : [rb, other]; /* v31.96: hop qua khong bi cau vong an — chi cau vong bien mat */
+  var clearCells = (otherTile && otherTile.type === "gift") ? [rb] : [rb, other]; /* v31.97: hop qua khong bi cau vong an — chi cau vong bien mat */
   var __pairClear = clearCells.slice();
-  /* v31.96: hop qua khong phai mau keo — cau vong khong cuon qua theo */
+  /* v31.97: hop qua khong phai mau keo — cau vong khong cuon qua theo */
   if (targetType && targetType !== "rainbow" && ANIMALS.indexOf(targetType) >= 0) {
     for (var r = 0; r < ROWS; r++) for (var c = 0; c < COLS; c++) {
       var tl = state.board[r][c];
@@ -2464,7 +2455,7 @@ async function doRainbowSwap(r1, c1, r2, c2) {
   }
   var chainedBeams = [];
   if (otherTile && (otherTile.special === "h" || otherTile.special === "v")) {
-    /* v31.96: cau vong + soc — moi o cung mau bien thanh soc roi cung no */
+    /* v31.97: cau vong + soc — moi o cung mau bien thanh soc roi cung no */
     var __dir = otherTile.special;
     var __seeds = [];
     for (var __r = 0; __r < ROWS; __r++) for (var __c = 0; __c < COLS; __c++) {
@@ -2517,7 +2508,7 @@ async function trySwap(r1, c1, r2, c2) {
   var a = state.board[r1][c1], b = state.board[r2][c2];
   if (!a || !b) return;
   if (a.type === "bomb" || b.type === "bomb") return; /* only the wolf bomb is dragged, never swapped; the eagle IS swapped (it clears the whole board) */
-  if (a.type === "gift" || b.type === "gift") return; /* v31.96: hop qua khong doi cho duoc */
+  if (a.type === "gift" || b.type === "gift") return; /* v31.97: hop qua khong doi cho duoc */
   state.busy = true;
   state.selected = null; renderSelection();
   /* animate the swap */
@@ -2535,7 +2526,7 @@ async function trySwap(r1, c1, r2, c2) {
     state.busy = false;
     return;
   }
-  /* v31.96: hai keo dac biet doi nhau — combo (soc/soc, soc/goi, goi/goi) */
+  /* v31.97: hai keo dac biet doi nhau — combo (soc/soc, soc/goi, goi/goi) */
   if (a.special && b.special && a.special !== "rainbow" && b.special !== "rainbow") {
     state.moves--;
     updateHUD();
@@ -2574,7 +2565,7 @@ function afterTurn() {
   /* v31.89 demo: man 1-10 thang can DU DIEM + XONG NHIEM VU; neu du diem
      ma chua xong nhiem vu thi choi tiep (luot/dong ho van gioi han). */
   if (state.score >= state.target) {
-    if (questDone() && ingDone()) { endLevel(true); return; } /* v31.96: thang can du diem + xong nhiem vu + tha het qua */
+    if (questDone() && ingDone()) { endLevel(true); return; } /* v31.97: thang can du diem + xong nhiem vu + tha het qua */
     if (!state.questToastShown) {
       state.questToastShown = true;
       showToast(!ingDone() ? (LANG === "vi" ? "Đủ điểm rồi — thả hết quà xuống đáy để thắng!" : "Target reached — drop all gifts to the bottom to win!") : (LANG === "vi" ? "Đủ điểm rồi — hoàn thành nhiệm vụ để thắng!" : "Target reached — finish the quest to win!"));
@@ -2681,7 +2672,7 @@ async function detonateBomb(target, from) {
     if (tl && tl.type === type) addCell(r, c);
   }
   addCell(from[0], from[1]); /* the bomb itself is consumed */
-  /* v31.96: bom soi + keo dac biet — moi o cung mau bien thanh keo dac biet do roi cung no */
+  /* v31.97: bom soi + keo dac biet — moi o cung mau bien thanh keo dac biet do roi cung no */
   if (targetTl && (targetTl.special === "h" || targetTl.special === "v" || targetTl.special === "wrapped" || targetTl.special === "rainbow")) {
     var __conv = targetTl.special === "rainbow" ? "h" : targetTl.special;
     var __bseeds = [];
@@ -2802,7 +2793,7 @@ async function detonateEagleFull() {
     var j = Math.floor(Math.random() * (i + 1));
     var tmp = cells[i]; cells[i] = cells[j]; cells[j] = tmp;
   }
-  cells = cells.filter(function(cell) { var __et = state.board[cell[0]] && state.board[cell[0]][cell[1]]; return !__et || __et.type !== "gift"; }); /* v31.96: set khong danh hop qua — qua chi thu khi roi xuong day */
+  cells = cells.filter(function(cell) { var __et = state.board[cell[0]] && state.board[cell[0]][cell[1]]; return !__et || __et.type !== "gift"; }); /* v31.97: set khong danh hop qua — qua chi thu khi roi xuong day */
   var waves = [], perWave = 8;
   for (var k = 0; k < cells.length; k += perWave) waves.push(cells.slice(k, k + perWave));
   showEagleFly(); /* dai bang bay vuot qua bang truoc khi set danh */
@@ -2861,7 +2852,7 @@ function specialClass(tl) {
 }
 function badgeFor(tl) {
   if (tl.type === "eagle") return "⚡";
-  if (tl.type === "gift") return "🎁"; /* v31.96: hop qua co nhan rieng */
+  if (tl.type === "gift") return "🎁"; /* v31.97: hop qua co nhan rieng */
   if (tl.special === "h") return "↔";
   if (tl.special === "v") return "↕";
   if (tl.special === "wrapped") return "🎀";
@@ -3904,7 +3895,7 @@ function updateHUD() {
   var pct = Math.min(100, Math.round(state.score / state.target * 100));
   document.getElementById("progressFill").style.width = pct + "%";
   /* v31.89: dong nhiem vu + thanh HP boss (chi man 1-10) */
-  /* v31.96: man co qua nguyen lieu — dong qua thay cho dong nhiem vu */
+  /* v31.97: man co qua nguyen lieu — dong qua thay cho dong nhiem vu */
   var ql = document.getElementById("questLine");
   var il = document.getElementById("ingLine");
   if (state.ingTotal) {
@@ -3913,7 +3904,7 @@ function updateHUD() {
   } else {
     if (il) il.classList.add("hidden");
     if (ql) {
-      if (state.quest) { ql.classList.remove("hidden"); ql.textContent = questText(); }
+      if (state.quest && state.level !== 10) { ql.classList.remove("hidden"); ql.textContent = questText(); } /* v31.97d: man 10 — nhiem vu boss hien trong hang boss (bossQuestText), khong rieng 1 dong nua */
       else ql.classList.add("hidden");
     }
   }
@@ -4084,7 +4075,7 @@ function placeParty(x, y) {
   var p = document.getElementById("mapParty");
   if (!p) return;
   p.style.left = x + "px";
-  p.style.top = (y - 26) + "px"; /* v31.96: chan dung ngay tren DINH nut (tren tam 26px) — be ca dung tren qua bong chu khong che orb; truoc -14px chan nam giua nut */
+  p.style.top = (y - 26) + "px"; /* v31.97: chan dung ngay tren DINH nut (tren tam 26px) — be ca dung tren qua bong chu khong che orb; truoc -14px chan nam giua nut */
 }
 /* v31.61: candy trail — the shark girl's recent positions, so the
    candies can glide along the road exactly where she just walked. */
@@ -4529,7 +4520,7 @@ function showStoryViewer() {
   close.onclick = function() { ov.classList.add("hidden"); if (inGame) resumeTimer(); };
 }
 
-/* ================= v31.96: 4 tinh nang kieu Candy Crush (An 2026-11-14: lam het tru dua voi me) =================
+/* ================= v31.97: 4 tinh nang kieu Candy Crush (An 2026-11-14: lam het tru dua voi me) =================
    A. Combo keo dac biet (doi 2 keo dac biet voi nhau). B. Nhiem vu moi: tha qua
    nguyen lieu (man 12/18/24) + quest man 11-20. C. Qua moi ngay + tem.
    D. So sticker theo chuong truyen. E. Vuong mien keo cho man boss (An gui
@@ -4828,7 +4819,7 @@ function showStickerBook() {
   ov.classList.remove("hidden");
   close.onclick = function() { ov.classList.add("hidden"); if (inGame) resumeTimer(); };
 }
-/* ================= /v31.96 ================= */
+/* ================= /v31.97 ================= */
 
 function storySeenAny() {
   try { var s = JSON.parse(localStorage.getItem("ac_story_seen") || "[]"); return s.length > 0; } catch (e) { return false; }
@@ -4843,10 +4834,9 @@ function maybeShowStory(level, proceed) {
   showStoryCard(level, proceed);
 }
 document.getElementById("storyBtnStart").addEventListener("click", function() { AudioEng.unlock(); showStoryViewer(); });
-document.getElementById("stickerBtnStart").addEventListener("click", function() { AudioEng.unlock(); showStickerBook(); }); /* v31.96: so sticker */
-document.getElementById("dailyClaimBtn").addEventListener("click", function() { AudioEng.unlock(); claimDaily(); }); /* v31.96: nhan qua moi ngay */
+document.getElementById("stickerBtnStart").addEventListener("click", function() { AudioEng.unlock(); showStickerBook(); }); /* v31.97: so sticker */
+document.getElementById("dailyClaimBtn").addEventListener("click", function() { AudioEng.unlock(); claimDaily(); }); /* v31.97: nhan qua moi ngay */
 /* v30.1: 📖 button in the game HUD — read the story mid-level, too. */
-document.getElementById("storyBtn").addEventListener("click", function() { AudioEng.unlock(); showStoryViewer(); });
 /* v30.3: reset button on the start screen — An asked to replay from
    Level 1. Uses an in-page confirm card (NOT window.confirm: automated
    browsers swallow the native dialog, so it could never be verified —
@@ -4900,7 +4890,7 @@ function startLevel(level) {
     __usedCells[r2 + "," + c2] = true;
     state.board[r2][c2] = makeTile(type, special);
   }
-  /* v31.96: hop qua nguyen lieu (man 12/18/24) — dat o 3 hang tren cung de roi xuong */
+  /* v31.97: hop qua nguyen lieu (man 12/18/24) — dat o 3 hang tren cung de roi xuong */
   state.ingDropped = 0;
   state.ingTotal = 0;
   var __ingN = INGREDIENT_LEVELS[level] || 0;
@@ -4914,7 +4904,7 @@ function startLevel(level) {
   }
   for (var bi = 0; bi < perks.freeBombs; bi++) __placeSpecial("bomb");
   if (perks.freeRainbow) __placeSpecial("rainbow", "rainbow");
-  /* v31.96: qua moi ngay trong tui — dat len ban dau man, ton gioi han san co */
+  /* v31.97: qua moi ngay trong tui — dat len ban dau man, ton gioi han san co */
   var __inv = getDailyInv();
   var __invChanged = false;
   if (__inv.eagle > 0 && !eagleOnBoard()) { __placeSpecial("eagle"); __inv.eagle--; __invChanged = true; }
@@ -4987,7 +4977,7 @@ function endLevel(won) {
     localStorage.setItem("animalCrushLevel", String(state.level + 1));
     showToast(t("nice"));
     if (stickerUnlock(state.level)) showToast("📕 " + (LANG === "vi" ? "Sticker mới đã mở!" : "New sticker unlocked!"));
-    awardStamp(); /* v31.96: thang 1 man/ngay duoc 1 tem; du 6 tem mo ruong */
+    awardStamp(); /* v31.97: thang 1 man/ngay duoc 1 tem; du 6 tem mo ruong */
   } else {
     AudioEng.sfx("lose");
   }
@@ -5168,19 +5158,17 @@ function applyLang() {
   var known = parseInt(localStorage.getItem("animalCrushVisits") || "0", 10);
   if (known) document.getElementById("visitCount").textContent = "🐠 " + t("visits").replace("{n}", known);
   renderStartLb();
-  renderDaily(); /* v31.96: cap nhat lich qua + tem + so sticker tren man hinh bat dau */
+  renderDaily(); /* v31.97: cap nhat lich qua + tem + so sticker tren man hinh bat dau */
 }
 function setLang(l) {
   LANG = l;
   localStorage.setItem("animalCrushLang", l);
   applyLang();
 }
-document.getElementById("langBtn").addEventListener("click", function() { setLang(LANG === "vi" ? "en" : "vi"); updatePerkLine(); });
 document.getElementById("langBtnStart").addEventListener("click", function() { setLang(LANG === "vi" ? "en" : "vi"); updatePerkLine(); });
 function syncMusicBtns() {
   var icon = AudioEng.isMusicOn() ? "🔊" : "🔇";
-  document.getElementById("musicBtn").textContent = icon;
-  document.getElementById("musicBtnStart").textContent = icon;
+  document.getElementById("musicBtnStart").textContent = icon; /* v31.97e: musicBtn (HUD) removed — start-screen toggle only */
 }
 /* The speaker button should START the music when tapped on the start screen,
    not mute it: on a fresh page the first tap anywhere starts the music via the
@@ -5199,22 +5187,9 @@ function speakerClick() {
   }
   syncMusicBtns();
 }
-document.getElementById("musicBtn").addEventListener("pointerdown", recordMusicStateBeforeTap);
-document.getElementById("musicBtn").addEventListener("click", speakerClick);
 document.getElementById("musicBtnStart").addEventListener("pointerdown", recordMusicStateBeforeTap);
 document.getElementById("musicBtnStart").addEventListener("click", speakerClick);
-document.getElementById("homeBtn").addEventListener("click", function() {
-  state.over = true;
-  stopTimer();
-  stopHintTimer();
-  /* music keeps playing on the start screen: it is the game's background music */
-  document.getElementById("gameScreen").classList.add("hidden");
-  document.getElementById("endScreen").classList.add("hidden");
-  stopBoings();
-  document.getElementById("transitionScreen").classList.add("hidden");
-  document.getElementById("startScreen").classList.remove("hidden");
-  applyLang();
-});
+/* v31.97e: homeBtn removed — settings buttons gone from the HUD; use hubBtn (←) to exit to the hub. */
 /* v17 (An's request): back to the game hub — same tab, so switching games
    never needs closing a tab. 🏠 above goes to this game's start screen;
    ← here goes to the hub (the list of all games). */
