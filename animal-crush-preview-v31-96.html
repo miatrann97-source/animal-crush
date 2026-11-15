@@ -625,10 +625,10 @@ button:disabled { opacity:.55; cursor:default; }
 @keyframes partyHop { from { transform:translateY(0); } to { transform:translateY(-7px); } }
 @keyframes partyBob { from { transform:translateY(0); } to { transform:translateY(-3px); } }
 .map-node.locked { background:linear-gradient(180deg,#c3ccd6 0%,#8b95a5 70%,#6f7987 100%); cursor:not-allowed; font-size:1.1rem; }
-.map-node .crown { position:absolute; top:-16px; left:50%; transform:translateX(-50%); font-size:1.1rem; }
+.map-node .crown { position:absolute; top:-28px; left:calc(50% + 34px); transform:translateX(-50%); font-size:.95rem; z-index:5; pointer-events:none; filter:drop-shadow(0 2px 2px rgba(34,64,90,.35)); } /* 2026-11-14 22:03: 👑 nut hien tai bi be ca che — doi sang phai + cao hon, z-index 5 (tren #mapParty z-index 3) */
 .map-node .boss-crown { position:absolute; top:-18px; left:50%; transform:translateX(-50%) rotate(-3deg); width:24px; height:22px; z-index:4; pointer-events:none; filter:drop-shadow(0 2px 2px rgba(34,64,90,.35)); } /* v31.96: vuong mien keo (SVG) cho man boss 10/20/30/40/50 — vang + ngoc keo deo nhieu mau + keo mut o dinh; nam tren dinh nut, khong che so man hay orb */
 .map-node .boss-crown svg { display:block; width:100%; height:100%; }
-.map-node.duo .crown { left:calc(50% - 11px); font-size:.95rem; } /* v31.96: man vua hien tai vua boss — 👑 lech trai, vuong mien keo lech phai, khong chong nhau */
+.map-node.duo .crown { left:calc(50% - 34px); font-size:.95rem; } /* v31.96: man vua hien tai vua boss — 👑 lech trai, vuong mien keo lech phai, khong chong nhau, khong che be ca */
 .map-node.duo .boss-crown { left:calc(50% + 13px); }
 .map-node .lock { font-size:1.2rem; }
 .map-node .lock-badge { position:absolute; right:-7px; bottom:-7px; font-size:.95rem; line-height:1; } /* v31.60: locked nodes keep their number; the lock becomes a small corner badge */
