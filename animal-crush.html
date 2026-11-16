@@ -607,7 +607,8 @@ button:disabled { opacity:.55; cursor:default; }
 /* v31.69: anh sang vang theo be ca — vong sang tron mo o duoi chan be (tren duong, sau be), di den dau sang den do; nhip nhe, khong chop. */
 #mapParty::before { content:""; position:absolute; left:50%; top:100%; width:104px; height:104px; transform:translate(-50%,-50%); border-radius:50%; background:radial-gradient(circle, rgba(255, 240, 150, .5) 0%, rgba(255, 210, 90, .25) 32%, rgba(255, 200, 100, 0) 60%); pointer-events:none; z-index:-1; animation:mapLightPulse 2.2s ease-in-out infinite alternate; } /* v31.96: vong sang nho + mo hon (150px/.85 -> 104px/.5) de khong rua trang orb nut hien tai */
 @keyframes mapLightPulse { from { opacity:.72; } to { opacity:.95; } }
-.map-candy { position:absolute; z-index:2; font-size:20px; line-height:1; pointer-events:none; transform:translate(-50%,-50%); filter:drop-shadow(0 2px 2px rgba(34,64,90,.3)); } /* v31.61: candies gliding on the road after the shark girl */
+.map-candy { position:absolute; z-index:2; font-size:20px; line-height:1; pointer-events:none; transform:translate(-50%,-50%); filter:drop-shadow(0 2px 2px rgba(34,64,90,.3)); }
+.map-sticker { position:absolute; z-index:4; pointer-events:none; } /* v32.24: sticker GIF dong dan ban do — tren nut/be ca (z 3) nen cho cham ma (opacity<0.5) bi sticker che han, khong am mau; khong chan cham (pointer-events:none) */ /* v31.61: candies gliding on the road after the shark girl */
 #mapParty .map-party-baby { display:block; flex:0 0 auto; margin-left:-3px; filter:drop-shadow(0 3px 4px rgba(34,64,90,.3)); animation:partyHop .5s ease-in-out infinite alternate; }
 #mapParty .map-party-baby img { display:block; width:100%; height:auto; }
 /* v31.67: be ca MAP DI BO — sprite wave 10 khung tu video An gui (tiles/shark-girl-walk.png 960x182, khung 96x182, hien 48x91px). Span trong chi doi khung wave (100ms/khung, steps(1) de khung dung yen khong truot); bounce (partyHop/partyBob) van o span ngoai .map-party-baby. */
@@ -846,7 +847,7 @@ input[type=text]:focus { border-color:#ff5c8a; }
 #devCredit { position:absolute; left:0; right:0; bottom:0.32cm; text-align:center; font-size:10px; font-weight:600; letter-spacing:.2px; color:rgba(255,255,255,.92); text-shadow:0 1px 3px rgba(0,0,0,.35); pointer-events:none; z-index:5; }
 /* v31.40: cá heo Flow pastel đưa lại vào game (An yêu cầu 2026-11-14) */
 /* v31.51: moi man la 1 vung dat rieng — man + qua toi man 25, glow tung o, truyen viet lai (An 2026-11-14). LIVE. */
-/* v31.74: cay VE TAY doc 2 ben DUONG (An sua 2026-11-14) — cay bam theo duong (nut ±16%), khong phai hang cay vien background; bo emoji. LIVE v32.23. */
+/* v31.74: cay VE TAY doc 2 ben DUONG (An sua 2026-11-14) — cay bam theo duong (nut ±16%), khong phai hang cay vien background; bo emoji. LIVE v32.24. */
 /* v30: story chapters — full-screen card before levels 1/3/5/8.
    z-index 60 sits above the transition overlay (55); the level timer
    only starts after the player taps Play, so reading costs no time. */
@@ -4351,6 +4352,7 @@ function buildMapCache() { /* do layout 1 LAN: vi tri noi dung cua 50 nut (nodeC
     party: null, partyT: "", partyO: "", partyOff: true }; /* v32.12: khong con o cache cho duong — duong la nen ve tinh, khong can leg/bent */
   return mapCache;
 }
+/* v32.24 — STICKER DÁN BẢN ĐỒ (An 2026-11-15: chon GIF 12:33, "gan vo di bom" 19:59): them 10 sticker GIF dong vao ban do — Molang liem keo mut (72x65) + tim hong nhay mat (64x64), xen ke nhau, thua (1 cai/4-5 man), 2 ben duong. Vi tri chung minh bang cong swept-orb o moi rong 390-760px / cao khung nhin 600-1133px / alpha -1.35..1.35 (opacity>=0.5): do ho 10.0-31.0px, khong che nut/nhan/be ca; phia = phia rong hon theo rong hien tai (x% duong nhay theo rong). Chi them sticker — khong doi nen ve, duong, nut, vuong mien, lan, do kho, tinh nang. */
 /* v32.23 — BỎ KẸO DỌC ĐƯỜNG (An 2026-11-15 18:49: "Thôi bỏ kẹo ra đi có làm hoài cũng vậy à" — sau cả ngày thử mẫu v1–v4, kẹo ven đường không bao giờ ra đúng ý cô: mẫu 1 thưa quá, mẫu 2 đặt sai chỗ (mép mây thay vì đất hồng giữa), mẫu 3 chỉ có 1 cây, mẫu 4 (50 cây to, đúng chỗ) cô vẫn bỏ — làm hoài cũng vậy). RỪNG KẸO BÔNG GÒN GIỮ NGUYÊN — cô chỉ bỏ kẹo dọc đường, không bỏ rừng. Mẫu overlay v4 BỎ HẲN, không đưa vào bản xem trước. FIX (cut-road-assets-v32-23.py): ô gạch vẽ lại từ dải sạch v32.13 + đúng 80 cụm biên cũ (cùng vị trí, cùng seed, cùng nét vẽ v32.20) — KHÔNG vẽ 8 kẹo đường (4 gậy + 4 mút); nắp vẽ lại từ nắp sạch v32.14 (khôi phục đúng từng byte, md5 152e3013...) + đúng 3 cụm nắp cũ — KHÔNG vẽ kẹo mút trái (535,748) + kẹo gậy phải (814,790). Đáy + đĩa xoay GIỮ NGUYÊN. Ba cái bẫy đã gặp khi chứng minh: (1) so pixel ảnh JPEG đã giải mã với nét vẽ chưa nén là sai — một thế hệ JPEG lệch tới 66 ở mép sắc, nên mọi so sánh phải là file-giải-mã với file-giải-mã; (2) cụm nắp phải vẽ bằng nét v32.17 (24-30 đốm, nhạt hơn, có vệt trắng), không phải nét v32.20 — vẽ bằng nét mới lệch ~42k pixel tới 86 trong hộp cụm; (3) nắp phải vẽ trên file JPEG v32.14 đã giải mã + mô phỏng thêm một thế hệ nén (v32.16), không phải trên bản tái tạo từ WebP — sai thế hệ nén đọc thành ~85k pixel lệch ±1. KẾT QUẢ THẬT (cut run, deterministic): ô gạch mới 150,768 bytes md5 7779a1c6..., nắp mới 82,697 bytes md5 c6f98f0c...; diff giải-mã: ô gạch 22,404 pixel khác, 0 ngoài hộp kẹo+16px (viền 16px lệch tối đa 22 — nhiễu JPEG); nắp 5,597 pixel khác, 0 ngoài hộp kẹo+16px (viền tối đa 14); 0 pixel màu kẹo còn lại (ô gạch cũ 2,154, nắp cũ 519 — kẹo gậy viền (200,60,100), kẹo mút hồng (240,120,170)); rừng nguyên vẹn: 80 cụm đo lại, 73 giống hệt v32.22 trong 1px, 7 thu lại (hộp đo cũ bị pixel kẹo phồng lên — đã chứng minh); bão hòa 16-61 x 18-67 CSS px; pixel kẹo ngoài ruy-băng 336,797 (v32.22: 345,947 — giảm đúng 9,150 = pixel bão hòa của 8 kẹo đường); ruy-băng cos 188->250->188 đủ 8 dải; nắp: hàng 849 chỉ còn đường, không bước nền >1.5 ở hàng 700-850. Chứng minh: ảnh tổng bản đồ + 3 màn hình 2x + so nắp cũ/mới (proof-v32-23/) ĐÃ ĐỌC BẰNG MẮT — kẹo mút + kẹo gậy trên nắp đã biến mất (chỗ cũ giờ là đất hồng trống), 3 cụm nắp còn nguyên, đường kem sạch không kẹo, rừng 2 mép liên tục. KHÔNG ĐỘNG TỚI: MAP_ROAD_TILE_H=2456, mapRoadX 8 dải, MAP_ROW_H=140, bếp chỉ theo lần dọc, đường rộng cos, nền G0, lăn (R = 0.45*cao, SQUASH 0.65, MIN 0.55, mờ 0.7, không cập ty, không tự xoay, giảm chuyển động phẳng), lag fix v32.09 (1 rAF, chỉ nút trong cửa sổ, chỉ ghi khi đổi, 0 đọc layout), toàn bộ tính năng v32.00, sửa vết ngang (mờ dải 720-790) + dưới nút 50 (tileEnd — ranh giới dải) + dải đáy (lớp tĩnh, đặt 1 lần). */
 var GLOBE_ROLL_MAX = 1.35; /* v32.05: goc LAN lon nhat (radian, ~77 do) — nut cach tam hon 1.35 ban kinh thi da vong ra SAU qua cau (an, khong thay); nut o rim (|alpha| ~1) van thay, bep phang + mo dan. XOAY MAT PHANG (GLOBE_SPIN_MAX ±60 do, v32.02-04) DA BO — An 01:08: "Sao ko cho xoay tu tren xuong duoi va tu duoi len tren" */
 
@@ -4422,6 +4424,48 @@ function showMap(fromLv) {
     var cur = document.querySelector(".map-node.current");
     if (cur) glideMapTo(cur); requestMapMotion(); /* v32.01: truot camera cham tu dau ban do xuong nut hien tai (~1.5s) — truot vua lan qua cau vao dung vi tri nut hien tai; bat hieu ung mat ca + lan ngay khi mo ban do; giam chuyen dong -> cuon ngay */
   }, 60);
+}
+/* v32.24 — STICKER DAN BAN DO (An 2026-11-15 12:33 chon 2 GIF: Molang liem keo mut + tim hong nhay mat; 19:59 "gan vo di bom"): 10 sticker GIF dong dan 2 ben duong, nho (Molang 72x65, tim 64x64), thua (1 cai/4-5 man, xen ke Molang/tim), KHONG BAO GIO che nut/nhan/be ca. Vi tri da chung minh bang cong swept-orb (place-stickers-v32-24.py): moi sticker qua cong o MOI rong noi dung 390-760px, MOI cao khung nhin 600-1133px, MOI alpha -1.35..1.35 ma phan tu con nhin thay (opacity>=0.5 theo dung cong thuc applyFisheye); do ho nho nhat 10.0px (L8), lon nhat 31.0px (L12); cho cham ma duy nhat la orb o opacity 0.26-0.39 (ma mo, sticker nam TREN nen che han). Vi x% cua duong nhay lung tung theo rong (vd L8: 71% o 390px nhung 21% o 430px) nen KHONG co phia co dinh nao vua o moi rong — phia = phia RONG HON o rong hien tai (nodeX < halfW ? phai : trai), tinh lai luc dung ban do + resize (positionMapStickers, dung mapCache — 0 doc layout, 0 rAF them). Sticker con nhac len DY=10/8px de khoi cham dau be ca dung o hang duoi (dau be toi ny+27). Muc: L3 Molang, L8 tim, L12 Molang, L17 tim, L23 Molang, L27 tim, L32 Molang, L36 tim, L39 Molang, L45 tim. File GIF: stickers/molang-lollipop.gif (240x218, 51 khung, 549,015 bytes) + stickers/pink-heart.gif (408x408, 17 khung, 293,932 bytes) — duong dan tuong doi, luc ship live giu nguyen. KHONG DONG TOI: nen ve, duong, nut, vuong mien, lan, do kho v32.00, toan bo tinh nang v32.00 — ban nay CHI THEM sticker. */
+var MAP_STICKERS_V32_24 = [
+  { lv: 3, src: "stickers/molang-lollipop.gif", w: 72, h: 65, off: 105, dy: 10 },
+  { lv: 8, src: "stickers/pink-heart.gif", w: 64, h: 64, off: 100, dy: 8 },
+  { lv: 12, src: "stickers/molang-lollipop.gif", w: 72, h: 65, off: 125, dy: 10 },
+  { lv: 17, src: "stickers/pink-heart.gif", w: 64, h: 64, off: 110, dy: 8 },
+  { lv: 23, src: "stickers/molang-lollipop.gif", w: 72, h: 65, off: 120, dy: 10 },
+  { lv: 27, src: "stickers/pink-heart.gif", w: 64, h: 64, off: 115, dy: 8 },
+  { lv: 32, src: "stickers/molang-lollipop.gif", w: 72, h: 65, off: 125, dy: 10 },
+  { lv: 36, src: "stickers/pink-heart.gif", w: 64, h: 64, off: 115, dy: 8 },
+  { lv: 39, src: "stickers/molang-lollipop.gif", w: 72, h: 65, off: 110, dy: 10 },
+  { lv: 45, src: "stickers/pink-heart.gif", w: 64, h: 64, off: 110, dy: 8 }
+];
+function buildMapStickers() { /* dung 1 lan moi renderMap (path.innerHTML="" xoa cu) */
+  var path = document.getElementById("mapPath");
+  if (!path) return;
+  MAP_STICKERS_V32_24.forEach(function(st, i) {
+    var im = document.createElement("img");
+    im.className = "map-sticker";
+    im.id = "mapSticker" + i;
+    im.src = st.src;
+    im.alt = "";
+    im.style.width = st.w + "px";
+    im.style.height = st.h + "px";
+    path.appendChild(im);
+  });
+}
+function positionMapStickers() { /* dat vi tri theo mapCache (toa do noi dung) — chi chay luc dung ban do + resize, KHONG chay moi frame cuon (vi tri noi dung khong doi khi cuon) */
+  if (!mapCache || !mapCache.nodes) return;
+  MAP_STICKERS_V32_24.forEach(function(st, i) {
+    var el = document.getElementById("mapSticker" + i);
+    if (!el) return;
+    var nd = null;
+    for (var j = 0; j < mapCache.nodes.length; j++) {
+      if (parseInt(mapCache.nodes[j].el.getAttribute("data-level") || "0", 10) === st.lv) { nd = mapCache.nodes[j]; break; }
+    }
+    if (!nd) return;
+    var side = nd.x < mapCache.halfW ? 1 : -1; /* phia RONG HON o rong hien tai */
+    el.style.left = (nd.x + side * st.off - st.w / 2) + "px";
+    el.style.top = (nd.y - st.dy - st.h / 2) + "px";
+  });
 }
 function renderMap() {
   var path = document.getElementById("mapPath");
@@ -4512,6 +4556,7 @@ function renderMap() {
     })(node, lv, locked);
   }
   buildMapCache(); /* v32.05: do layout 1 LAN sau khi dung ban do — duong cuon chi doc cache */
+  buildMapStickers(); positionMapStickers(); /* v32.24: dung sticker GIF + dat vi tri theo mapCache (phia rong hon) */
   /* v32.12: khong con ham ve duong SVG cu — nen ve da dat o dau renderMap (layoutPaintedRoad); duong cuon chi lan nut + be ca. */
 }
 function playMapLevel(level) {
@@ -4522,7 +4567,7 @@ var mapResizeTimer = null;
 window.addEventListener("resize", function() {
   if (document.getElementById("mapScreen").classList.contains("hidden")) return;
   clearTimeout(mapResizeTimer);
-  mapResizeTimer = setTimeout(function() { buildMapCache(); layoutPaintedRoad(); }, 120); /* v32.12: resize — dat lai hinh hoc nen ve (topH/tileH theo rong moi); nut la % nen tu dich theo, khong can dung lai ban do */
+  mapResizeTimer = setTimeout(function() { buildMapCache(); layoutPaintedRoad(); positionMapStickers(); }, 120); /* v32.24: resize — dat lai vi tri sticker (phia rong hon doi theo rong moi) */ /* v32.12: resize — dat lai hinh hoc nen ve (topH/tileH theo rong moi); nut la % nen tu dich theo, khong can dung lai ban do */
 });
 document.getElementById("mapPlayNextBtn").addEventListener("click", function() {
   AudioEng.unlock();
