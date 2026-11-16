@@ -94,7 +94,7 @@ button:disabled { opacity:.55; cursor:default; }
 @keyframes bubbleRise { 0% { transform:translateY(0); opacity:0; } 15% { opacity:1; } 100% { transform:translateY(-56px); opacity:0; } }
 @media (prefers-reduced-motion: reduce) { #swimShark, #swimShark .swimSprite, .swim-bubble { animation:none; } #swimShark { left:50%; transform:translateX(-50%); } }
 /* v31.67: prefers-reduced-motion — tat ca animation nen (body bgShift, bg-float) + be ca map dung yen o khung 1. */
-@media (prefers-reduced-motion: reduce) { body { animation:none; } .bg-float { animation:none; } #mapParty .map-walk-sprite { animation:none; } #mapParty::before { animation:none; } .tile img { animation:none; } } /* v31.69: tat luon nhip sang; v31.76: tat luon dong dua */
+@media (prefers-reduced-motion: reduce) { body { animation:none; } .bg-float { animation:none; } #mapParty .map-walk-sprite { animation:none; transform:none !important; } #mapParty::before { animation:none; } .tile img { animation:none; } .map-node .boss-crown, .map-node .crown { animation:none; } .map-node .boss-crown::after { animation:none; } #mapPath { transform:none !important; } .map-scroll { scroll-behavior:auto; } } /* v32.06: tat ca hieu ung lan (khong lan, khong phong, khong bep, khong mo dan) + cuon ban do ngay lap tuc — ban do phang hinh chu nhat, be ca dung thang, choi duoc binh thuong */ /* v31.69: tat luon nhip sang; v31.76: tat luon dong dua */
 
 .logo-row { display:flex; gap:6px; justify-content:center; flex-wrap:wrap; margin: 6px 0; }
 .logo-row img { width:56px; height:56px; border-radius:16px; box-shadow: 0 4px 10px rgba(0,0,0,.2); animation: logoBob 2s ease-in-out infinite; }
@@ -233,7 +233,7 @@ button:disabled { opacity:.55; cursor:default; }
 .tile.t-mouse img { filter: drop-shadow(0 -3px 4px rgba(185,190,195,.95)) drop-shadow(0 0 7px rgba(154,160,166,.60)); }
 .tile.t-jellyfish img { filter: drop-shadow(0 -3px 4px rgba(210,185,250,.95)) drop-shadow(0 0 7px rgba(193,166,237,.65)); }
 .tile.t-fox img { filter: drop-shadow(0 -3px 4px rgba(255,170,65,.95)) drop-shadow(0 0 7px rgba(255,140,26,.60)); }
-.tile.t-gift img { filter: drop-shadow(0 -3px 4px rgba(255,90,90,.95)) drop-shadow(0 0 7px rgba(255,190,60,.65)); } /* v31.97: hop qua — do + vang */
+.tile.t-gift img { filter: drop-shadow(0 -3px 4px rgba(255,90,90,.95)) drop-shadow(0 0 7px rgba(255,190,60,.65)); } /* v31.96: hop qua — do + vang */
 .tile img { width:105%; height:105%; margin:-2.5%; object-fit:cover; display:block; pointer-events:none; animation: tileSway 2.6s ease-in-out infinite; transform-origin: 50% 88%; } /* v31.76: dong dua/lac lu nhe (An 2026-11-14) — xoay ±2° quanh chan duoi, 2.6s, nhe nhang, khong chop/khong rung man hinh. v31.80: mat cac be TO HON NUA (An 2026-11-14, dong y cat vien trong suot) — phong to anh 120% trong o thay vi cat file goc (cat se cat mat tai/vay; phong to thi mat chiem ~91% o, vien trong suot hap thu phan tran nen khong de len o ke. v31.86: An gui anh iPad — dau to qua, de len dau ban ke — thu nho xuong 110% (mat ~0.81 o, van to hon v31.79) cho anh rong nhat (ca map/chuot) vua khit trong o, khong de. v31.87: An choi ban live — dau van hoi to — thu nho them xiu xuong 105% (mat ~0.77 o, van to hon v31.79), anh rong nhat gio nam 2.75%..97.25% trong o, co khoang ho ro rang. v31.88: tren iPad van to — do o iPad ~87px nen khe ho o 105% chi ~5px — rieng may tinh bang (600-1024px) xuong 100% (khe ho ~9px, mat ~64px van to ro), dien thoai giu 105%. */
 /* v31.88: An — tren iPad dau van to sau khi refresh — thu nho rieng cho may tinh bang (600-1024px): dau 100% (mat ~0.73 o, khe ho giua cac dau ~9px tren o ~87px), dien thoai giu 105%. v31.92: An — tren PC/laptop dau van to de len nhau — mo rong 100% ra moi man hinh >=600px. */
 @media (min-width: 600px) { .tile img { width:100%; height:100%; margin:0; } } /* v31.92: An — tren PC/laptop dau van to de len dau ban ke — mo rong luat 100% tu chi-may-tinh-bang (600-1024px) ra moi man hinh >=600px ke ca desktop: khe ho ~9.5px tren o ~95px hap thu duoc do lac tileSway, dien thoai (<600px) giu 105%. */
@@ -517,6 +517,7 @@ button:disabled { opacity:.55; cursor:default; }
   text-shadow: 1px 1px 0 #fff; pointer-events:none;
   animation: floatUp 0.9s ease-out forwards;
 }
+.float-score.big { font-size:30px; color:#ff9500; text-shadow: 0 0 6px #fff, 0 0 14px #ffd23f, 2px 2px 0 rgba(120,60,0,.6); } /* v32.00: so diem LON cho pha an lon (>=1000 diem) — so bay khap noi nhu video Soda Saga */
 @keyframes floatUp { from { opacity:1; transform: translate(-50%,0); } to { opacity:0; transform: translate(-50%,-46px); } }
 
 /* ---------- Explosion & lightning FX ---------- */
@@ -560,8 +561,8 @@ button:disabled { opacity:.55; cursor:default; }
 /* striped-candy beam: white-hot core with a warm gold glow, sweeping out from the candy.
    Thunder version: much stronger glow so the beam blazes across the row/column. */
 .fx-beam { position:absolute; z-index:24; pointer-events:none; }
-.fx-beam.h { left:0; width:100%; height:12.5%; background: linear-gradient(180deg, rgba(255,190,0,0) 0%, rgba(255,210,60,.8) 16%, #fffbe8 40%, #ffffff 50%, #fffbe8 60%, rgba(255,210,60,.8) 84%, rgba(255,190,0,0) 100%); box-shadow: 0 0 10px 2px rgba(255,200,40,.55); animation: beamSweepX .34s ease-out forwards; }
-.fx-beam.v { top:0; height:100%; width:12.5%; background: linear-gradient(90deg, rgba(255,190,0,0) 0%, rgba(255,210,60,.8) 16%, #fffbe8 40%, #ffffff 50%, #fffbe8 60%, rgba(255,210,60,.8) 84%, rgba(255,190,0,0) 100%); box-shadow: 0 0 10px 2px rgba(255,200,40,.55); animation: beamSweepY .34s ease-out forwards; }
+.fx-beam.h { left:0; width:100%; height:12.5%; background: linear-gradient(180deg, rgba(255,190,0,0) 0%, rgba(255,210,60,.95) 16%, #fffbe8 40%, #ffffff 50%, #fffbe8 60%, rgba(255,210,60,.95) 84%, rgba(255,190,0,0) 100%); box-shadow: 0 0 18px 6px rgba(255,200,40,.8), 0 0 34px 12px rgba(255,180,20,.45); animation: beamSweepX .34s ease-out forwards; } /* v32.00: tia SANG + DAY hon (An 00:01: tia set di manh va du) */
+.fx-beam.v { top:0; height:100%; width:12.5%; background: linear-gradient(90deg, rgba(255,190,0,0) 0%, rgba(255,210,60,.95) 16%, #fffbe8 40%, #ffffff 50%, #fffbe8 60%, rgba(255,210,60,.95) 84%, rgba(255,190,0,0) 100%); box-shadow: 0 0 18px 6px rgba(255,200,40,.8), 0 0 34px 12px rgba(255,180,20,.45); animation: beamSweepY .34s ease-out forwards; } /* v32.00: tia SANG + DAY hon */
 /* v31.53: 3 tia sang theo dung huong o trung nhau — moi tia mau cua ban
    thu trung (bien --c), mo dan roi tat dan (1 nhịp mem, khong nhap
    nhay). .fx-ray: tia DOC (cot sang doc tu tren dinh bang xuong toi o,
@@ -578,39 +579,39 @@ button:disabled { opacity:.55; cursor:default; }
 @keyframes rayDown { 0% { transform: scaleY(0); opacity:0; } 30% { transform: scaleY(1); opacity:1; } 100% { transform: scaleY(1); opacity:0; } }
 @keyframes rayAcross { 0% { transform: scaleX(0); opacity:0; } 30% { transform: scaleX(1); opacity:1; } 100% { transform: scaleX(1); opacity:0; } }
 /* v31.54: ban do chon man kieu Candy Crush — duong uon luon (SVG) qua cac node man; node so man, sao 2-3, ten vung dat; khoa man chua mo. */
-#mapScreen { position:fixed; inset:0; z-index:60; background:url("map-bg-candy-sides.jpg") center top/cover no-repeat, linear-gradient(180deg,#bfe8ff 0%,#ffe3f0 55%,#fff6e0 100%); /* v31.72: nen banh keo 2 ben, giua trong (An duyet 2026-11-14 — be ca giua da xoa) */ overflow:hidden; display:flex; flex-direction:column; }
-/* v31.67: landscape (PC/desktop ngang) — cover cat tron anh doc nen be ca o giua bi cat mat: background-position 38% giua tam cua so hien thi vao be ca (mat ~31-45% chieu cao anh). Portrait giu center top. */
-@media (orientation: landscape) { #mapScreen { background-position: center 38%; } }
+#mapScreen { position:fixed; inset:0; z-index:60; background:linear-gradient(180deg,#bfe8ff 0%,#ffe3f0 55%,#fff6e0 100%); /* v32.12: KHONG con anh nen rieng — nen ve (nap tren + o gach lap + dia ket) gio nam TREN #mapPath; man hinh chi con gradient bau troi lam nen duoi khung cuon */ overflow:hidden; display:flex; flex-direction:column; }
 #mapScreen.hidden { display:none; }
 .map-wrap { flex:1; display:flex; flex-direction:column; max-width:560px; width:100%; margin:0 auto; padding:16px 12px 12px; overflow:hidden; }
 .map-wrap h2 { text-align:center; font-size:1.5rem; color:#22405a; margin:4px 0 2px; text-shadow:0 1px 4px rgba(255,255,255,.95), 0 0 10px rgba(255,255,255,.85); }
 .map-total, .map-sub { text-shadow:0 1px 3px rgba(255,255,255,.95), 0 0 8px rgba(255,255,255,.85); }
 .map-total { text-align:center; font-weight:800; color:#b26a00; font-size:1rem; }
 .map-sub { text-align:center; font-size:.85rem; opacity:.75; color:#22405a; margin:2px 0 6px; }
-.map-scroll { flex:1; overflow-y:auto; position:relative; border-radius:18px; background:rgba(255,255,255,.08); padding:8px 0 96px; -webkit-overflow-scrolling:touch; } /* v31.97: dem duoi 16->96px de hang cuoi khong bi thanh nut duoi che; v31.95: overlay trang .15 -> .08 cho nut ro hon (An 2026-11-14: nut mo); v31.72: KHONG lam mo nua — nen moi giua trong */
-#mapPath { position:relative; padding-top:84px; } /* v31.97: tang tu 72px de be ca dung cao hon van hien tron dau (nhay len khong bi cat); v31.60: room above node 1 so the party (standing above its node) is fully visible, not hidden behind the header */
-#mapRoad { position:absolute; inset:0; width:100%; height:100%; pointer-events:none; z-index:0; filter:drop-shadow(0 0 6px rgba(255, 200, 80, .8)) drop-shadow(0 0 16px rgba(255, 190, 60, .4)); } /* v31.73: duong cau vong phat sang RO hon (test v31.71: glow cu 5px/.55 qua mo, mat thuong khong thay) */
-.map-row { height:110px; position:relative; z-index:1; } /* v31.68: row cao hon cho nut 72px + ten dat vua */
-.map-tree { position:absolute; top:42px; transform:translate(-50%,-50%); width:26px; height:33px; line-height:0; pointer-events:none; filter:drop-shadow(0 2px 2px rgba(34,64,90,.25)); z-index:0; } .map-tree svg { display:block; width:26px; height:33px; } /* v31.74: cay ve tay doc 2 ben duong — ngay tam nut (42px), bam theo duong */
-.map-node { position:absolute; top:6px; width:72px; height:72px; border-radius:50%; border:3px solid #fff; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:1.35rem; color:#fff; cursor:pointer; background:linear-gradient(180deg,#ffd23f 0%,#ff9500 70%,#e07b00 100%); text-shadow:0 2px 3px rgba(0,0,0,.3); box-shadow:0 7px 0 rgba(0,0,0,.16), 0 12px 20px rgba(34,64,90,.35), inset 0 3px 0 rgba(255,255,255,.65), inset 0 -7px 0 rgba(0,0,0,.14); }
+.map-scroll { flex:1; min-height:0; overflow-y:auto; overflow-x:hidden; position:relative; border-radius:18px; background:rgba(255,255,255,.08); scroll-behavior:smooth; padding:8px 0 96px; -webkit-overflow-scrolling:touch; } /* v32.06: HINH CHU NHAT TRO LAI (An 09:01: "bo cai vong tron ra cho duong no tu chay nhu vay duoc hông" — duyet lan doc v32.05, bo khung tron) — scroller doc binh thuong nhu live v31.97 (flex:1, border-radius:18px, nen kem .08, KHONG blur); duong LAN DOC van chay nhu cu (R = nua chieu cao khung nhin); quang halo + van cham bi + kinh tuyen + hat keo cua qua cau DA BO theo vong tron */
+#mapPath { position:relative; padding-top:84px; padding-bottom:320px; background-color:#fde6ee; } /* v32.14: nen hong phang G0 (253,230,238) — phan duoi o gach (sau dia ket) hien mau nay, trung mau nen o gach nen khong co moi noi. */ /* v32.13: them 320px duoi cung de nut 50 (tam y 6986) cuon len gan giua man hinh (cuon toi da alpha -0.23 o cao 800px, -0.59 o cao 640px) — vuong mien boss moi thay ro thay vi chi la vet cam; v32.17: o gach chi lap toi sau dia ket (tileEnd — ranh gioi dai), phan dem duoi dia la DAI DUOI (#mapRoadBottom — nen hong G0 + 5 cum keo bong gon TO, xem background-color o tren + lop moi). */ /* v32.06: MAT BAN DO — KHONG con vong tron (An 09:01: bo vong tron, duong tu chay); KHONG xoay nua (xoay mat phang rotateZ ±60 do da BO — An 01:08); nut LAN theo chieu DOC bang translate trong applyFisheye, duong + be ca nam tren mat ban do; v31.96: tang tu 72px de be ca dung cao hon van hien tron dau (nhay len khong bi cat); v31.60: room above node 1 so the party (standing above its node) is fully visible, not hidden behind the header */
+#mapRoadTop { position:absolute; top:0; left:0; right:0; background:url("map-road-top.jpg") center top/100% auto no-repeat; background-color:#fde6ee; z-index:1; pointer-events:none; } /* v32.14: them background-color G0 — neu trinh duyet lam tron chieu cao nap tren (topH = 850*s, vd 275.2px o rong 430) va de lai khe duoi-pixel giua nap va o gach, khe do hien G0 (trung mau nen 2 ben) chu khong hien gradient man hinh phia sau. */ /* v32.12: NAP TREN cua duong ve (cau vong + troi cyan + nui keo bong gon + cay keo o dau ban do, anh goc y 0-850, lau dai DA BO theo y An) — chieu cao dat bang JS (850 * ti le rong) de khop dung anh goc 1328x850; anh scale 100% rong nen khong meo; z-index 1 de nap luon tren o gach lap (neu 2 lop chong nhau luc JS chua chay). v32.14: anh cat lai — mo dai smoothstep y 720-790, duoi 790 la nen phang G0 (xem cut-road-assets-v32-14.py); duong vien day doi (y~789-792) da duoc xoa, moi noi (y=850) von da lien (cap row 846 == tile row 0 == G0). */
+#mapRoadTile { position:absolute; top:0; left:0; right:0; bottom:0; background:url("map-road-tile.jpg") center top/100% auto repeat-y; background-color:#fde6ee; z-index:0; pointer-events:none; } /* v32.14: them background-color G0 (ly do nhu nap tren). */ /* v32.12: O GACH LAP LAI cua duong ve (o gach 8 DAI 1328x2456: doan duong uon y 850-1157 lap lai 8 dai, dai le lat ngang — moi dai mang keo cua rieng no) — bat dau ngay duoi nap tren (top dat bang JS = 850 * ti le rong), lap doc toi sau dia ket (tileEnd, JS dat — ranh gioi dai, v32.17); moi lan lap cao 2456 * ti le rong (~795px o rong 430) nen canh lap lai ~8 lan doc ban do; mep tren cua o gach CHINH LA mep duoi cua nap tren (cung hang anh y=850) nen khong co moi noi o dau; nut nam tren duong ve qua mapRoadX. v32.23: BO KEO DOC DUONG (An 2026-11-15 18:49: "Thoi bo keo ra di co lam hoai cung vay a") — o gach + nap VE LAI KHONG KEO: 8 keo duong (4 gay + 4 mut) khoi o gach, keo mut trai + keo gay phai khoi nap; RUNG BONG GON GIU NGUYEN 100% (80 cum, 40 trai + 40 phai, khoang hong dai nhat 21 CSS px, phu 87.3% hang anh) + dai duoi chu U GIU NGUYEN (30 cum); duong rong mem 188-250px (cos), nen hong dong nhat G0 (xem cut-road-assets-v32-13.py). */
+#mapRoadBottom { position:absolute; top:0; left:0; right:0; background:url("map-road-bottom.jpg") center top/100% auto no-repeat; background-color:#fde6ee; z-index:0; pointer-events:none; } /* v32.17: DAI DUOI cua duong ve (nen hong G0 + 5 cum keo bong gon TO duoi dia ket — sua vung hong trong duoi dia ma browser check thay o v32.16) — bat dau ngay duoi o gach (top dat bang JS = tileEnd), cao 840 * ti le rong; nam DUOI dia ket (DOM order: truoc #mapRoadSwirl, cung z-index 0 nen dia ve sau nam tren); nen G0 de khe duoi-pixel hien G0. */
+#mapRoadSwirl { position:absolute; left:50%; transform:translateX(-50%); bottom:4px; width:88%; aspect-ratio:1140/252; background:url("map-road-swirl.jpg") center/cover no-repeat; border-radius:50%; z-index:0; pointer-events:none; } /* v32.12: DIA KET (keo xoan hong lon o cuoi anh goc, y 1300-1552) — dia ellipse nam duoi nut 50, nut 50 dung tren dia nhu dich den cuoi cung; nut z-index 1 nen nam TREN dia. */
+.map-row { height:140px; position:relative; z-index:1; } /* v32.13: row cao hon 110->140px (MAP_ROW_H) — ten nut (top:82px, ~52px duoi tam nut) khong con bi nut ke che khi lan: nut ke o rim chi cach 110*cos(alpha) ~ 40-56px, ten nam ~52px duoi tam nut nen bi che; 140px giu khoang cach lan luon duong o moi |alpha| <= 1.2 (mo hinh quet: v32.12 co 336 cap ten/nut chong nhau, v32.13 co 0). Nut VAN 72px, KHONG thu nho nut. */
+.map-node { position:absolute; top:6px; width:72px; height:72px; border-radius:50%; border:3px solid #fff; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:1.35rem; color:#fff; cursor:pointer; will-change:transform; background:linear-gradient(180deg,#ffd23f 0%,#ff9500 70%,#e07b00 100%); text-shadow:0 2px 3px rgba(0,0,0,.3); box-shadow:0 7px 0 rgba(0,0,0,.16), 0 12px 20px rgba(34,64,90,.35), inset 0 3px 0 rgba(255,255,255,.65), inset 0 -7px 0 rgba(0,0,0,.14); }
 .map-node::before { content:""; position:absolute; top:6px; left:10px; width:32px; height:19px; border-radius:50%; background:rgba(255,255,255,.55); filter:blur(1px); transform:rotate(-18deg); pointer-events:none; }
-.map-node:active, .map-node.pressed { transform:translateY(5px); box-shadow:0 1px 0 rgba(0,0,0,.16), 0 3px 8px rgba(34,64,90,.3), inset 0 2px 0 rgba(255,255,255,.6), inset 0 -5px 0 rgba(0,0,0,.12); } /* v31.71: lom xuong nhu phim ban phim (An 2026-11-14) — nut chim 5px, bong day gan nhu bien mat */
+.map-node:active, .map-node.pressed { margin-top:5px; box-shadow:0 1px 0 rgba(0,0,0,.16), 0 3px 8px rgba(34,64,90,.3), inset 0 2px 0 rgba(255,255,255,.6), inset 0 -5px 0 rgba(0,0,0,.12); } /* v32.00: lom xuong bang margin-top thay vi transform — transform cua nut gio do ong kinh mat ca giu nen nut van lom duoc khi an (truoc day transform inline cua fisheye chan mat hieu ung lom) */
 .map-node.done { background:linear-gradient(180deg,#5ee0a0 0%,#2ed573 70%,#1da85c 100%); }
-.map-node.current { background:linear-gradient(180deg,#ffe066 0%,#ffb700 55%,#ff9500 100%); outline:3px solid #ffd23f; outline-offset:2px; animation:mapPulse 1.2s ease-in-out infinite; } /* v31.97: nut hien tai — vang chi con la VIEN vang (+ 👑 + nhip dap), khong con lop vang phu orb (An 2026-11-14: nut man 1 mo vi lop vang + be ca che) */
+.map-node.current { background:linear-gradient(180deg,#ffe066 0%,#ffb700 55%,#ff9500 100%); outline:3px solid #ffd23f; outline-offset:2px; animation:mapPulse 1.2s ease-in-out infinite; } /* v31.96: nut hien tai — vang chi con la VIEN vang (+ 👑 + nhip dap), khong con lop vang phu orb (An 2026-11-14: nut man 1 mo vi lop vang + be ca che) */
 @keyframes mapPulse { 0%,100% { scale:1; } 50% { scale:1.12; } } /* v31.75: dung thuoc-tinh scale thay cho transform — animation mapPulse khong con chan transform:translateY(5px) cua :active/.pressed, nut man hien tai (do, dang nhap nhay) gio lom xuong duoc khi an (test v31.74: giu nut man 2 khong thay lom) */
 /* v31.55: doan be ca + cac be khoi vuong buoc di tren ban do (anh AI, nen trong suot). */
 /* v31.57: doan di — be ca map (mau cua game) dan dau, sau la 5 be
    dong vat KHOI VUONG (o tile cua game), vua di vua bouncy: moi be nay
    len lech nhau (stagger) nhu doan tau nay. */
-#mapParty { position:absolute; z-index:3; width:52px; pointer-events:none; transform:translate(-50%,-100%); display:flex; align-items:flex-end; justify-content:center; } /* v31.97: be ca nho lai (64->52px) de khong che orb nut hien tai; v31.61: only the shark girl walks now, so the party is just her */
+#mapParty { position:absolute; z-index:3; width:52px; pointer-events:none; transform:translate(-50%,-100%); transform-origin:50% 100%; display:flex; align-items:flex-end; justify-content:center; } /* v31.96: be ca nho lai (64->52px) de khong che orb nut hien tai; v31.61: only the shark girl walks now, so the party is just her */
 /* v31.69: anh sang vang theo be ca — vong sang tron mo o duoi chan be (tren duong, sau be), di den dau sang den do; nhip nhe, khong chop. */
-#mapParty::before { content:""; position:absolute; left:50%; top:100%; width:104px; height:104px; transform:translate(-50%,-50%); border-radius:50%; background:radial-gradient(circle, rgba(255, 240, 150, .5) 0%, rgba(255, 210, 90, .25) 32%, rgba(255, 200, 100, 0) 60%); pointer-events:none; z-index:-1; animation:mapLightPulse 2.2s ease-in-out infinite alternate; } /* v31.97: vong sang nho + mo hon (150px/.85 -> 104px/.5) de khong rua trang orb nut hien tai */
+#mapParty::before { content:""; position:absolute; left:50%; top:100%; width:104px; height:104px; transform:translate(-50%,-50%); border-radius:50%; background:radial-gradient(circle, rgba(255, 240, 150, .5) 0%, rgba(255, 210, 90, .25) 32%, rgba(255, 200, 100, 0) 60%); pointer-events:none; z-index:-1; animation:mapLightPulse 2.2s ease-in-out infinite alternate; } /* v31.96: vong sang nho + mo hon (150px/.85 -> 104px/.5) de khong rua trang orb nut hien tai */
 @keyframes mapLightPulse { from { opacity:.72; } to { opacity:.95; } }
 .map-candy { position:absolute; z-index:2; font-size:20px; line-height:1; pointer-events:none; transform:translate(-50%,-50%); filter:drop-shadow(0 2px 2px rgba(34,64,90,.3)); } /* v31.61: candies gliding on the road after the shark girl */
 #mapParty .map-party-baby { display:block; flex:0 0 auto; margin-left:-3px; filter:drop-shadow(0 3px 4px rgba(34,64,90,.3)); animation:partyHop .5s ease-in-out infinite alternate; }
 #mapParty .map-party-baby img { display:block; width:100%; height:auto; }
 /* v31.67: be ca MAP DI BO — sprite wave 10 khung tu video An gui (tiles/shark-girl-walk.png 960x182, khung 96x182, hien 48x91px). Span trong chi doi khung wave (100ms/khung, steps(1) de khung dung yen khong truot); bounce (partyHop/partyBob) van o span ngoai .map-party-baby. */
-#mapParty .map-walk-sprite { display:block; width:46px; height:87px; /* v31.97: nho lai (56x106 -> 46x87) de khong che orb; v31.68: to hon theo nut 72px */ background:url("tiles/shark-girl-walk.png") 0 0/1000% 100% no-repeat; animation:walkCycle 1s steps(1) infinite; }
+#mapParty .map-walk-sprite { display:block; width:46px; height:87px; /* v31.96: nho lai (56x106 -> 46x87) de khong che orb; v31.68: to hon theo nut 72px */ background:url("tiles/shark-girl-walk.png") 0 0/1000% 100% no-repeat; animation:walkCycle 1s steps(1) infinite; transform-origin:50% 100%; } /* v32.05: xoay nguoc da BO (khong con goc mat phang) — be dung thang san vi qua cau khong lac ngang nua; transform-origin 50% 100% giu lai (chan la neo) */
 @keyframes walkCycle { 0% { background-position:0% 0; } 10% { background-position:11.111% 0; } 20% { background-position:22.222% 0; } 30% { background-position:33.333% 0; } 40% { background-position:44.444% 0; } 50% { background-position:55.555% 0; } 60% { background-position:66.666% 0; } 70% { background-position:77.777% 0; } 80% { background-position:88.888% 0; } 90%,100% { background-position:100% 0; } }
 #mapParty .map-party-baby.leader { width:46px; margin-left:0; z-index:2; }
 #mapParty .map-party-baby.follower { width:28px; }
@@ -625,17 +626,23 @@ button:disabled { opacity:.55; cursor:default; }
 @keyframes partyHop { from { transform:translateY(0); } to { transform:translateY(-7px); } }
 @keyframes partyBob { from { transform:translateY(0); } to { transform:translateY(-3px); } }
 .map-node.locked { background:linear-gradient(180deg,#c3ccd6 0%,#8b95a5 70%,#6f7987 100%); cursor:not-allowed; font-size:1.1rem; }
-.map-node .crown { position:absolute; top:-28px; left:calc(50% + 34px); transform:translateX(-50%); font-size:.95rem; z-index:5; pointer-events:none; filter:drop-shadow(0 2px 2px rgba(34,64,90,.35)); } /* 2026-11-14 22:03: 👑 nut hien tai bi be ca che — doi sang phai + cao hon, z-index 5 (tren #mapParty z-index 3) */
-.map-node .boss-crown { position:absolute; top:-18px; left:50%; transform:translateX(-50%) rotate(-3deg); width:24px; height:22px; z-index:4; pointer-events:none; filter:drop-shadow(0 2px 2px rgba(34,64,90,.35)); } /* v31.97: vuong mien keo (SVG) cho man boss 10/20/30/40/50 — vang + ngoc keo deo nhieu mau + keo mut o dinh; nam tren dinh nut, khong che so man hay orb */
-.map-node .boss-crown svg { display:block; width:100%; height:100%; }
-.map-node.duo .crown { left:calc(50% - 34px); font-size:.95rem; } /* v31.97: man vua hien tai vua boss — 👑 lech trai, vuong mien keo lech phai, khong chong nhau, khong che be ca */
+.map-node .crown { position:absolute; top:-28px; left:calc(50% + 34px); transform:translateX(-50%); font-size:.95rem; z-index:5; pointer-events:none; filter:drop-shadow(0 0 6px rgba(255,210,80,.95)) drop-shadow(0 0 16px rgba(255,180,45,.6)) drop-shadow(0 2px 2px rgba(34,64,90,.35)); animation:crownGlowSoft 3s ease-in-out infinite; } /* v31.99: 👑 nut hien tai phat sang VUA (nhe hon vuong mien boss) — nhip cham 3s, KHONG chop (An 2026-11-14 23:52: van chua thay phat sang) */
+.map-node .boss-crown { position:absolute; top:-20px; left:50%; transform:translateX(-50%) rotate(-3deg); width:32px; height:30px; z-index:4; pointer-events:none; filter:drop-shadow(0 0 8px rgba(255,205,70,1)) drop-shadow(0 0 22px rgba(255,175,40,.75)) drop-shadow(0 0 36px rgba(255,160,30,.45)) drop-shadow(0 2px 2px rgba(34,64,90,.35)); animation:crownGlow 3s ease-in-out infinite; } /* v32.00: vuong mien keo man boss TO HON (24->32px) + dia hao quang vang dac — thay RO tren dien thoai (An 23:53 + kiem tra 00:01: van khong thay phat sang) — nhip cham 3s, KHONG chop */
+.map-node .boss-crown svg { display:block; width:100%; height:100%; position:relative; z-index:1; } /* v32.00: vuong mien nam TREN dia hao quang + tia (2 lop ::before/::after o duoi) */
+.map-node .boss-crown::before { content:""; position:absolute; left:50%; top:50%; width:56px; height:56px; margin:-28px 0 0 -28px; border-radius:50%; background:radial-gradient(circle, rgba(255,190,0,.95) 0%, rgba(255,170,25,.8) 30%, rgba(255,150,10,.4) 55%, rgba(255,150,10,0) 72%); pointer-events:none; animation:crownHaloPulse 3s ease-in-out infinite; } /* v32.00: DIA hao quang vang DAC sau vuong mien boss — thay ro tren nen kem (chi drop-shadow mo qua nhat, khong thay) */ /* v32.05: nhip sang bang opacity (re, compositor) thay cho doi filter */
+.map-node .boss-crown::after { content:""; position:absolute; left:50%; top:50%; width:78px; height:78px; margin:-39px 0 0 -39px; border-radius:50%; background:conic-gradient(from 0deg, rgba(255,205,70,.95) 0deg 16deg, rgba(255,205,70,0) 16deg 55deg, rgba(255,205,70,.55) 55deg 63deg, rgba(255,205,70,0) 63deg 120deg, rgba(255,205,70,.7) 120deg 132deg, rgba(255,205,70,0) 132deg 190deg, rgba(255,205,70,.45) 190deg 196deg, rgba(255,205,70,0) 196deg 250deg, rgba(255,205,70,.6) 250deg 260deg, rgba(255,205,70,0) 260deg 320deg, rgba(255,205,70,.4) 320deg 326deg, rgba(255,205,70,0) 326deg 360deg); -webkit-mask:radial-gradient(circle, rgba(0,0,0,.9) 0%, rgba(0,0,0,0) 68%); mask:radial-gradient(circle, rgba(0,0,0,.9) 0%, rgba(0,0,0,0) 68%); animation:crownRays 24s linear infinite; pointer-events:none; } @keyframes crownHaloPulse { 0%,100% { opacity:.85; } 50% { opacity:1; } } /* v32.05: nhip sang dia hao quang — CHI opacity (compositor), khong doi filter */
+/* v32.00: tia vang BAT DOI XUNG — 1 tia dai sang nhat (16 do) + cac tia ngan khac nhau, xoay 24s/vong NHIN THAY DUOC tia dai quet vong (ban cu 12 doan giong het nhau nen xoay khong thay gi) — cham, khong chop */
+.map-node.duo .crown { left:calc(50% - 34px); font-size:.95rem; } /* v31.96: man vua hien tai vua boss — 👑 lech trai, vuong mien keo lech phai, khong chong nhau, khong che be ca */
 .map-node.duo .boss-crown { left:calc(50% + 13px); }
+@keyframes crownGlow { 0%,100% { transform:translateX(-50%) rotate(-3deg) scale(1); } 50% { transform:translateX(-50%) rotate(-3deg) scale(1.12); } } /* v32.05: CHI SCALE (compositor) — KHONG doi filter nua: doi filter 4 drop-shadow moi frame tren 5 vuong mien la tac nhan lag chinh tren dien thoai (An 01:09: "Rat lag va cham luon"); glow tinh giu nguyen tren .boss-crown, nhip sang chuyen sang dia hao quang ::before (opacity, re) — nhin van sang dan/mo dan, khong chop */
+@keyframes crownRays { from { transform:rotate(0deg); } to { transform:rotate(360deg); } } /* v31.99: xoay tia vang 24s/vong — cham, deu, khong chop */
+@keyframes crownGlowSoft { 0%,100% { transform:translateX(-50%) scale(1); } 50% { transform:translateX(-50%) scale(1.08); } } /* v32.05: CHI SCALE (compositor) — nhu crownGlow: khong doi filter nua (lag) */
 .map-node .lock { font-size:1.2rem; }
 .map-node .lock-badge { position:absolute; right:-7px; bottom:-7px; font-size:.95rem; line-height:1; } /* v31.60: locked nodes keep their number; the lock becomes a small corner badge */
 .map-node .map-land-img { position:absolute; inset:3px; border-radius:50%; background-image:url(map-nodes/glass-orbs-nodes.jpg); background-size:5000% 100%; background-repeat:no-repeat; filter:saturate(1.55) contrast(1.12); } /* v31.95: saturate 1.45->1.55, contrast 1.07->1.12 (An: nut mo); v31.94: the node IS its level's hand-drawn glass orb (An approved the 50-orb set 2026-11-14); inset 3px so the state colour still shows as a ring */
 .map-node .map-land-img::after { content:""; position:absolute; inset:0; border-radius:50%; pointer-events:none; background:radial-gradient(circle at 30% 20%, rgba(255,255,255,1) 0%, rgba(255,255,255,.55) 14%, rgba(255,255,255,.12) 26%, rgba(255,255,255,0) 35%), radial-gradient(circle at 50% 118%, rgba(255,255,255,.55) 0%, rgba(255,255,255,0) 42%); box-shadow:inset 0 -6px 10px rgba(0,0,0,.22), inset 0 4px 6px rgba(255,255,255,.35); } /* v31.95: specular nho gon + sac net hon (tan het o 35% thay vi 55%), vien sang duoi manh hon .4->.55, bong trang tren giam .55->.35 (An 2026-11-14: nut mo); v31.90: glass-mirror dome — round & shiny like a glass lollipop */
 .map-node.locked .map-land-img { filter:grayscale(1) contrast(1.12); opacity:.68; } /* v31.95: locked opacity .55->.68 + contrast 1.12 cho hinh khoa ro hon (van xam + vong xam + khoa, van nhan ra la khoa); locked: the orb picture is greyed out */
-.map-node.current .map-land-img { filter:saturate(1.55) contrast(1.12); opacity:1; } /* v31.97: orb nut hien tai hien day du do bong nhu nut khoa (khong bi lop vang lam nhat) */
+.map-node.current .map-land-img { filter:saturate(1.55) contrast(1.12); opacity:1; } /* v31.96: orb nut hien tai hien day du do bong nhu nut khoa (khong bi lop vang lam nhat) */
 .map-node .map-num { position:absolute; top:-7px; left:-7px; min-width:22px; height:22px; padding:0 4px; border-radius:10px; background:#22405a; color:#fff; font-size:.72rem; font-weight:900; display:flex; align-items:center; justify-content:center; border:2px solid #fff; box-sizing:border-box; } /* v31.62: level number as a small corner badge */
 .map-node .map-story { position:absolute; top:-8px; right:-8px; font-size:.9rem; }
 .map-stars { position:absolute; top:52px; left:50%; transform:translateX(-50%); font-size:.85rem; letter-spacing:1px; color:#ffd23f; text-shadow:0 1px 2px rgba(0,0,0,.35), 0 0 3px rgba(255,255,255,.6); white-space:nowrap; }
@@ -839,7 +846,7 @@ input[type=text]:focus { border-color:#ff5c8a; }
 #devCredit { position:absolute; left:0; right:0; bottom:0.32cm; text-align:center; font-size:10px; font-weight:600; letter-spacing:.2px; color:rgba(255,255,255,.92); text-shadow:0 1px 3px rgba(0,0,0,.35); pointer-events:none; z-index:5; }
 /* v31.40: cá heo Flow pastel đưa lại vào game (An yêu cầu 2026-11-14) */
 /* v31.51: moi man la 1 vung dat rieng — man + qua toi man 25, glow tung o, truyen viet lai (An 2026-11-14). LIVE. */
-/* v31.74: cay VE TAY doc 2 ben DUONG (An sua 2026-11-14) — cay bam theo duong (nut ±16%), khong phai hang cay vien background; bo emoji. LIVE v31.97. */
+/* v31.74: cay VE TAY doc 2 ben DUONG (An sua 2026-11-14) — cay bam theo duong (nut ±16%), khong phai hang cay vien background; bo emoji. LIVE v32.23. */
 /* v30: story chapters — full-screen card before levels 1/3/5/8.
    z-index 60 sits above the transition overlay (55); the level timer
    only starts after the player taps Play, so reading costs no time. */
@@ -1669,6 +1676,9 @@ function levelConfig(level) {
   var r = seededRand(level * 7 + 13);
   var target = Math.round((15000 + (level - 1) * 5000 + r * 2000) / 100) * 100;
   var moves = Math.max(60, 100 - (level - 1) * 3);
+  /* v32.00 (An 2026-11-15 00:04 — man 1-50 van de + nhanh qua): kho dan theo cap do — man 1-10: muc tieu +10%, luot -5; man 11-50: muc tieu +22%, luot -10; luot san 50. L1 17800/95, L10 67500/68, L30 195600/50, L50 477200/120 (x1.5 tren muc tieu moi). */
+  if (level <= 10) { target = Math.round(target * 1.10 / 100) * 100; moves = Math.max(50, moves - 5); }
+  else { target = Math.round(target * 1.22 / 100) * 100; moves = Math.max(50, moves - 10); }
   /* v31.86 (An 2026-11-14 — man 50 la man cuoi DAI + KHO: me An choi le qua):
      man 50 duoc 120 luot (gap doi) + muc tieu x1.5 (~390.000), choi lau ma kho thang. */
   if (level === 50) { target = Math.round(target * 1.5 / 100) * 100; moves = 120; }
@@ -1708,7 +1718,7 @@ var QUESTS = {
   8: { kind: "jelly", target: 6, icon: "🍮", label: { vi: "Phá kẹo dẻo", en: "Clear jelly" } },
   9: { kind: "bomb", target: 2, icon: "💣", label: { vi: "Nổ bom sói", en: "Detonate wolf bombs" } },
   10: { kind: "boss", target: 12, icon: "👾", label: { vi: "Đánh bại Quái Kẹo Dẻo", en: "Defeat the Jelly Monster" } },
-  /* v31.97: nhiem vu man 11-20 (Order — thu du mon theo vung dat). Man 12/18/24 la
+  /* v31.96: nhiem vu man 11-20 (Order — thu du mon theo vung dat). Man 12/18/24 la
      nhiem vu nguyen lieu (tha qua xuong day) thay cho nhiem vu thu thuong. */
   11: { kind: "type", type: "mouse", target: 12, icon: "🐭", label: { vi: "Ăn chuột", en: "Clear mice" } },
   12: { kind: "ingredient", target: 2, icon: "🎁", label: { vi: "Thả quà xuống đáy", en: "Drop gifts to the bottom" } },
@@ -1748,7 +1758,7 @@ function questProgress() {
   return 0;
 }
 function questDone() {
-  if (!state.quest) return true; /* v31.97: nhiem vu mo rong toi man 20 (truoc chi toi man 10) */
+  if (!state.quest) return true; /* v31.96: nhiem vu mo rong toi man 20 (truoc chi toi man 10) */
   return questProgress() >= state.quest.target;
 }
 function questText() {
@@ -1907,7 +1917,7 @@ var state = {
   quest: null,
   bossHP: 0,
   questToastShown: false,
-  /* v31.97: qua nguyen lieu (man 12/18/24) — roi xuong day de thu */
+  /* v31.96: qua nguyen lieu (man 12/18/24) — roi xuong day de thu */
   ingDropped: 0,
   ingTotal: 0
 };
@@ -1950,7 +1960,7 @@ function findMatches(b) {
     c = 0;
     while (c < COLS) {
       var t0 = b[r][c];
-      if (!t0 || t0.type === "rainbow" || t0.type === "bomb" || t0.type === "eagle" || t0.type === "gift") { c++; continue; } /* v31.97: hop qua khong ghep duoc */
+      if (!t0 || t0.type === "rainbow" || t0.type === "bomb" || t0.type === "eagle" || t0.type === "gift") { c++; continue; } /* v31.96: hop qua khong ghep duoc */
       len = 1;
       while (c + len < COLS && b[r][c+len] && b[r][c+len].type === t0.type) len++;
       if (len >= 3) {
@@ -1965,7 +1975,7 @@ function findMatches(b) {
     r = 0;
     while (r < ROWS) {
       var t1 = b[r][c];
-      if (!t1 || t1.type === "rainbow" || t1.type === "bomb" || t1.type === "eagle" || t1.type === "gift") { r++; continue; } /* v31.97: hop qua khong ghep duoc */
+      if (!t1 || t1.type === "rainbow" || t1.type === "bomb" || t1.type === "eagle" || t1.type === "gift") { r++; continue; } /* v31.96: hop qua khong ghep duoc */
       len = 1;
       while (r + len < ROWS && b[r+len][c] && b[r+len][c].type === t1.type) len++;
       if (len >= 3) {
@@ -2007,7 +2017,7 @@ function hasValidMove(b) {
       var r2 = r + dirs[d][0], c2 = c + dirs[d][1];
       if (!inBoard(r2, c2)) continue;
       var a = b[r][c], bb = b[r2][c2];
-      if (a && bb && a.special && bb.special) return true; /* v31.97: hai keo dac biet canh nhau luon doi duoc (combo) */
+      if (a && bb && a.special && bb.special) return true; /* v31.96: hai keo dac biet canh nhau luon doi duoc (combo) */
       if (!a || !bb || a.type === "bomb" || bb.type === "bomb" || a.type === "eagle" || bb.type === "eagle" || a.type === "gift" || bb.type === "gift") continue;
       b[r][c] = bb; b[r2][c2] = a;
       var m = findMatches(b).runs.length > 0;
@@ -2092,7 +2102,7 @@ function rateFor(len) { return len === 3 ? 60 : len === 4 ? 120 : 200; }
 /* Expand a clear set with special effects. Returns {cells:Set(keys), wrappedHits:[[r,c]], effects:[names], strikes:[[r,c]], beams:[{dir,line,from}], rainbows:[{from,cells}]} */
 function expandClear(initialCells) {
   var cells = {}, queue = [], wrappedHits = [], effects = [], strikes = [], beams = [], rainbows = [];
-  initialCells.forEach(function(cell) { var __st = state.board[cell[0]] && state.board[cell[0]][cell[1]]; if (__st && __st.type === "gift") return; cells[cell[0] + "," + cell[1]] = cell; queue.push(cell); }); /* v31.97: hop qua khong bi hieu ung cuon theo */
+  initialCells.forEach(function(cell) { var __st = state.board[cell[0]] && state.board[cell[0]][cell[1]]; if (__st && __st.type === "gift") return; cells[cell[0] + "," + cell[1]] = cell; queue.push(cell); }); /* v31.96: hop qua khong bi hieu ung cuon theo */
   var processed = {};
   while (queue.length) {
     var cell = queue.shift();
@@ -2158,7 +2168,7 @@ async function bounceThenPop(cells) {
 async function resolveBoard(swapPos, quiet) {
   var total = 0, cascade = 0;
   while (true) {
-    if (await collectGifts()) continue; /* v31.97: hop qua vua roi xuong day — thu roi nap lai truoc khi tim match */
+    if (await collectGifts()) continue; /* v31.96: hop qua vua roi xuong day — thu roi nap lai truoc khi tim match */
     var found = findMatches(state.board);
     if (found.runs.length === 0) break;
     cascade++;
@@ -2227,6 +2237,8 @@ async function resolveBoard(swapPos, quiet) {
     state.score += stepScore;
     updateHUD();
     showFloatScore(stepScore, clearCells);
+    /* v32.00: so diem bay KHAP NOI — moi run hien them so rieng cua no (tren tong buoc), so lon (>=1000) hien TO hon */
+    found.runs.forEach(function(run) { showFloatScore(run.len * rateFor(run.len) * mult * state.scoreMult, run.cells); });
     /* Play effects: Candy Crush bubble pop (pitch climbs with the cascade) + praise word + jingle on chained cascades */
     AudioEng.sfx("candyPop", { cascade: cascade });
     if (cascade >= 2) { if (!quiet) showPraiseText(cascade); AudioEng.sfx("praiseJingle", { cascade: cascade }); }
@@ -2278,10 +2290,12 @@ async function resolveBoard(swapPos, quiet) {
     found.runs.forEach(function(run) { run.cells.forEach(function(cell) { tilePts[cell[0] + "," + cell[1]] = rateFor(run.len); }); });
     extraCells.forEach(function(k) { if (!tilePts[k]) tilePts[k] = 60; });
     var ptsFor = function(cell) { return tilePts[cell[0] + "," + cell[1]] || 60; };
-    if (!quiet) expanded.beams.forEach(function(bm) { stripedBeam(bm, ptsFor); });
-    if (!quiet) expanded.rainbows.forEach(function(rb) { rainbowLightning(rb.from, rb.cells, ptsFor); });
+    if (!quiet) expanded.beams.forEach(function(bm) { stripedBeamBurst(bm, ptsFor, expanded.beams.length <= 2 ? 3 : 2); }); /* v32.00: tia soc don dap — 3 tia neu it tia, 2 tia neu nhieu tia */
+    if (!quiet) expanded.rainbows.forEach(function(rb) { rainbowLightningBurst(rb.from, rb.cells, ptsFor); }); /* v32.00: set cau vong 2 dot lech 90ms */
     /* Big bright beam when one clear step eats many tiles at once (8+). */
     if (!quiet && Object.keys(expanded.cells).length >= 8) bigBeam(Object.keys(expanded.cells).map(function(k) { return expanded.cells[k]; }));
+    /* v32.00: keo goi (wrapped) no DON DAP — 1 lan no phu lech 80ms ngay trong dot (khong chop them, khong goi them tieng) */
+    if (!quiet && expanded.wrappedHits.length) { setTimeout(function() { explosionAt(expanded.wrappedHits, "fox", { text: false, count: 10, color: "#ffd23f", noFlash: true, quiet: true }); }, 80); }
     /* Screen shake removed: it gave An eye strain and headaches. No shake
        anywhere in the game now; flashes, confetti and sounds stay. */
     /* Special activations strike lightning at the special tiles (at least 2 bolts) */
@@ -2290,7 +2304,7 @@ async function resolveBoard(swapPos, quiet) {
       if (boltCells.length < 2 && clearCells.length) {
         boltCells.push(clearCells[Math.floor(Math.random() * clearCells.length)]);
       }
-      if (!quiet) lightningTo(boltCells); /* v31.93: cascade lang */
+      if (!quiet) { lightningTo(boltCells); setTimeout(function() { lightningTo(boltCells); }, 60); } /* v32.00: set danh DON DAP — 2 lan set lech 60ms (chi chop bang, khong chop man hinh); v31.93: cascade lang */
     }
     /* Bounce the matched tiles happily, then pop them */
     var keys = Object.keys(expanded.cells);
@@ -2371,7 +2385,7 @@ function pickRefillType(r, c) {
     var opts = [];
     [[r+1,c],[r+2,c],[r,c-1],[r,c-2]].forEach(function(p) {
       var tl = inBoard(p[0], p[1]) && b[p[0]][p[1]];
-      if (tl && tl.type !== "rainbow" && tl.type !== "bomb" && tl.type !== "eagle" && tl.type !== "gift") opts.push(tl.type); /* v31.97: khong nap them hop qua */
+      if (tl && tl.type !== "rainbow" && tl.type !== "bomb" && tl.type !== "eagle" && tl.type !== "gift") opts.push(tl.type); /* v31.96: khong nap them hop qua */
     });
     for (var i = opts.length - 1; i > 0; i--) {
       var j = Math.floor(Math.random() * (i + 1));
@@ -2441,12 +2455,12 @@ async function doRainbowSwap(r1, c1, r2, c2) {
   var rb = state.board[r1][c1] && state.board[r1][c1].special === "rainbow" ? [r1, c1] : [r2, c2];
   var other = (rb[0] === r1 && rb[1] === c1) ? [r2, c2] : [r1, c1];
   var otherTile = state.board[other[0]][other[1]];
-  /* v31.97: cau vong + cau vong — ca ban no sach theo dot (khong dai bang, khong sam) */
+  /* v31.96: cau vong + cau vong — ca ban no sach theo dot (khong dai bang, khong sam) */
   if (otherTile && otherTile.special === "rainbow") { await detonateRainbowPair(); return; }
   var targetType = otherTile ? otherTile.type : null;
-  var clearCells = (otherTile && otherTile.type === "gift") ? [rb] : [rb, other]; /* v31.97: hop qua khong bi cau vong an — chi cau vong bien mat */
+  var clearCells = (otherTile && otherTile.type === "gift") ? [rb] : [rb, other]; /* v31.96: hop qua khong bi cau vong an — chi cau vong bien mat */
   var __pairClear = clearCells.slice();
-  /* v31.97: hop qua khong phai mau keo — cau vong khong cuon qua theo */
+  /* v31.96: hop qua khong phai mau keo — cau vong khong cuon qua theo */
   if (targetType && targetType !== "rainbow" && ANIMALS.indexOf(targetType) >= 0) {
     for (var r = 0; r < ROWS; r++) for (var c = 0; c < COLS; c++) {
       var tl = state.board[r][c];
@@ -2455,7 +2469,7 @@ async function doRainbowSwap(r1, c1, r2, c2) {
   }
   var chainedBeams = [];
   if (otherTile && (otherTile.special === "h" || otherTile.special === "v")) {
-    /* v31.97: cau vong + soc — moi o cung mau bien thanh soc roi cung no */
+    /* v31.96: cau vong + soc — moi o cung mau bien thanh soc roi cung no */
     var __dir = otherTile.special;
     var __seeds = [];
     for (var __r = 0; __r < ROWS; __r++) for (var __c = 0; __c < COLS; __c++) {
@@ -2485,9 +2499,9 @@ async function doRainbowSwap(r1, c1, r2, c2) {
   showFloatScore(pts, list);
   AudioEng.sfx("rainbow");
   lightningTo([rb, other]);
-  rainbowLightning(rb, list, function() { return 60; });
+  rainbowLightningBurst(rb, list, function() { return 60; }); /* v32.00: set cau vong 2 dot don dap */
   bigBeam(list); /* rainbow clears are usually 8+ tiles: big bright beam */
-  chainedBeams.forEach(function(bm) { stripedBeam(bm, function() { return 60; }); });
+  chainedBeams.forEach(function(bm) { stripedBeamBurst(bm, function() { return 60; }, 2); }); /* v32.00: tia soc don dap (2 tia — nhieu tia ghep nen moi tia chi lap 1 lan) */
   burstCells(list, 10, BURST_CAP_RAINBOW); /* rainbow clear bursts in each tile's own color */
   list.forEach(function(cell) { var el = tileEl(cell[0], cell[1]); if (el) el.classList.add("pop"); });
   await sleep(210);
@@ -2508,7 +2522,7 @@ async function trySwap(r1, c1, r2, c2) {
   var a = state.board[r1][c1], b = state.board[r2][c2];
   if (!a || !b) return;
   if (a.type === "bomb" || b.type === "bomb") return; /* only the wolf bomb is dragged, never swapped; the eagle IS swapped (it clears the whole board) */
-  if (a.type === "gift" || b.type === "gift") return; /* v31.97: hop qua khong doi cho duoc */
+  if (a.type === "gift" || b.type === "gift") return; /* v31.96: hop qua khong doi cho duoc */
   state.busy = true;
   state.selected = null; renderSelection();
   /* animate the swap */
@@ -2526,7 +2540,7 @@ async function trySwap(r1, c1, r2, c2) {
     state.busy = false;
     return;
   }
-  /* v31.97: hai keo dac biet doi nhau — combo (soc/soc, soc/goi, goi/goi) */
+  /* v31.96: hai keo dac biet doi nhau — combo (soc/soc, soc/goi, goi/goi) */
   if (a.special && b.special && a.special !== "rainbow" && b.special !== "rainbow") {
     state.moves--;
     updateHUD();
@@ -2565,7 +2579,7 @@ function afterTurn() {
   /* v31.89 demo: man 1-10 thang can DU DIEM + XONG NHIEM VU; neu du diem
      ma chua xong nhiem vu thi choi tiep (luot/dong ho van gioi han). */
   if (state.score >= state.target) {
-    if (questDone() && ingDone()) { endLevel(true); return; } /* v31.97: thang can du diem + xong nhiem vu + tha het qua */
+    if (questDone() && ingDone()) { endLevel(true); return; } /* v31.96: thang can du diem + xong nhiem vu + tha het qua */
     if (!state.questToastShown) {
       state.questToastShown = true;
       showToast(!ingDone() ? (LANG === "vi" ? "Đủ điểm rồi — thả hết quà xuống đáy để thắng!" : "Target reached — drop all gifts to the bottom to win!") : (LANG === "vi" ? "Đủ điểm rồi — hoàn thành nhiệm vụ để thắng!" : "Target reached — finish the quest to win!"));
@@ -2672,7 +2686,7 @@ async function detonateBomb(target, from) {
     if (tl && tl.type === type) addCell(r, c);
   }
   addCell(from[0], from[1]); /* the bomb itself is consumed */
-  /* v31.97: bom soi + keo dac biet — moi o cung mau bien thanh keo dac biet do roi cung no */
+  /* v31.96: bom soi + keo dac biet — moi o cung mau bien thanh keo dac biet do roi cung no */
   if (targetTl && (targetTl.special === "h" || targetTl.special === "v" || targetTl.special === "wrapped" || targetTl.special === "rainbow")) {
     var __conv = targetTl.special === "rainbow" ? "h" : targetTl.special;
     var __bseeds = [];
@@ -2684,7 +2698,7 @@ async function detonateBomb(target, from) {
     renderBoard(false); /* cho thay cac o doi mau truoc khi no */
     var __bexp = expandClear(__bseeds);
     Object.keys(__bexp.cells).forEach(function(k) { addCell(__bexp.cells[k][0], __bexp.cells[k][1]); });
-    __bexp.beams.forEach(function(bm) { stripedBeam(bm, function() { return 60; }); });
+    __bexp.beams.forEach(function(bm) { stripedBeamBurst(bm, function() { return 60; }, 2); }); /* v32.00: tia soc don dap */
     if (state.level === 10) damageBoss(3);
   }
   /* v31.89: deo trong vung no nut truoc; chinh qua bom luon bi tieu thu. */
@@ -2695,7 +2709,7 @@ async function detonateBomb(target, from) {
   updateHUD();
   showFloatScore(pts, list);
   /* Thunder lightning arcs from the bomb to every exploded tile */
-  rainbowLightning(from, list, function() { return 60; });
+  rainbowLightningBurst(from, list, function() { return 60; }); /* v32.00: set don dap 2 dot */
   /* Big bright beam when many tiles clear at once (bomb clears usually 10+) */
   bigBeam(list);
   explosionAt(list, type, { count: 25, max: 180, text: true }); /* v26: was { count: 80, max: 650 } — up to 650 particles lagged the bomb */
@@ -2793,7 +2807,7 @@ async function detonateEagleFull() {
     var j = Math.floor(Math.random() * (i + 1));
     var tmp = cells[i]; cells[i] = cells[j]; cells[j] = tmp;
   }
-  cells = cells.filter(function(cell) { var __et = state.board[cell[0]] && state.board[cell[0]][cell[1]]; return !__et || __et.type !== "gift"; }); /* v31.97: set khong danh hop qua — qua chi thu khi roi xuong day */
+  cells = cells.filter(function(cell) { var __et = state.board[cell[0]] && state.board[cell[0]][cell[1]]; return !__et || __et.type !== "gift"; }); /* v31.96: set khong danh hop qua — qua chi thu khi roi xuong day */
   var waves = [], perWave = 8;
   for (var k = 0; k < cells.length; k += perWave) waves.push(cells.slice(k, k + perWave));
   showEagleFly(); /* dai bang bay vuot qua bang truoc khi set danh */
@@ -2852,7 +2866,7 @@ function specialClass(tl) {
 }
 function badgeFor(tl) {
   if (tl.type === "eagle") return "⚡";
-  if (tl.type === "gift") return "🎁"; /* v31.97: hop qua co nhan rieng */
+  if (tl.type === "gift") return "🎁"; /* v31.96: hop qua co nhan rieng */
   if (tl.special === "h") return "↔";
   if (tl.special === "v") return "↕";
   if (tl.special === "wrapped") return "🎀";
@@ -3025,7 +3039,7 @@ function showFloatScore(points, cells) {
   cells.forEach(function(cell) { sr += cell[0]; sc += cell[1]; });
   sr /= cells.length; sc /= cells.length;
   var div = document.createElement("div");
-  div.className = "float-score";
+  div.className = "float-score" + (points >= 1000 ? " big" : ""); /* v32.00: diem lon (>=1000) hien so TO hon */
   div.textContent = "+" + points;
   div.style.left = ((sc + 0.5) * 12.5) + "%";
   div.style.top = ((sr + 0.5) * 12.5) + "%";
@@ -3313,8 +3327,8 @@ function explosionAt(cells, type, opts) {
     cells.forEach(function(cell) { sr += cell[0]; sc += cell[1]; });
     showBoomText((sc / cells.length + 0.5) * 12.5, (sr / cells.length + 0.5) * 12.5);
   }
-  flashScreen();
-  AudioEng.sfx("boom");
+  if (!opts.noFlash) flashScreen(); /* v32.00: no lan lap lai (noFlash) khong chop them — chi lan dau chop 1 lan */
+  if (!opts.quiet) AudioEng.sfx("boom"); /* v32.00: lan lap lai (quiet) khong goi them tieng no */
 }
 function lightningTo(cells) {
   var layer = fxLayer(); if (!layer || !cells || !cells.length) return;
@@ -3382,7 +3396,8 @@ function showTileScores(cells, ptsFor) {
 /* Striped-candy beam: a white-hot, gold-glowing beam sweeping out from the striped
    candy across its whole row (h) or column (v), with sparkles along it. The tiles
    in the beam flash bright, pop a gold score number, then explode as usual. */
-function stripedBeam(beam, ptsFor) {
+function stripedBeam(beam, ptsFor, opts) {
+  opts = opts || {}; /* v32.00: noFlash = tia phu lap lai khong chop man hinh them; noScores = tia phu khong hien them so (so chi o tia dau, tranh day man hinh) */
   var layer = fxLayer(); if (!layer) return;
   var cells = [];
   if (beam.dir === "h") { for (var cc = 0; cc < COLS; cc++) cells.push([beam.line, cc]); }
@@ -3397,14 +3412,21 @@ function stripedBeam(beam, ptsFor) {
     div.style.transformOrigin = "50% " + ((beam.from[0] + 0.5) * 12.5) + "%";
   }
   layer.appendChild(div);
-  flashScreen();
+  if (!opts.noFlash) flashScreen();
   setTimeout(function() { if (div.parentNode) div.parentNode.removeChild(div); }, 420);
   for (var i = 0; i < 5; i++) {
     var cell = cells[Math.floor(Math.random() * cells.length)];
     spawnStar(layer, (cell[1] + 0.5) * 12.5 + (Math.random() * 6 - 3), (cell[0] + 0.5) * 12.5 + (Math.random() * 6 - 3));
   }
   flashTiles(cells);
-  showTileScores(cells, ptsFor);
+  if (!opts.noScores) showTileScores(cells, ptsFor);
+}
+/* v32.00: tia soc DON DAP — 1 tia chinh + 1-2 tia phu chong len nhau (lech 70/140ms) nhu video Soda Saga: tia set di lien tuc khong khoang nghi. Chi tia dau chop man hinh + hien so; tia phu chi them anh sang (khong chop, khong them so) de khong chop trang lien tuc — mat An khong chiu duoc chop. */
+function stripedBeamBurst(beam, ptsFor, count) {
+  count = count || 2;
+  stripedBeam(beam, ptsFor);
+  setTimeout(function() { stripedBeam(beam, ptsFor, { noFlash: true, noScores: true }); }, 70);
+  if (count >= 3) setTimeout(function() { stripedBeam(beam, ptsFor, { noFlash: true, noScores: true }); }, 140);
 }
 /* Big bright beam for many-tile clears (8+ tiles in one clear step): a bright
    white-pink cross of light through the cleared area, with sparkles and shattered
@@ -3451,7 +3473,8 @@ function addBoltPath(svg, d, stroke, width, opacity) {
 /* Rainbow-candy lightning: bright blue-white jagged bolts arcing from the rainbow
    candy to every candy it clears, with short branch offshoots and a flicker.
    Clearly different from the warm gold striped beam. */
-function rainbowLightning(fromCell, cells, ptsFor) {
+function rainbowLightning(fromCell, cells, ptsFor, opts) {
+  opts = opts || {}; /* v32.00: noFlash = dot set thu 2 khong chop them; quiet = dot 2 khong goi lai tieng sam */
   var layer = fxLayer(); if (!layer || !cells || !cells.length) return;
   var targets = cells.filter(function(cell) { return !(cell[0] === fromCell[0] && cell[1] === fromCell[1]); });
   if (!targets.length) return;
@@ -3506,8 +3529,8 @@ function rainbowLightning(fromCell, cells, ptsFor) {
     }
   });
   layer.appendChild(svg);
-  flashScreen(); flashBoard();
-  AudioEng.sfx("thunder");
+  if (!opts.noFlash) { flashScreen(); flashBoard(); }
+  if (!opts.quiet) AudioEng.sfx("thunder");
   var anim = svg.animate([
     { opacity: 1 }, { opacity: 0.3, offset: 0.25 }, { opacity: 1, offset: 0.45 }, { opacity: 0.4, offset: 0.7 }, { opacity: 0 }
   ], { duration: 480, easing: "ease-out" });
@@ -3515,6 +3538,13 @@ function rainbowLightning(fromCell, cells, ptsFor) {
   setTimeout(function() { if (svg.parentNode) svg.parentNode.removeChild(svg); }, 500);
   flashTiles(targets);
   showTileScores(targets, ptsFor);
+}
+/* v32.00: set cau vong DON DAP — chia muc tieu thanh 2 dot: dot 1 ngay lap tuc, dot 2 lech 90ms (khong chop them, khong goi lai tieng sam) — tia set di lien tuc nhu video Soda Saga. */
+function rainbowLightningBurst(fromCell, cells, ptsFor) {
+  if (!cells || cells.length < 2) { rainbowLightning(fromCell, cells, ptsFor); return; }
+  var half = Math.ceil(cells.length / 2);
+  rainbowLightning(fromCell, cells.slice(0, half), ptsFor);
+  setTimeout(function() { rainbowLightning(fromCell, cells.slice(half), ptsFor, { noFlash: true, quiet: true }); }, 90);
 }
 /* Icy blue full-screen flash for thunder strikes */
 function flashThunder() {
@@ -3895,7 +3925,7 @@ function updateHUD() {
   var pct = Math.min(100, Math.round(state.score / state.target * 100));
   document.getElementById("progressFill").style.width = pct + "%";
   /* v31.89: dong nhiem vu + thanh HP boss (chi man 1-10) */
-  /* v31.97: man co qua nguyen lieu — dong qua thay cho dong nhiem vu */
+  /* v31.96: man co qua nguyen lieu — dong qua thay cho dong nhiem vu */
   var ql = document.getElementById("questLine");
   var il = document.getElementById("ingLine");
   if (state.ingTotal) {
@@ -4033,9 +4063,15 @@ function speakLetsGo() {
 function showTransition(fromLevel) {
   var next = fromLevel + 1;
   var ov = document.getElementById("transitionScreen");
-  /* v31.67: preload nen map (451KB) trong luc tau chay 3.9s, de mo map khong phai cho tai. */
+  /* v32.17: preload 4 anh nen ve (nap tren + o gach lap + dia ket + dai duoi) trong luc tau chay 3.9s, de mo map khong phai cho tai. */
   window.__mapBgPreload = new Image();
-  window.__mapBgPreload.src = "map-bg-candy-sides.jpg";
+  window.__mapBgPreload.src = "map-road-top.jpg";
+  window.__mapBgPreload2 = new Image();
+  window.__mapBgPreload2.src = "map-road-tile.jpg";
+  window.__mapBgPreload3 = new Image();
+  window.__mapBgPreload3.src = "map-road-swirl.jpg";
+  window.__mapBgPreload4 = new Image();
+  window.__mapBgPreload4.src = "map-road-bottom.jpg";
   document.getElementById("transTitle").textContent = t("transDone").replace("{n}", fromLevel);
   var __land = landForLevel(next)[LANG];
   document.getElementById("transMsg").textContent = t("transWalk").replace("{n}", next).replace("{land}", __land);
@@ -4057,25 +4093,87 @@ function showTransition(fromLevel) {
    man; moi node hien so man + sao (0-3) + ten vung dat; man chua mo khoa
    lai. Sau khi thang 1 man, tau dua toi day thay vi tu mo man tiep
    theo — An tu chon man muon choi (cham node hoac nut "Choi man {n}"). */
-var MAP_OFFSETS = [50, 28, 72, 38, 62, 20, 80, 45, 55, 30, 70, 25, 75]; /* % ngang, lap lai — duong uon luon */
+/* v32.12: DUONG VE — nut nam TREN duong keo ve tay (An 2026-11-15 10:38: "thay vi minh ve duong minh add 50 nut, ca em be ca tren cai duong do roi giu cai che do lan nhu hien tai"; 10:39: bo lau dai, ap dung vao game cho xem mau; 10:49: lay hinh MOI, bo lau dai, luoc bot chi tiet, them idea cua Bom, giu bang mau; 10:50: nui thanh NUI KEO BONG GON). Anh goc 1328x1552 (lau dai DA BO): cau vong + troi cyan + nui keo bong gon o tren, duong trang uon luon xuong giua, keo xoan hong lon o cuoi. Cat thanh 3 anh JPG: nap tren (y 0-850: cau vong/troi/nui), o gach DOI (y 850-1464: doan duong uon y 850-1157 + ban lat ngang xep duoi), dia ket (y 1300-1552: keo xoan). Bang duoi la tam duong ve do duoc tu anh (x% theo hang anh y, moi 40px): doan goc 36% (y 850) -> 18% (cuc trai, y 950) -> 64% (y 1157); 100-36.2 = 63.8 nen doan goc + ban lat ngang noi lien mach (lech 0.1%); nut cach nhau 140px noi dung (MAP_ROW_H) nen noi suy tuyen tinh giua 2 hang ke (cach nhau 40px anh) la du. Nut 1-2 nam TREN nap tren (y noi dung < topH) — duong ve chi bat dau o anh y ~670 nen 2 nut dau khong co duong duoi chan (nam tren troi/nui duoi cau vong); tu nut 3 tro di nam tren duong ve. */
+var MAP_ROAD_PATH = [[850,36],[890,27],[930,20],[970,22],[1010,30],[1050,40],[1090,53],[1130,60],[1157,64]];
+var MAP_ROAD_IMG_W = 1328; /* chieu rong anh goc (px) — ti le s = rong ban do / 1328 */
+var MAP_ROAD_TOP_Y = 850; /* hang anh ket thuc nap tren = bat dau o gach lap */
+var MAP_ROAD_BAND_H = 307; /* chieu cao doan goc (px anh): y 850-1157 */
+var MAP_ROAD_BAND_END = 1157; /* hang anh ket thuc doan goc (MAP_ROAD_PATH: y 850-1157) — chi la moc cuoi bang, khong dung de lat nua (v32.15: lat theo chi so dai, xem mapRoadX). */
+var MAP_ROAD_TILE_H = 2456; /* chieu cao o gach 8 DAI (px anh): 8 dai x 307, dai chan doan goc, dai le ban lat ngang */
+var MAP_ROAD_BOTTOM_H = 840; /* v32.17: chieu cao DAI DUOI (px anh) — nen hong G0 + 5 cum keo bong gon TO duoi dia ket, cao 840 * ti le rong (~256px o rong 430), nam trong 320px padding-bottom cua #mapPath */
+var MAP_ROW_H = 140; /* v32.13: chieu cao 1 hang nut (px noi dung) — 110->140 de ten nut khong bi nut ke che khi lan (xem ghi chu o .map-row). DUNG 1 CHO DUY NHAT: CSS .map-row, mapRoadX, swirl top trong layoutPaintedRoad; build script kiem tra CSS + JS dong bo. */
+var mapRoadGeom = null; /* { s, topH, tileH, tileY0 } — dat 1 lan luc dung ban do / resize (layoutPaintedRoad), KHONG doc lai moi frame */
+function mapRoadX(lv) { /* x% cua nut lv TREN duong ve (thay zigzag ran ran cu): tam nut y = 126 + (lv-1)*MAP_ROW_H; tren nap tren -> 50% (giua); trong o gach 8 DAI -> noi suy tuyen tinh tren MAP_ROAD_PATH theo hang anh tuong ung: dai CHAN la doan goc, dai LE la ban lat ngang (x = 100 - bang). Khong doc layout — chi dung bang + hinh hoc da luu. */
+  var y = 126 + (lv - 1) * MAP_ROW_H;
+  var g = mapRoadGeom;
+  if (!g || y < g.topH) return 50;
+  var iy = g.tileY0 + (((y - g.topH) % g.tileH) / g.s);
+  var band = Math.floor((iy - MAP_ROAD_TOP_Y) / MAP_ROAD_BAND_H); /* v32.15: chi so dai (0-7) trong o gach 8 dai */
+  var flip = (band % 2) === 1; /* v32.15: dai LE lat ngang, dai CHAN giu nguyen */
+  var row = MAP_ROAD_TOP_Y + ((iy - MAP_ROAD_TOP_Y) % MAP_ROAD_BAND_H); /* v32.15: hang trong doan goc (850-1156) */
+  var t = MAP_ROAD_PATH, i;
+  for (i = 0; i < t.length - 1; i++) { if (row <= t[i + 1][0]) break; }
+  var y0 = t[i][0], x0 = t[i][1], y1 = t[i + 1][0], x1 = t[i + 1][1];
+  var x = (y1 === y0) ? x0 : x0 + (x1 - x0) * (row - y0) / (y1 - y0);
+  return flip ? 100 - x : x;
+}
+function layoutPaintedRoad() { /* v32.12: dat hinh hoc nen ve (nap tren + o gach lap + dia ket) — CHI chay luc dung ban do / resize, KHONG phai duong cuon: doc path.clientWidth 1 lan (khong phai moi frame), tinh ti le s + topH + tileH, dat chieu cao nap tren + top cua o gach bang px; dia ket la ellipse CSS (aspect-ratio), top dat bang JS theo tam nut 50 (126 + 49*MAP_ROW_H - 19). Tao cac lop neu chua co (renderMap xoa innerHTML moi lan mo ban do). Nut dat theo mapRoadX nen phai chay TRUOC vong lap nut trong renderMap (goi o dau renderMap). */
+  var path = document.getElementById("mapPath");
+  if (!path) return;
+  var sc = document.getElementById("mapScroll");
+  var w = path.clientWidth || (sc ? sc.clientWidth : 0) || 0;
+  if (!w) return;
+  var s = w / MAP_ROAD_IMG_W;
+  mapRoadGeom = { s: s, topH: MAP_ROAD_TOP_Y * s, tileH: MAP_ROAD_TILE_H * s, tileY0: MAP_ROAD_TOP_Y };
+  /* v32.16: o gach ket o RANH GIOI DAI CUOI CUNG truoc day dia ket (khong keo toi day #mapPath — duong khong con keo dai thanh duong trong xuong day ban do): day dia = dinh dia (126 + 49*MAP_ROW_H - 19 = 6967) + chieu cao dia (rong 88% * 252/1140); tileEnd = topH + so NGUYEN dai * (tileH/8) — lan lap TRON khong du de che man 48-50 (o gach ket tren cac nut do), nen phai keo toi ranh gioi dai (cac dai thua cua lan lap cuoi mang keo che man 48-50: dai 0 gay ~man 48, dai 1 mut ~48-49, dai 2 mut ~49, dai 3 gay ~man 50 ben canh dia); duong o diem cat nam trong pham vi dia che o y do nen khong thay vet cat (kiem chung so hoc o cac rong 320-800: vet cat an duoi dia, hoac khe <=22px tren dia o rong hep nhat — duong doc nhu chay toi lau dai, nhu v32.14); phan duoi tileEnd la nen hong phang G0 cua #mapPath. */
+  mapRoadGeom.swirlBottom = (126 + 49 * MAP_ROW_H - 19) + 0.88 * w * 252 / 1140;
+  mapRoadGeom.tileEnd = mapRoadGeom.topH + Math.floor((mapRoadGeom.swirlBottom - mapRoadGeom.topH) / (mapRoadGeom.tileH / 8)) * (mapRoadGeom.tileH / 8); /* v32.16: ranh gioi DAI (khong phai lan lap) — de cac dai thua che man 48-50 */
+  var top = path.querySelector("#mapRoadTop");
+  if (!top) { top = document.createElement("div"); top.id = "mapRoadTop"; path.appendChild(top); }
+  top.style.height = mapRoadGeom.topH + "px";
+  var tile = path.querySelector("#mapRoadTile");
+  if (!tile) { tile = document.createElement("div"); tile.id = "mapRoadTile"; path.appendChild(tile); }
+  tile.style.top = mapRoadGeom.topH + "px";
+  tile.style.bottom = "auto"; /* v32.14: bottom:0 trong CSS chi la du phong khi JS chua chay — JS gioi han o gach o tileEnd (xem ghi chu o mapRoadGeom). */
+  tile.style.height = (mapRoadGeom.tileEnd - mapRoadGeom.topH) + "px"; /* v32.16: chieu cao o gach = so NGUYEN dai toi sau dia ket (lan lap tron + cac dai thua). */
+  var bottom = path.querySelector("#mapRoadBottom");
+  if (!bottom) { bottom = document.createElement("div"); bottom.id = "mapRoadBottom"; path.appendChild(bottom); }
+  bottom.style.top = mapRoadGeom.tileEnd + "px"; /* v32.17: dai duoi bat dau ngay duoi o gach (tileEnd) */
+  bottom.style.height = (MAP_ROAD_BOTTOM_H * s) + "px"; /* v32.17: cao 840 * ti le rong (~256px o rong 430) — nam trong 320px padding-bottom cua #mapPath; lop TINH, dat 1 lan luc dung/resize, khong ghi gi khi cuon */
+  var swirl = path.querySelector("#mapRoadSwirl");
+  if (!swirl) { swirl = document.createElement("div"); swirl.id = "mapRoadSwirl"; path.appendChild(swirl); }
+  swirl.style.top = (126 + 49 * MAP_ROW_H - 19) + "px"; /* v32.13: dia ket DAT THEO NUT 50 (tam nut 50 = 126 + 49*140 = 6986; dinh dia o 6967, orb nut che 55px dinh dia — nhu v32.12 o rong 430); nut 50 cuon len gan giua man hinh nho padding-bottom 320px tren #mapPath nen vuong mien boss moi thay ro. */
+  swirl.style.bottom = "auto"; /* top thang, bottom:4px trong CSS chi la du phong khi JS chua chay */
+}
 var mapCurrentLevel = 1;
 function mapMaxShown() { return LANDS.length; } /* v31.65: show ALL 50 levels — An wants to scroll through every level (2026-11-14); .map-scroll already scrolls */
 /* v31.55: doan buoc di — sau khi thang 1 man, be ca + cac be khoi vuong
    buoc tu nut cua man vua qua sang nut cua man tiep theo roi dung lai;
    luc do man tiep theo mo ra. Mo ban do bang tay thi doan dung yen o
    nut man hien tai. */
+/* v32.01: toa do NOI DUNG (layout) — KHONG dung getBoundingClientRect
+   nua: ban do gio xoay rotateZ (qua dia cau tron) nen rect tra ve la toa do
+   CHIEU len man hinh, khong phai toa do that trong ban do; dung rect
+   thi be ca dat SAI cho (lech vai tram px) va duong cau vong ve lech.
+   offsetTop/offsetLeft la toa do that: nut (tuyet doi trong hang) +
+   hang (tuong doi voi #mapPath). */
 function nodeCenter(lv) {
   var n = document.querySelector('.map-node[data-level="' + lv + '"]');
   if (!n) return null;
-  var pr = document.getElementById("mapPath").getBoundingClientRect();
-  var r = n.getBoundingClientRect();
-  return { x: r.left + r.width / 2 - pr.left, y: r.top + r.height / 2 - pr.top };
+  var x = 0, y = 0, el = n;
+  while (el && el.id !== "mapPath") {
+    x += el.offsetLeft || 0;
+    y += el.offsetTop || 0;
+    el = el.offsetParent;
+  }
+  return { x: x + 36, y: y + 36 }; /* +36 = nua nut 72px — tam nut */
 }
 function placeParty(x, y) {
   var p = document.getElementById("mapParty");
   if (!p) return;
   p.style.left = x + "px";
-  p.style.top = (y - 26) + "px"; /* v31.97: chan dung ngay tren DINH nut (tren tam 26px) — be ca dung tren qua bong chu khong che orb; truoc -14px chan nam giua nut */
+  p.style.top = (y - 26) + "px"; /* v31.96: chan dung ngay tren DINH nut (tren tam 26px) — be ca dung tren qua bong chu khong che orb; truoc -14px chan nam giua nut */
+  if (mapCache) mapCache.party = { x: x, y: y - 69.5 }; /* v32.05: vi tri GIUA THAN be (chan o y-26, giua than cao hon 43.5px) — de fisheye tinh cong lan cho be tu cache, khong doc rect */
 }
 /* v31.61: candy trail — the shark girl's recent positions, so the
    candies can glide along the road exactly where she just walked. */
@@ -4095,6 +4193,7 @@ function placePartyAt(lv) {
   var c = nodeCenter(lv);
   if (c) {
     placeParty(c.x, c.y);
+    requestMapMotion(); /* v32.05: 1 rAF duy nhat (lan + fisheye) — be ca dich chuyen -> cap nhat lan/fisheye theo vi tri moi */
     /* Teleport = reset the trail to her new spot, so the candies never get
        stranded far away from her. */
     candyTrail = [];
@@ -4133,6 +4232,7 @@ function walkParty(fromLv, toLv) {
     var pos = cubic(pts[si], pts[si + 1], st);
     var hop = Math.abs(Math.sin(st * Math.PI * 2)) * 5;
     placeParty(pos.x, pos.y - hop);
+    requestMapMotion(); /* v32.05: 1 rAF duy nhat (lan + fisheye) — be ca buoc di -> cap nhat lan/fisheye theo tung buoc */
     /* Record where she just was, so the candies can glide after her. */
     candyTrail.push({ x: pos.x, y: pos.y });
     if (candyTrail.length > 60) candyTrail.shift();
@@ -4145,6 +4245,155 @@ function walkParty(fromLv, toLv) {
     }
   }
   requestAnimationFrame(frame);
+}
+var FISHEYE_MAX = 1.5; /* v32.04: do phong to lon nhat o giua — MANH HON (1.35->1.5): nut giua 108px, rim 43px, chenh 65px — KHONG the khong thay (v32.02 chi chenh 5-13px, An khong thay) */
+var FISHEYE_MIN = 0.55; /* v32.07: rim nho hon nua (0.6->0.55) — nut o rim chi con 0.55/1.5 = 0.37x tam */ /* v32.04: do thu nho nhat o ria — MANH HON (0.75->0.6): rim chi con 0.6/1.5 = 0.4x tam (<= 0.6x nhu yeu cau 00:54) */
+var FISHEYE_BEND = 28; /* v32.04: do cong toi da (px) — MANH HON (18->28): nut o ria keo manh ve tam, cong nhu mat cau */
+var FISHEYE_SQUASH = 0.65; /* v32.07: bep manh hon o rim (0.5->0.65) — truc xuyen tam chi con (1-0.65*rr^2) lan truc tiep tuyen */ /* v32.04: do BEP XUYEN TAM o rim (video @daibaj22 00:54) — truc xuyen tam chi con (1-0.5*rr^2) lan truc tiep tuyen: rim rr=1 thi nut dep con 1/2 be ngang, doc nhu di vong ra sau qua cau; tam rr=0 khong bep */
+function applyFisheye() { /* v32.07: LAN CONG HON (An 09:13: "Cho cong hon xiu duoc hông bom nhin van chua dung la lan len lan xuong cho lam a") — 3 thay doi: (1) DUONG VE TINH (v32.12): duong khong con la dai ruy-bang ve bang SVG nua — no la ANH VE nam tren #mapPath, cuon phang theo noi dung; chi NUT + BE CA lan (R*sin(alpha)) tren nen ve. (2) R CHAT HON: 0.45 * chieu cao khung nhin (truoc: 0.5) — vung phang giua hep lai, nut bat dau cong som hon. (3) KHONG CAP ty NUA: nut dung DUNG tren duong cong sin (cap 28px cu lam nut lech toi ~91px khoi duong cong o rim); rim bep/mo manh hon (SQUASH 0.65, MIN 0.55, mo 0.7, edgeFade /0.45). CHI transform/opacity (nut + be ca), CHI doc scrollTop + cache — KHONG getBoundingClientRect, KHONG offset*, KHONG clientHeight/scrollHeight trong duong cuon. Chi ghi style khi chuoi THAY DOI. Nut xa khung nhin + da off thi bo qua han (chi tinh nut trong cua so lan). */
+  if (!mapCache || mapCache.mapScreen.classList.contains("hidden")) return;
+  if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    for (var j = 0; j < mapCache.nodes.length; j++) { var nj = mapCache.nodes[j]; if (nj.t) { nj.el.style.transform = ""; nj.t = ""; } if (nj.o) { nj.el.style.opacity = ""; nj.o = ""; } nj.off = true; }
+    if (mapCache.partyT) { mapCache.partyEl.style.transform = ""; mapCache.partyT = ""; }
+    if (mapCache.partyO) { mapCache.partyEl.style.opacity = ""; mapCache.partyO = ""; }
+    mapCache.partyOff = true;
+    /* v32.12: giam chuyen dong — duong la nen ve tinh (khong bep theo lan) nen khong can tra ve phang; chi nut + be ca ve phang o tren. */
+    return;
+  }
+  var st = mapCache.sc.scrollTop; /* DUY NHAT doc moi frame — gia tri luu san, khong gay layout */
+  var R = mapCache.R, halfW = mapCache.halfW, centerY = st + R;
+  var winLo = centerY - R * (GLOBE_ROLL_MAX + 0.8), winHi = centerY + R * (GLOBE_ROLL_MAX + 0.8); /* v32.09: CHI TINH NUT TRONG CUA SO LAN — nut xa khung nhin hon 0.8 rad (230px) khoi tam thi khong can tinh: leg cua no noi 2 nut ke nhau (cach nhau 140px = 0.49 rad < 0.8 rad) nen leg nao co 1 dau hien cung nam trong cua so; chi nut DA OFF (transform da xoa) moi duoc bo qua — nut CHUA OFF van chay qua nhanh reset (no phai di qua vung 1.35-2.15 truoc khi ra xa, reset o do) nen khong bao gio de lai transform cu trong khung nhin. */
+  for (var i = 0; i < mapCache.nodes.length; i++) {
+    var nd = mapCache.nodes[i];
+    if (nd.off && (nd.y < winLo || nd.y > winHi)) continue; /* v32.09: nut xa khung nhin + DA OFF — khong tinh, khong ghi (xem winLo/winHi o tren). */
+    var d = nd.y - centerY;
+    var alpha = d / R;
+    /* v32.07: vi tri LAN + ti le cua nut tinh TRUOC cho MOI nut (ke ca nut vong ra sau) — nut vong ra sau van co vi tri lan (cong thuc sin chay tiep qua rim) de khong de lai transform cu trong khung nhin — duong ve khong can chung nua (nen ve cuon phang theo noi dung). */
+    var dx = (nd.x - halfW) / halfW;
+    if (dx > 1.4) dx = 1.4; if (dx < -1.4) dx = -1.4;
+    var sinA = Math.sin(alpha);
+    var rr = Math.sqrt(dx * dx + sinA * sinA);
+    if (rr > 1.4) rr = 1.4;
+    var q = 1 - rr * rr;
+    if (q < 0) q = 0;
+    var s = FISHEYE_MIN + (FISHEYE_MAX - FISHEYE_MIN) * q;
+    var tx = -dx * FISHEYE_BEND * rr;
+    var ty = R * sinA - d; /* v32.07: KHONG CAP NUA — nut phai dung DUNG tren duong cong R*sin(alpha). Cap 28px cu (v32.05-06) lam nut lech toi ~91px khoi duong cong o rim (ty that -119px, cap -28px) — do la ly do lan doc "khong ra" (chi thay truot + phong to, An 09:13). Gio nut dung DUNG tren duong cong sin; duong ve o duoi cuon phang theo, khong can cap de giu nut tren duong nua. */
+    nd.rx = nd.x + tx; nd.ry = nd.y + ty; nd.s = s;
+    if (alpha > GLOBE_ROLL_MAX || alpha < -GLOBE_ROLL_MAX) { /* vong ra SAU qua cau — an (ve vi tri tu nhien ngoai khung nhin) */
+      if (!nd.off) { nd.el.style.transform = ""; nd.el.style.opacity = ""; nd.t = ""; nd.o = ""; nd.off = true; }
+      continue;
+    }
+    nd.off = false;
+    var phi = Math.atan2(sinA, dx) * 180 / Math.PI;
+    var sR = s * (1 - FISHEYE_SQUASH * sinA * sinA); /* v32.13: BEP CHI THEO LAN DOC (sinA) — truoc day bep theo rr (gom ca dx ngang) nen nut khoa o giua ban do (sinA~0, dx~0.6) bi bep ngang thanh bau duc doc 1.31x; gio nut o giua van TRON (ti le 1.00), chi bep doc khi vong qua mep tren/duoi (sinA lon, sR/s toi 0.39) — cam giac lan o rim giu nguyen. */
+    var tf = "translate(" + tx.toFixed(1) + "px," + ty.toFixed(1) + "px) rotate(" + phi.toFixed(2) + "deg) scale(" + sR.toFixed(3) + "," + s.toFixed(3) + ") rotate(" + (-phi).toFixed(2) + "deg)";
+    if (nd.t !== tf) { nd.el.style.transform = tf; nd.t = tf; } /* CHI GHI KHI DOI — khong ghi lai 100 chuoi moi frame */
+    var edgeFade = (GLOBE_ROLL_MAX - Math.abs(alpha)) / 0.45; /* v32.07: mo som hon (0.35->0.45) — nut bat dau mo tu |alpha| 0.9, "di vong ra sau" ro hon */
+    if (edgeFade > 1) edgeFade = 1; if (edgeFade < 0) edgeFade = 0;
+    var op = 1 - 0.7 * rr * rr; /* v32.07: mo manh hon o rim (0.6->0.7) */
+    if (op < 0) op = 0;
+    op = op * edgeFade;
+    var os = op.toFixed(2);
+    if (nd.o !== os) { nd.el.style.opacity = os; nd.o = os; }
+  }
+  /* v32.06: BE CA LAN CUNG NUT CUA MINH — kiem tra v32.05 (01:23) phat hien be KHONG bep/mo theo nut o rim: nut chi con lat mong 30x15px ma be van cao ~70px dung thang — trong nhu loi lung tren mep. Gio be lay DUNG ti le + do mo + goc bep cua NUT CUA MINH (tinh tu vi tri nut: party.y + 69.5 = tam nut — chan be dung tren dinh nut): translate bend cua nut (chan be dap dung dinh nut da bep), rotate(phi) scale(sR,sT) rotate(-phi) — be van DUNG THANG (xoay nguoc -phi) nhung BEP DOC theo nut khi nut vong ra sau cau; opacity = opacity cua nut. Be bien mat CUNG nut khi nut vong ra sau (khong loi lung o rim). transform-origin 50% 100% (chan) tren #mapParty giu chan be dung yen khi scale. */
+  var party = mapCache.partyEl;
+  if (party && mapCache.party) {
+    var nd = mapCache.party.y + 69.5 - centerY; /* tam NUT cua be (chan be o nut.y - 26, giua than cao hon nut 43.5px) */
+    var na = nd / R;
+    if (na > GLOBE_ROLL_MAX || na < -GLOBE_ROLL_MAX) { /* nut vong ra SAU — be bien mat CUNG nut */
+      if (!mapCache.partyOff) { party.style.transform = ""; party.style.opacity = ""; mapCache.partyT = ""; mapCache.partyO = ""; mapCache.partyOff = true; }
+    } else {
+      mapCache.partyOff = false;
+      var ndx = (mapCache.party.x - halfW) / halfW;
+      if (ndx > 1.4) ndx = 1.4; if (ndx < -1.4) ndx = -1.4;
+      var nsin = Math.sin(na);
+      var nrr = Math.sqrt(ndx * ndx + nsin * nsin);
+      if (nrr > 1.4) nrr = 1.4;
+      var nq = 1 - nrr * nrr;
+      if (nq < 0) nq = 0;
+      var ns = FISHEYE_MIN + (FISHEYE_MAX - FISHEYE_MIN) * nq; /* ti le TIEP TUYEN cua nut — be thu nho cung nut */
+      var ntx = -ndx * FISHEYE_BEND * nrr;
+      var nty = R * nsin - nd; /* v32.07: KHONG CAP NUA — be phai dung DUNG tren nut da lan (nhu nut, xem ghi chu o vong lap nut) */
+      var nphi = Math.atan2(nsin, ndx) * 180 / Math.PI;
+      var nsR = ns * (1 - FISHEYE_SQUASH * nsin * nsin); /* v32.13: be bep theo nut — CHI theo lan doc (nsin), nhu nut (xem ghi chu o vong lap nut). */
+      var ptf = "translate(-50%,-100%) translate(" + ntx.toFixed(1) + "px," + nty.toFixed(1) + "px) rotate(" + nphi.toFixed(2) + "deg) scale(" + nsR.toFixed(3) + "," + ns.toFixed(3) + ") rotate(" + (-nphi).toFixed(2) + "deg)";
+      if (mapCache.partyT !== ptf) { party.style.transform = ptf; mapCache.partyT = ptf; }
+      var nedge = (GLOBE_ROLL_MAX - Math.abs(na)) / 0.45; /* v32.07: mo som hon (0.35->0.45) */
+      if (nedge > 1) nedge = 1; if (nedge < 0) nedge = 0;
+      var nop = 1 - 0.7 * nrr * nrr; /* v32.07: mo manh hon o rim (0.6->0.7) */
+      if (nop < 0) nop = 0;
+      nop = nop * nedge;
+      var nos = nop.toFixed(2);
+      if (mapCache.partyO !== nos) { party.style.opacity = nos; mapCache.partyO = nos; }
+    }
+  }
+  /* v32.12: KHONG con ham cap nhat duong moi frame — duong la nen ve tinh cuon theo noi dung; chi nut + be ca lan moi frame. */
+}
+
+var mapCache = null; /* v32.05: BO NHO LAYOUT — do 1 LAN khi dung ban do (renderMap) / resize, KHONG doc lai moi frame. v32.04 doc 51 getBoundingClientRect() + scrollHeight/clientHeight moi frame cuon — tren dien thoai moi frame tra gia 1 lan layout + style recalc, do la lag An thay ("Rat lag va cham luon", 01:09). Duong cuon chi doc scrollTop (gia tri luu san, khong layout) + so trong cache. */
+function buildMapCache() { /* do layout 1 LAN: vi tri noi dung cua 50 nut (nodeCenter — offsetTop/offsetLeft, khong rect) + hinh hoc khung nhin (R, halfW, maxScroll) + cac phan tu hay dung (sc, mapScreen, path, party). Goi lai khi resize / renderMap. */
+  var sc = document.getElementById("mapScroll");
+  var path = document.getElementById("mapPath");
+  if (!sc || !path) return null;
+  var nodes = [];
+  var els = path.querySelectorAll(".map-node");
+  for (var i = 0; i < els.length; i++) {
+    var c = nodeCenter(parseInt(els[i].getAttribute("data-level") || "0", 10));
+    if (c) nodes.push({ el: els[i], x: c.x, y: c.y, rx: c.x, ry: c.y, s: 1, t: "", o: "", off: true }); /* v32.07: rx/ry/s = vi tri LAN + ti le cua nut (applyFisheye tinh moi frame — duong dung de bep theo, ke ca nut vong ra sau) */
+  }
+  var sr = sc.getBoundingClientRect();
+  mapCache = { sc: sc, mapScreen: document.getElementById("mapScreen"), path: path,
+    partyEl: document.getElementById("mapParty"),
+    nodes: nodes, R: sr.height * 0.45, halfW: sr.width / 2, /* v32.07: R CHAT HON (0.5->0.45 chieu cao khung nhin) — vung phang giua hep lai, nut bat dau cong som hon, lan doc ro hon (An 09:13: "cho cong hon xiu") */
+    maxScroll: Math.max(0, sc.scrollHeight - sc.clientHeight),
+    party: null, partyT: "", partyO: "", partyOff: true }; /* v32.12: khong con o cache cho duong — duong la nen ve tinh, khong can leg/bent */
+  return mapCache;
+}
+/* v32.23 — BỎ KẸO DỌC ĐƯỜNG (An 2026-11-15 18:49: "Thôi bỏ kẹo ra đi có làm hoài cũng vậy à" — sau cả ngày thử mẫu v1–v4, kẹo ven đường không bao giờ ra đúng ý cô: mẫu 1 thưa quá, mẫu 2 đặt sai chỗ (mép mây thay vì đất hồng giữa), mẫu 3 chỉ có 1 cây, mẫu 4 (50 cây to, đúng chỗ) cô vẫn bỏ — làm hoài cũng vậy). RỪNG KẸO BÔNG GÒN GIỮ NGUYÊN — cô chỉ bỏ kẹo dọc đường, không bỏ rừng. Mẫu overlay v4 BỎ HẲN, không đưa vào bản xem trước. FIX (cut-road-assets-v32-23.py): ô gạch vẽ lại từ dải sạch v32.13 + đúng 80 cụm biên cũ (cùng vị trí, cùng seed, cùng nét vẽ v32.20) — KHÔNG vẽ 8 kẹo đường (4 gậy + 4 mút); nắp vẽ lại từ nắp sạch v32.14 (khôi phục đúng từng byte, md5 152e3013...) + đúng 3 cụm nắp cũ — KHÔNG vẽ kẹo mút trái (535,748) + kẹo gậy phải (814,790). Đáy + đĩa xoay GIỮ NGUYÊN. Ba cái bẫy đã gặp khi chứng minh: (1) so pixel ảnh JPEG đã giải mã với nét vẽ chưa nén là sai — một thế hệ JPEG lệch tới 66 ở mép sắc, nên mọi so sánh phải là file-giải-mã với file-giải-mã; (2) cụm nắp phải vẽ bằng nét v32.17 (24-30 đốm, nhạt hơn, có vệt trắng), không phải nét v32.20 — vẽ bằng nét mới lệch ~42k pixel tới 86 trong hộp cụm; (3) nắp phải vẽ trên file JPEG v32.14 đã giải mã + mô phỏng thêm một thế hệ nén (v32.16), không phải trên bản tái tạo từ WebP — sai thế hệ nén đọc thành ~85k pixel lệch ±1. KẾT QUẢ THẬT (cut run, deterministic): ô gạch mới 150,768 bytes md5 7779a1c6..., nắp mới 82,697 bytes md5 c6f98f0c...; diff giải-mã: ô gạch 22,404 pixel khác, 0 ngoài hộp kẹo+16px (viền 16px lệch tối đa 22 — nhiễu JPEG); nắp 5,597 pixel khác, 0 ngoài hộp kẹo+16px (viền tối đa 14); 0 pixel màu kẹo còn lại (ô gạch cũ 2,154, nắp cũ 519 — kẹo gậy viền (200,60,100), kẹo mút hồng (240,120,170)); rừng nguyên vẹn: 80 cụm đo lại, 73 giống hệt v32.22 trong 1px, 7 thu lại (hộp đo cũ bị pixel kẹo phồng lên — đã chứng minh); bão hòa 16-61 x 18-67 CSS px; pixel kẹo ngoài ruy-băng 336,797 (v32.22: 345,947 — giảm đúng 9,150 = pixel bão hòa của 8 kẹo đường); ruy-băng cos 188->250->188 đủ 8 dải; nắp: hàng 849 chỉ còn đường, không bước nền >1.5 ở hàng 700-850. Chứng minh: ảnh tổng bản đồ + 3 màn hình 2x + so nắp cũ/mới (proof-v32-23/) ĐÃ ĐỌC BẰNG MẮT — kẹo mút + kẹo gậy trên nắp đã biến mất (chỗ cũ giờ là đất hồng trống), 3 cụm nắp còn nguyên, đường kem sạch không kẹo, rừng 2 mép liên tục. KHÔNG ĐỘNG TỚI: MAP_ROAD_TILE_H=2456, mapRoadX 8 dải, MAP_ROW_H=140, bếp chỉ theo lần dọc, đường rộng cos, nền G0, lăn (R = 0.45*cao, SQUASH 0.65, MIN 0.55, mờ 0.7, không cập ty, không tự xoay, giảm chuyển động phẳng), lag fix v32.09 (1 rAF, chỉ nút trong cửa sổ, chỉ ghi khi đổi, 0 đọc layout), toàn bộ tính năng v32.00, sửa vết ngang (mờ dải 720-790) + dưới nút 50 (tileEnd — ranh giới dải) + dải đáy (lớp tĩnh, đặt 1 lần). */
+var GLOBE_ROLL_MAX = 1.35; /* v32.05: goc LAN lon nhat (radian, ~77 do) — nut cach tam hon 1.35 ban kinh thi da vong ra SAU qua cau (an, khong thay); nut o rim (|alpha| ~1) van thay, bep phang + mo dan. XOAY MAT PHANG (GLOBE_SPIN_MAX ±60 do, v32.02-04) DA BO — An 01:08: "Sao ko cho xoay tu tren xuong duoi va tu duoi len tren" */
+
+
+
+var mapMotionRAF = 0;
+function requestMapMotion() { /* v32.05: 1 rAF DUY NHAT cho fisheye (lan) — v32.04 co 2 rAF rieng (fisheyeRAF + globeRAF): moi su kien cuon dat 2 callback, moi callback doc/ghi rieng (gap doi style recalc + layout). Gio 1 su kien cuon = 1 callback duy nhat. */
+  if (mapMotionRAF) return;
+  mapMotionRAF = requestAnimationFrame(function() { mapMotionRAF = 0; applyFisheye(); });
+}
+var MAP_GLIDE_MS = 1500; /* v31.99: thoi gian truot camera ban do — luot cham nhu video Candy Crush (An 2026-11-14 23:52: van chua thay luot) */
+var glideRAF = 0;
+function glideMapTo(nodeEl) { /* v31.99: truot camera ban do bang rAF, easeInOut, ~1500ms tu dau ban do xuong nut hien tai; giam chuyen dong -> cuon ngay; keo/chuot giua chung se huy truot */
+  var sc = document.getElementById("mapScroll");
+  if (!sc || !nodeEl) return;
+  if (glideRAF) cancelAnimationFrame(glideRAF);
+  if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    nodeEl.scrollIntoView({ block: "center", behavior: "auto" });
+    return;
+  }
+  sc.style.scrollBehavior = "auto"; /* tam tat smooth cua CSS de rAF khong bi danh nhau */
+  sc.scrollTop = 0; /* bat dau tu dau ban do — camera luot doc duong xuong nut hien tai nhu video */
+  /* v32.01: dich = toa do NOI DUNG (nodeCenter) — KHONG dung rect nua:
+     ban do LAN nen rect la vi tri CHIEU (nut o giua man hinh nhin gan
+     hon that), truot theo rect se truot QUA dich. Truot nay vua lan
+     qua cau vao dung vi tri nut hien tai. */
+  var lv = parseInt(nodeEl.getAttribute("data-level") || "1", 10);
+  var cc = nodeCenter(lv);
+  var target = cc ? Math.max(0, Math.min(cc.y - sc.clientHeight / 2, sc.scrollHeight - sc.clientHeight)) : 0;
+  var t0 = null, cancelled = false;
+  function cancelGlide() { cancelled = true; if (glideRAF) cancelAnimationFrame(glideRAF); sc.style.scrollBehavior = ""; }
+  sc.addEventListener("touchstart", cancelGlide, { once: true, passive: true });
+  sc.addEventListener("wheel", cancelGlide, { once: true, passive: true });
+  function step(ts) {
+    if (cancelled) return;
+    if (t0 === null) t0 = ts;
+    var p = Math.min(1, (ts - t0) / MAP_GLIDE_MS);
+    var e = p < 0.5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2;
+    sc.scrollTop = target * e;
+    if (p < 1) { glideRAF = requestAnimationFrame(step); }
+    else { sc.style.scrollBehavior = ""; }
+  }
+  glideRAF = requestAnimationFrame(step);
 }
 function showMap(fromLv) {
   document.getElementById("startScreen").classList.add("hidden");
@@ -4159,6 +4408,8 @@ function showMap(fromLv) {
   document.getElementById("mapPlayNextBtn").textContent = "▶ " + t("mapPlayNext").replace("{n}", mapCurrentLevel);
   document.getElementById("mapHomeBtn").textContent = t("mapHome");
   renderMap();
+  var sc0 = document.getElementById("mapScroll");
+  if (sc0 && !sc0._feBound) { sc0.addEventListener("scroll", requestMapMotion, { passive: true }); sc0._feBound = true; } /* v32.01: gan 1 lan — cuon ban do kich hoat lan + ong kinh mat ca (luot toi dau, cong theo toi do) */
   if (fromLv && fromLv === mapCurrentLevel - 1) {
     placePartyAt(fromLv);
     walkParty(fromLv, mapCurrentLevel);
@@ -4169,16 +4420,13 @@ function showMap(fromLv) {
   }
   setTimeout(function() {
     var cur = document.querySelector(".map-node.current");
-    if (cur) cur.scrollIntoView({ block: "center", behavior: "smooth" });
+    if (cur) glideMapTo(cur); requestMapMotion(); /* v32.01: truot camera cham tu dau ban do xuong nut hien tai (~1.5s) — truot vua lan qua cau vao dung vi tri nut hien tai; bat hieu ung mat ca + lan ngay khi mo ban do; giam chuyen dong -> cuon ngay */
   }, 60);
 }
 function renderMap() {
   var path = document.getElementById("mapPath");
   path.innerHTML = "";
-  var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-  svg.setAttribute("id", "mapRoad");
-  svg.setAttribute("aria-hidden", "true");
-  path.appendChild(svg);
+  layoutPaintedRoad(); /* v32.12: dat hinh hoc nen ve TRUOC khi dung nut (mapRoadX can mapRoadGeom) — nap tren + o gach lap + dia ket; khong con duong SVG nao nua. */
   var party = document.createElement("div");
   party.id = "mapParty";
   party.innerHTML =
@@ -4194,29 +4442,10 @@ function renderMap() {
     path.appendChild(cd);
   });
   var max = mapMaxShown();
-  /* v31.74: cay xanh VE TAY (An 2026-11-14 — khong dung emoji) — 2 mau ve tay
-     kieu net ve banh keo: cay la tron + cay thong, vien net dam cho giong ve tay. */
-  var TREE_SVG = [
-    '<svg viewBox="0 0 28 36" width="26" height="33" aria-hidden="true"><path d="M13 36 L13 22 L15 22 L15 36 Z" fill="#8D5A2B" stroke="#6D4423" stroke-width="1" stroke-linejoin="round"/><path d="M14 4 C10 4 7 7 7 10 C4 10 2 13 3 16 C2 19 5 21 8 20 C9 23 12 23 14 21 C16 23 19 22 19 19 C22 20 24 17 23 14 C24 11 21 8 18 9 C17 6 15 4 14 4 Z" fill="#43A047" stroke="#2E7D32" stroke-width="1.2" stroke-linejoin="round"/><circle cx="10" cy="10" r="2.2" fill="#81C784"/><circle cx="17" cy="13" r="1.6" fill="#81C784"/><circle cx="12" cy="16" r="0.9" fill="#2E7D32"/><circle cx="18" cy="17" r="0.9" fill="#2E7D32"/></svg>',
-    '<svg viewBox="0 0 28 36" width="26" height="33" aria-hidden="true"><path d="M13 36 L13 29 L15 29 L15 36 Z" fill="#8D5A2B" stroke="#6D4423" stroke-width="1" stroke-linejoin="round"/><path d="M14 17 L4.5 30 L23.5 30 Z" fill="#2E7D32" stroke="#1B5E20" stroke-width="1.2" stroke-linejoin="round"/><path d="M14 12 L7.5 22 L20.5 22 Z" fill="#388E3C" stroke="#1B5E20" stroke-width="1.2" stroke-linejoin="round"/><path d="M14 7 L10.5 15 L17.5 15 Z" fill="#43A047" stroke="#1B5E20" stroke-width="1.2" stroke-linejoin="round"/><circle cx="12" cy="18" r="1.4" fill="#66BB6A"/></svg>'
-  ];
   for (var lv = 1; lv <= max; lv++) {
     var row = document.createElement("div");
     row.className = "map-row";
-    var off = MAP_OFFSETS[(lv - 1) % MAP_OFFSETS.length];
-    /* v31.74: cay ve tay doc 2 ben DUONG (An 2026-11-14) — cay bam theo duong
-       (nut o off%), 2 cay moi hang: trai/phai duong cach nut 16%, kep trong
-       [5%,95%] de khong cham nut va khong rot khoi khung; la/thong xen ke. */
-    for (var ti = 0; ti < 2; ti++) {
-      var tr = document.createElement("span");
-      tr.className = "map-tree";
-      tr.innerHTML = TREE_SVG[(lv + ti) % 2];
-      var side = (ti === 0) ? off - 16 : off + 16;
-      side = Math.max(5, Math.min(95, side));
-      tr.style.left = side + "%";
-      tr.setAttribute("aria-hidden", "true");
-      row.appendChild(tr);
-    }
+    var off = mapRoadX(lv); /* v32.12: nut nam TREN duong ve — x theo bang duong ve (mapRoadX), khong con zigzag ran ran nua */
     var node = document.createElement("div");
     node.style.left = "calc(" + off + "% - 36px)"; /* v31.68: -36px = nua nut 72px */
     var locked = lv > state.maxLevel;
@@ -4282,64 +4511,18 @@ function renderMap() {
       });
     })(node, lv, locked);
   }
-  drawMapRoad();
+  buildMapCache(); /* v32.05: do layout 1 LAN sau khi dung ban do — duong cuon chi doc cache */
+  /* v32.12: khong con ham ve duong SVG cu — nen ve da dat o dau renderMap (layoutPaintedRoad); duong cuon chi lan nut + be ca. */
 }
 function playMapLevel(level) {
   document.getElementById("mapScreen").classList.add("hidden");
   maybeShowStory(level, function() { startLevel(level); });
 }
-function drawMapRoad() {
-  var svg = document.getElementById("mapRoad");
-  var path = document.getElementById("mapPath");
-  if (!svg || !path) return;
-  var nodes = path.querySelectorAll(".map-node");
-  if (!nodes.length) { svg.innerHTML = ""; return; }
-  var pr = path.getBoundingClientRect();
-  var pts = [];
-  for (var i = 0; i < nodes.length; i++) {
-    var r = nodes[i].getBoundingClientRect();
-    pts.push({ x: r.left + r.width / 2 - pr.left, y: r.top + r.height / 2 - pr.top });
-  }
-  var stops = '<stop offset="0%" stop-color="#ff3b30"/><stop offset="16.7%" stop-color="#ff9500"/>' +
-    '<stop offset="33.3%" stop-color="#ffd60a"/><stop offset="50%" stop-color="#34c759"/>' +
-    '<stop offset="66.7%" stop-color="#0a84ff"/><stop offset="83.3%" stop-color="#5e5ce6"/>' +
-    '<stop offset="100%" stop-color="#bf5af2"/>';
-  /* v31.63: EVERY leg carries the full rainbow (An: "con duong tu man nay
-     qua man kia mang day du sac cau vong") — one gradient per leg, from
-     that leg's own start point to its end point. */
-  var defs = "<defs>";
-  var legs = "";
-  var dAll = "M " + pts[0].x + " " + pts[0].y;
-  for (var j = 1; j < pts.length; j++) {
-    var my = (pts[j - 1].y + pts[j].y) / 2;
-    var segD = "M " + pts[j - 1].x + " " + pts[j - 1].y +
-      " C " + pts[j - 1].x + " " + my + ", " + pts[j].x + " " + my + ", " + pts[j].x + " " + pts[j].y;
-    /* v31.64: anchor the gradient at the NODE EDGES, not the centres —
-       the 29px node circles cover both ends of the leg, so a centre-to-
-       centre gradient only ever shows its middle colours. */
-    var dx = pts[j].x - pts[j - 1].x, dy = pts[j].y - pts[j - 1].y;
-    var len = Math.sqrt(dx * dx + dy * dy) || 1;
-    var ux = dx / len, uy = dy / len;
-    var trim = len > 60 ? 36 : 0; /* v31.68: 36px = ban kinh nut 72px */
-    var gx1 = pts[j - 1].x + ux * trim, gy1 = pts[j - 1].y + uy * trim;
-    var gx2 = pts[j].x - ux * trim, gy2 = pts[j].y - uy * trim;
-    defs += '<linearGradient id="mapRainbow' + j + '" gradientUnits="userSpaceOnUse" x1="' + gx1 + '" y1="' + gy1 + '" x2="' + gx2 + '" y2="' + gy2 + '">' + stops + "</linearGradient>";
-    legs += '<path d="' + segD + '" fill="none" stroke="url(#mapRainbow' + j + ')" stroke-width="18" stroke-linecap="round" opacity="0.9"/>';
-    dAll += " C " + pts[j - 1].x + " " + my + ", " + pts[j].x + " " + my + ", " + pts[j].x + " " + pts[j].y;
-  }
-  defs += "</defs>";
-  var h = path.getBoundingClientRect().height;
-  svg.setAttribute("viewBox", "0 0 " + pr.width + " " + h);
-  svg.setAttribute("width", pr.width);
-  svg.setAttribute("height", h);
-  svg.innerHTML = defs + legs +
-    '<path d="' + dAll + '" fill="none" stroke="#ffffff" stroke-width="3" stroke-dasharray="10 10" stroke-linecap="round" opacity="0.9"/>';
-}
 var mapResizeTimer = null;
 window.addEventListener("resize", function() {
   if (document.getElementById("mapScreen").classList.contains("hidden")) return;
   clearTimeout(mapResizeTimer);
-  mapResizeTimer = setTimeout(drawMapRoad, 120);
+  mapResizeTimer = setTimeout(function() { buildMapCache(); layoutPaintedRoad(); }, 120); /* v32.12: resize — dat lai hinh hoc nen ve (topH/tileH theo rong moi); nut la % nen tu dich theo, khong can dung lai ban do */
 });
 document.getElementById("mapPlayNextBtn").addEventListener("click", function() {
   AudioEng.unlock();
@@ -4520,7 +4703,7 @@ function showStoryViewer() {
   close.onclick = function() { ov.classList.add("hidden"); if (inGame) resumeTimer(); };
 }
 
-/* ================= v31.97: 4 tinh nang kieu Candy Crush (An 2026-11-14: lam het tru dua voi me) =================
+/* ================= v31.96: 4 tinh nang kieu Candy Crush (An 2026-11-14: lam het tru dua voi me) =================
    A. Combo keo dac biet (doi 2 keo dac biet voi nhau). B. Nhiem vu moi: tha qua
    nguyen lieu (man 12/18/24) + quest man 11-20. C. Qua moi ngay + tem.
    D. So sticker theo chuong truyen. E. Vuong mien keo cho man boss (An gui
@@ -4611,7 +4794,7 @@ async function doSpecialCombo(r1, c1, r2, c2) {
   state.score += pts; updateHUD();
   showFloatScore(pts, list);
   if (plan.kind === "blast5") AudioEng.sfx("wrapped"); else AudioEng.sfx("striped");
-  plan.beams.forEach(function(bm) { stripedBeam(bm, function() { return 60; }); });
+  plan.beams.forEach(function(bm) { stripedBeamBurst(bm, function() { return 60; }, 2); }); /* v32.00: tia soc don dap (combo nhieu tia nen moi tia chi lap 1 lan) */
   if (plan.kind !== "cross") explosionAt(list, "fox", { count: 25, max: 180, text: false });
   burstCells(list, 10, BURST_CAP);
   await bounceThenPop(list);
@@ -4819,7 +5002,7 @@ function showStickerBook() {
   ov.classList.remove("hidden");
   close.onclick = function() { ov.classList.add("hidden"); if (inGame) resumeTimer(); };
 }
-/* ================= /v31.97 ================= */
+/* ================= /v31.96 ================= */
 
 function storySeenAny() {
   try { var s = JSON.parse(localStorage.getItem("ac_story_seen") || "[]"); return s.length > 0; } catch (e) { return false; }
@@ -4834,8 +5017,8 @@ function maybeShowStory(level, proceed) {
   showStoryCard(level, proceed);
 }
 document.getElementById("storyBtnStart").addEventListener("click", function() { AudioEng.unlock(); showStoryViewer(); });
-document.getElementById("stickerBtnStart").addEventListener("click", function() { AudioEng.unlock(); showStickerBook(); }); /* v31.97: so sticker */
-document.getElementById("dailyClaimBtn").addEventListener("click", function() { AudioEng.unlock(); claimDaily(); }); /* v31.97: nhan qua moi ngay */
+document.getElementById("stickerBtnStart").addEventListener("click", function() { AudioEng.unlock(); showStickerBook(); }); /* v31.96: so sticker */
+document.getElementById("dailyClaimBtn").addEventListener("click", function() { AudioEng.unlock(); claimDaily(); }); /* v31.96: nhan qua moi ngay */
 /* v30.1: 📖 button in the game HUD — read the story mid-level, too. */
 /* v30.3: reset button on the start screen — An asked to replay from
    Level 1. Uses an in-page confirm card (NOT window.confirm: automated
@@ -4890,7 +5073,7 @@ function startLevel(level) {
     __usedCells[r2 + "," + c2] = true;
     state.board[r2][c2] = makeTile(type, special);
   }
-  /* v31.97: hop qua nguyen lieu (man 12/18/24) — dat o 3 hang tren cung de roi xuong */
+  /* v31.96: hop qua nguyen lieu (man 12/18/24) — dat o 3 hang tren cung de roi xuong */
   state.ingDropped = 0;
   state.ingTotal = 0;
   var __ingN = INGREDIENT_LEVELS[level] || 0;
@@ -4904,7 +5087,7 @@ function startLevel(level) {
   }
   for (var bi = 0; bi < perks.freeBombs; bi++) __placeSpecial("bomb");
   if (perks.freeRainbow) __placeSpecial("rainbow", "rainbow");
-  /* v31.97: qua moi ngay trong tui — dat len ban dau man, ton gioi han san co */
+  /* v31.96: qua moi ngay trong tui — dat len ban dau man, ton gioi han san co */
   var __inv = getDailyInv();
   var __invChanged = false;
   if (__inv.eagle > 0 && !eagleOnBoard()) { __placeSpecial("eagle"); __inv.eagle--; __invChanged = true; }
@@ -4977,7 +5160,7 @@ function endLevel(won) {
     localStorage.setItem("animalCrushLevel", String(state.level + 1));
     showToast(t("nice"));
     if (stickerUnlock(state.level)) showToast("📕 " + (LANG === "vi" ? "Sticker mới đã mở!" : "New sticker unlocked!"));
-    awardStamp(); /* v31.97: thang 1 man/ngay duoc 1 tem; du 6 tem mo ruong */
+    awardStamp(); /* v31.96: thang 1 man/ngay duoc 1 tem; du 6 tem mo ruong */
   } else {
     AudioEng.sfx("lose");
   }
@@ -5158,7 +5341,7 @@ function applyLang() {
   var known = parseInt(localStorage.getItem("animalCrushVisits") || "0", 10);
   if (known) document.getElementById("visitCount").textContent = "🐠 " + t("visits").replace("{n}", known);
   renderStartLb();
-  renderDaily(); /* v31.97: cap nhat lich qua + tem + so sticker tren man hinh bat dau */
+  renderDaily(); /* v31.96: cap nhat lich qua + tem + so sticker tren man hinh bat dau */
 }
 function setLang(l) {
   LANG = l;
