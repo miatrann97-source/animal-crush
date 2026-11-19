@@ -585,12 +585,10 @@ button:disabled { opacity:.55; cursor:default; }
 .map-stars-pill { position:absolute; top:calc(env(safe-area-inset-top, 0px) + 8px); right:10px; z-index:70; width:84px; height:30px; padding:0 8px; box-sizing:border-box; display:flex; align-items:center; justify-content:center; background:rgba(255,255,255,.82); border-radius:999px; box-shadow:0 2px 8px rgba(34,64,90,.25), inset 0 1px 0 rgba(255,255,255,.9); color:#b26a00; font-weight:800; font-size:.95rem; line-height:1; white-space:nowrap; pointer-events:none; transition:opacity .25s; } /* v32.32: VIEN TONG SAO — thay the tieu de banner da xoa: tong so sao van hien, dang vien noi nho goc phai tren (84x30, trang mo .82, khong chan thao tac, z 70 tren moi noi dung cuon); updateStarsPill() an vien (opacity 0) khi nut/nhan/be ca/sticker cham vao no. */
 .map-scroll { flex:1; min-height:0; overflow-y:auto; overflow-x:hidden; position:relative; border-radius:0; background:transparent; scroll-behavior:smooth; padding:0 0 96px; /* v32.30: het vach hong 8px giua tieu de (nen troi) va bau troi cuon — duong + nut dich len 8px, R khong doi (doc chieu cao hien cua scroller), dau be van trong khung vi o man 1 be bep xuong ~0.73. */ -webkit-overflow-scrolling:touch; } /* v32.26: BO goc bo tron 18px + lop trang .08 — khung cuon khong con la "the" rieng: hong trong khung = hong ngoai khung (#fde6ee) lien mot mach, khong con duong vien hay sac do lech; nut/nhan/be ca/sticker khong doi */ /* v32.06: HINH CHU NHAT TRO LAI (An 09:01: "bo cai vong tron ra cho duong no tu chay nhu vay duoc hông" — duyet lan doc v32.05, bo khung tron) — scroller doc binh thuong nhu live v31.97 (flex:1, border-radius:18px, nen kem .08, KHONG blur); duong LAN DOC van chay nhu cu (R = nua chieu cao khung nhin); quang halo + van cham bi + kinh tuyen + hat keo cua qua cau DA BO theo vong tron */
 #mapPath { position:relative; padding-top:84px; padding-bottom:320px; background-color:#fde6ee; } /* v32.14: nen hong phang G0 (253,230,238) — phan duoi o gach (sau dia ket) hien mau nay, trung mau nen o gach nen khong co moi noi. */ /* v32.13: them 320px duoi cung de nut 50 (tam y 10326 — v32.34; v32.31: 7166) cuon len gan giua man hinh (cuon toi da alpha -0.23 o cao 800px, -0.59 o cao 640px) — vuong mien boss moi thay ro thay vi chi la vet cam; v32.17: o gach chi lap toi sau dia ket (tileEnd — ranh gioi dai), phan dem duoi dia la DAI DUOI (#mapRoadBottom — nen hong G0 + 5 cum keo bong gon TO, xem background-color o tren + lop moi). */ /* v32.06: MAT BAN DO — KHONG con vong tron (An 09:01: bo vong tron, duong tu chay); KHONG xoay nua (xoay mat phang rotateZ ±60 do da BO — An 01:08); nut LAN theo chieu DOC bang translate trong applyFisheye, duong + be ca nam tren mat ban do; v31.96: tang tu 72px de be ca dung cao hon van hien tron dau (nhay len khong bi cat); v31.60: room above node 1 so the party (standing above its node) is fully visible, not hidden behind the header */
-#mapRoadTop { position:absolute; top:0; left:0; right:0; background:url("map-road-top.jpg") center top/100% auto no-repeat; background-color:#fde6ee; z-index:1; pointer-events:none; } /* v32.14: them background-color G0 — neu trinh duyet lam tron chieu cao nap tren (topH = 850*s, vd 275.2px o rong 430) va de lai khe duoi-pixel giua nap va o gach, khe do hien G0 (trung mau nen 2 ben) chu khong hien gradient man hinh phia sau. */ /* v32.12: NAP TREN cua duong ve (cau vong + troi cyan + nui keo bong gon + cay keo o dau ban do, anh goc y 0-850, lau dai DA BO theo y An) — chieu cao dat bang JS (850 * ti le rong) de khop dung anh goc 1328x850; anh scale 100% rong nen khong meo; z-index 1 de nap luon tren o gach lap (neu 2 lop chong nhau luc JS chua chay). v32.14: anh cat lai — mo dai smoothstep y 720-790, duoi 790 la nen phang G0 (xem cut-road-assets-v32-14.py); duong vien day doi (y~789-792) da duoc xoa, moi noi (y=850) von da lien (cap row 846 == tile row 0 == G0). */
-#mapRoadTile { position:absolute; top:0; left:0; right:0; bottom:0; background:url("map-road-tile-v32-30.jpg") center top/100% auto repeat-y; /* v32.30: o gach VE LAI (may ra toi mep trai/phai 100.0%, moi noi lap lien tuc — xem regen-map-art-v32-30.py). */ background-color:#fde6ee; z-index:0; pointer-events:none; } /* v32.14: them background-color G0 (ly do nhu nap tren). */ /* v32.12: O GACH LAP LAI cua duong ve (o gach 8 DAI 1328x2456: doan duong uon y 850-1157 lap lai 8 dai, dai le lat ngang — moi dai mang keo cua rieng no) — bat dau ngay duoi nap tren (top dat bang JS = 850 * ti le rong), lap doc toi sau dia ket (tileEnd, JS dat — ranh gioi dai, v32.17); moi lan lap cao 2456 * ti le rong (~795px o rong 430) nen canh lap lai ~8 lan doc ban do; mep tren cua o gach CHINH LA mep duoi cua nap tren (cung hang anh y=850) nen khong co moi noi o dau; nut nam tren duong ve qua mapRoadX. v32.23: BO KEO DOC DUONG (An 2026-11-15 18:49: "Thoi bo keo ra di co lam hoai cung vay a") — o gach + nap VE LAI KHONG KEO: 8 keo duong (4 gay + 4 mut) khoi o gach, keo mut trai + keo gay phai khoi nap; RUNG BONG GON GIU NGUYEN 100% (80 cum, 40 trai + 40 phai, khoang hong dai nhat 21 CSS px, phu 87.3% hang anh) + dai duoi chu U GIU NGUYEN (30 cum); duong rong mem 188-250px (cos), nen hong dong nhat G0 (xem cut-road-assets-v32-13.py). */
-#mapRoadBottom { position:absolute; top:0; left:0; right:0; background:url("map-road-bottom-v32-30.jpg") center top/100% auto no-repeat; /* v32.30: dai duoi VE LAI (may cham trai/phai/day 100.0% — xem regen-map-art-v32-30.py). */ background-color:#fde6ee; z-index:0; pointer-events:none; } /* v32.17: DAI DUOI cua duong ve (nen hong G0 + 5 cum keo bong gon TO duoi dia ket — sua vung hong trong duoi dia ma browser check thay o v32.16) — bat dau ngay duoi o gach (top dat bang JS = tileEnd), cao 840 * ti le rong; nam DUOI dia ket (DOM order: truoc #mapRoadSwirl, cung z-index 0 nen dia ve sau nam tren); nen G0 de khe duoi-pixel hien G0. */
-#mapRoadSwirl { position:absolute; left:50%; transform:translateX(-50%); bottom:4px; width:88%; aspect-ratio:1140/252; background:url("map-road-swirl.jpg") center/cover no-repeat; border-radius:50%; z-index:0; pointer-events:none; } /* v32.12: DIA KET (keo xoan hong lon o cuoi anh goc, y 1300-1552) — dia ellipse nam duoi nut 50, nut 50 dung tren dia nhu dich den cuoi cung; nut z-index 1 nen nam TREN dia. */
+.road-strip { position:absolute; left:0; right:0; z-index:0; pointer-events:none; background-repeat:no-repeat; transform-origin:50% 0; } .strip-top { background-image:url("map-road-top.jpg"); background-color:#fde6ee; } .strip-tile { background-image:url("map-road-tile-v32-30.jpg"); background-color:#fde6ee; } .strip-bottom { background-image:url("map-road-bottom-v32-30.jpg"); background-color:#fde6ee; } .strip-swirl { background-image:url("map-road-swirl.jpg"); background-size:cover; border-radius:50%; } /* v32.37: 4 URL nen ve CHUYEN tu 4 lop tinh (#mapRoadTop/Tile/Bottom/Swirl) sang 4 lop dai — SO LUONG URL KHONG DOI (BASE refs van 56) de ship sau nay doi chieu duoc; transform-origin TREN GIUA de scaleY tinh tu mep tren (khop chinh xac dai ke, khong ho/khong chong). */
 .map-row { height:200px; position:relative; z-index:2; } /* v32.27: HANG (nut) VE DUOI BE CA — nut (orb) khong con ve tren be ca nua: be luon thay ro ca luc dung lan di (An 2026-11-15 23:52 laptop + 23:53 dien thoai: nut qua gan, gan che mat be ca di bo; do: nut o vung giua phong len 108px (FISHEYE_MAX 1.5) + hang chi cach 140px trong khi be cao 87px). Nhan ten man van o TREN be ca nho lop #mapLabels rieng (z-index 5) — tach nhan khoi nut de thoat stacking context cua nut. Sticker van z-index 4. */ /* v32.13: row cao hon 110->140px (MAP_ROW_H) — ten nut (top:82px, ~52px duoi tam nut) khong con bi nut ke che khi lan: nut ke o rim chi cach 110*cos(alpha) ~ 40-56px, ten nam ~52px duoi tam nut nen bi che; 140px giu khoang cach lan luon duong o moi |alpha| <= 1.2 (mo hinh quet: v32.12 co 336 cap ten/nut chong nhau, v32.13 co 0). Nut VAN 72px, KHONG thu nho nut. */ /* v32.34: HANG 6-50 CAO 200px (hang 4-50 tu 140px len 200px) — khoang giua 2 nut 200px nen be ca 105px khong bi orb nut tren che; hang 1-5 cao 280px (xem .map-row.early — v32.31: hang 1-3 200px). */
 .map-row.early { height:280px; } /* v32.34: hang 1-5 cao 280px (MAP_ROW_H_EARLY) — nut 1-5 cach nhau 280px; hang 6-50 cao 200px (v32.31: hang 1-3 200px, hang 4-50 140px) */
+#mapVignette { position:absolute; top:0; left:0; right:0; height:100%; z-index:6; pointer-events:none; background:linear-gradient(180deg, rgba(120,40,70,.09) 0%, rgba(120,40,70,0) 16%, rgba(120,40,70,0) 84%, rgba(120,40,70,.09) 100%); } /* v32.37: MO VIEN MEM tren/duoi khung cuon (toi da 9%, tinh) — cam giac chieu sau 4D (mat cau cong xa o 2 dau), khong cham nut (chi toi o mep ngoai cung, nut o do da mo ~0.3); absolute, con truc tiep cua #mapScreen (position:fixed) — KHONG nam trong #mapScroll: sticky + height:100% + margin-bottom:-100% day #mapPath lech (margin % tinh theo RONG: +397px phone / -897px desktop) lam nut/be lech ~1000px tren desktop; absolute khong chiem cho trong luong cuon, khong cuon theo noi dung, khong chan tap (pointer-events:none). */
 #mapLabels { position:absolute; inset:0; z-index:5; pointer-events:none; } /* v32.27: lop nhan rieng — nhan ten man ve TREN be ca (z-index 5 > party 3) trong khi orb nut ve DUOI be ca (row z-index 2); lop phu toan #mapPath, khong chan click (pointer-events:none); nhan dat vi tri + goc bien doi trong buildMapCache, transform theo nut trong applyFisheye. */
 .map-node { position:absolute; top:6px; width:72px; height:72px; border-radius:50%; border:3px solid #fff; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:1.35rem; color:#fff; cursor:pointer; will-change:transform; background:linear-gradient(180deg,#ffd23f 0%,#ff9500 70%,#e07b00 100%); text-shadow:0 2px 3px rgba(0,0,0,.3); box-shadow:0 0 0 2px rgba(255,255,255,.95), 0 0 0 4px rgba(34,64,90,.22), 0 7px 0 rgba(0,0,0,.16), 0 10px 18px rgba(34,64,90,.5), inset 0 3px 0 rgba(255,255,255,.65), inset 0 -7px 0 rgba(0,0,0,.14); } /* v32.36: VIEN NGOAI + BONG DAM — vong trang 2px + vong toi 4px tach orb khoi nen hong + bong do 0.35->0.5, nut doc nhu nut that su. */
 .map-node::before { content:""; position:absolute; top:6px; left:10px; width:32px; height:19px; border-radius:50%; background:rgba(255,255,255,.35); filter:blur(1px); transform:rotate(-18deg); pointer-events:none; }
@@ -604,14 +602,15 @@ button:disabled { opacity:.55; cursor:default; }
    len lech nhau (stagger) nhu doan tau nay. */
 #mapParty { position:absolute; z-index:3; width:76px; /* v32.35: be ca TO HON (An 2026-11-16 22:38: "be ca van bi mo nhat qua, cho be noi bat len") — hop 64 -> 76px (sprite 76x125 ben trong, 1.19x); chan van o tam nut, nua tren troi ra ngoai nut nhu cu. */ pointer-events:none; transform:translate(-50%,-100%); transform-origin:50% 100%; display:flex; align-items:flex-end; justify-content:center; } /* v31.96: be ca nho lai (64->52px) de khong che orb nut hien tai; v31.61: only the shark girl walks now, so the party is just her */
 /* v31.69: anh sang vang theo be ca — vong sang tron mo o duoi chan be (tren duong, sau be), di den dau sang den do; nhip nhe, khong chop. */
-#mapParty::before { content:""; position:absolute; left:50%; top:100%; width:152px; height:152px; /* v32.35: vong sang TRANG theo hop be (152px = 2x76) — tach be khoi nen hong; vong vang cu rua be thay vi tach be. */ transform:translate(-50%,-50%); border-radius:50%; background:radial-gradient(circle, rgba(255, 255, 255, .55) 0%, rgba(255, 255, 255, .22) 40%, rgba(255, 255, 255, 0) 65%); pointer-events:none; z-index:-1; animation:mapLightPulse 2.2s ease-in-out infinite alternate; } /* v31.96: vong sang nho + mo hon (150px/.85 -> 104px/.5) de khong rua trang orb nut hien tai */
+#mapParty::before { content:""; position:absolute; left:50%; top:100%; width:152px; height:152px; /* v32.35: vong sang TRANG theo hop be (152px = 2x76) — tach be khoi nen hong; vong vang cu rua be thay vi tach be. */ transform:translate(-50%,-50%); border-radius:50%; background:radial-gradient(circle, rgba(255, 255, 255, .42) 0%, rgba(255, 255, 255, .18) 40%, rgba(255, 255, 255, 0) 65%); pointer-events:none; z-index:-1; /* v32.37: halo NHAT BOT (.55->.42, .22->.18) — bot suong trang quanh be. */ animation:mapLightPulse 2.2s ease-in-out infinite alternate; } /* v31.96: vong sang nho + mo hon (150px/.85 -> 104px/.5) de khong rua trang orb nut hien tai */
 @keyframes mapLightPulse { from { opacity:.72; } to { opacity:.95; } }
 .map-candy { position:absolute; z-index:2; font-size:20px; line-height:1; pointer-events:none; transform:translate(-50%,-50%); filter:drop-shadow(0 2px 2px rgba(34,64,90,.3)); }
 .map-sticker { position:absolute; z-index:4; pointer-events:none; } /* v32.24: sticker GIF dong dan ban do — tren nut/be ca (z 3) nen cho cham ma (opacity<0.5) bi sticker che han, khong am mau; khong chan cham (pointer-events:none) */ /* v31.61: candies gliding on the road after the shark girl */
+#mapParty::after { content:""; position:absolute; left:50%; bottom:-3px; width:62px; height:13px; transform:translateX(-50%); border-radius:50%; background:radial-gradient(ellipse at center, rgba(34,64,90,.30) 0%, rgba(34,64,90,.12) 55%, rgba(34,64,90,0) 75%); pointer-events:none; z-index:-1; } /* v32.37: BONG CHAM DAT duoi chan be (nam trong #mapParty nen lan cung be, khong nhay theo partyHop) — be dung CHAC tren mat nut, co chieu sau 4D; z-index -1 de bong nam DUOI be nhung TREN orb nut. */
 #mapParty .map-party-baby { display:block; flex:0 0 auto; margin-left:-3px; filter:none; /* v32.35: bong do chuyen sang sprite (tranh nhan doi bong toi). */ animation:partyHop .5s ease-in-out infinite alternate; }
 #mapParty .map-party-baby img { display:block; width:100%; height:auto; }
 /* v32.30: be ca MAP DI BO 2x — sprite AI cat tu video Flow, sheet tiles/shark-girl-walk-ai-2x.png (1880x309, 10 khung x 188x309, cat lai tu cung 10 khung video Flow — hinh lap 98-99% khung, hien 64x105: be ~76px o man 1 thay vi ~53px, ~1.0x DPR tren dien thoai 3x nen net tro lai). v32.25 goc: sheet 960x182, 10 khung x 96px, be AI nho hon ~4px, khung 7 giay hoi mo. Span trong chi doi khung wave (100ms/khung, steps(1) de khung dung yen khong truot); bounce (partyHop/partyBob) van o span ngoai .map-party-baby. */
-#mapParty .map-walk-sprite { display:block; width:76px; height:125px; /* v32.35: be ca TO + DAM + CO VONG TRANG — sprite 76x125 (sheet 2x, hinh lap day khung, phong 0.45x nen net hon); filter saturate/contrast + vong trang (halo) + bong chan — be tach khoi nen hong. */ /* v31.96: nho lai (56x106 -> 46x87) de khong che orb; v31.68: to hon theo nut 72px */ background:url("tiles/shark-girl-walk-ai-2x.png") 0 0/1000% 100% no-repeat; /* v32.30: sheet 2x (10 khung, 1000% giu nguyen). */ filter:saturate(1.35) contrast(1.12) brightness(1.02) drop-shadow(0 0 4px rgba(255, 255, 255, .95)) drop-shadow(0 0 10px rgba(255, 255, 255, .45)) drop-shadow(0 4px 5px rgba(34,64,90,.35)); animation:walkCycle 1s steps(1) infinite; transform-origin:50% 100%; } /* v32.05: xoay nguoc da BO (khong con goc mat phang) — be dung thang san vi qua cau khong lac ngang nua; transform-origin 50% 100% giu lai (chan la neo) */
+#mapParty .map-walk-sprite { display:block; width:76px; height:125px; /* v32.35: be ca TO + DAM + CO VONG TRANG — sprite 76x125 (sheet 2x, hinh lap day khung, phong 0.45x nen net hon); filter saturate/contrast + vong trang (halo) + bong chan — be tach khoi nen hong. */ /* v31.96: nho lai (56x106 -> 46x87) de khong che orb; v31.68: to hon theo nut 72px */ background:url("tiles/shark-girl-walk-ai-2x.png") 0 0/1000% 100% no-repeat; /* v32.30: sheet 2x (10 khung, 1000% giu nguyen). */ filter:saturate(1.35) contrast(1.12) brightness(1.02) drop-shadow(0 4px 5px rgba(34,64,90,.35)); /* v32.37: BO 2 drop-shadow TRANG (4px .95 + 10px .45) — chung loang vien be thanh suong trang, la ly do be MO tren map du sprite goc net; chi giu 1 bong toi duoi chan. */ animation:walkCycle 1s steps(1) infinite; transform-origin:50% 100%; } /* v32.05: xoay nguoc da BO (khong con goc mat phang) — be dung thang san vi qua cau khong lac ngang nua; transform-origin 50% 100% giu lai (chan la neo) */
 @keyframes walkCycle { 0% { background-position:0% 0; } 10% { background-position:11.111% 0; } 20% { background-position:22.222% 0; } 30% { background-position:33.333% 0; } 40% { background-position:44.444% 0; } 50% { background-position:55.555% 0; } 60% { background-position:66.666% 0; } 70% { background-position:77.777% 0; } 80% { background-position:88.888% 0; } 90%,100% { background-position:100% 0; } }
 #mapParty .map-party-baby.leader { width:76px; margin-left:0; z-index:2; } /* v32.35: span ngoai theo sprite 76px. */
 #mapParty .map-party-baby.follower { width:28px; }
@@ -849,7 +848,7 @@ input[type=text]:focus { border-color:#ff5c8a; }
 #devCredit { position:absolute; left:0; right:0; bottom:0.32cm; text-align:center; font-size:10px; font-weight:600; letter-spacing:.2px; color:rgba(255,255,255,.92); text-shadow:0 1px 3px rgba(0,0,0,.35); pointer-events:none; z-index:5; }
 /* v31.40: cá heo Flow pastel đưa lại vào game (An yêu cầu 2026-11-14) */
 /* v31.51: moi man la 1 vung dat rieng — man + qua toi man 25, glow tung o, truyen viet lai (An 2026-11-14). LIVE. */
-/* v31.74: cay VE TAY doc 2 ben DUONG (An sua 2026-11-14) — cay bam theo duong (nut ±16%), khong phai hang cay vien background; bo emoji. LIVE v32.36. */
+/* v31.74: cay VE TAY doc 2 ben DUONG (An sua 2026-11-14) — cay bam theo duong (nut ±16%), khong phai hang cay vien background; bo emoji. LIVE v32.37. */
 /* v30: story chapters — full-screen card before levels 1/3/5/8.
    z-index 60 sits above the transition overlay (55); the level timer
    only starts after the player taps Play, so reading costs no time. */
@@ -1069,6 +1068,7 @@ input[type=text]:focus { border-color:#ff5c8a; }
 </div>
 
 <div id="mapScreen" class="hidden">
+  <div id="mapVignette"></div>
   <div class="map-wrap">
     <div class="map-scroll" id="mapScroll">
       <div id="mapPath"></div>
@@ -4131,22 +4131,59 @@ function layoutPaintedRoad() { /* v32.12: dat hinh hoc nen ve (nap tren + o gach
   /* v32.16: o gach ket o RANH GIOI DAI CUOI CUNG truoc day dia ket (khong keo toi day #mapPath — duong khong con keo dai thanh duong trong xuong day ban do): day dia = dinh dia (nodeContentY(50) - 19 = 10307 — v32.34; v32.31: 7147) + chieu cao dia (rong 88% * 252/1140); tileEnd = topH + so NGUYEN dai * (tileH/8) — lan lap TRON khong du de che man 48-50 (o gach ket tren cac nut do), nen phai keo toi ranh gioi dai (cac dai thua cua lan lap cuoi mang keo che man 48-50: dai 0 gay ~man 48, dai 1 mut ~48-49, dai 2 mut ~49, dai 3 gay ~man 50 ben canh dia); duong o diem cat nam trong pham vi dia che o y do nen khong thay vet cat (kiem chung so hoc o cac rong 320-800: vet cat an duoi dia, hoac khe <=22px tren dia o rong hep nhat — duong doc nhu chay toi lau dai, nhu v32.14); phan duoi tileEnd la nen hong phang G0 cua #mapPath. */
   mapRoadGeom.swirlBottom = (nodeContentY(50) - 19) + 0.88 * w * 252 / 1140;
   mapRoadGeom.tileEnd = mapRoadGeom.topH + Math.floor((mapRoadGeom.swirlBottom - mapRoadGeom.topH) / (mapRoadGeom.tileH / 8)) * (mapRoadGeom.tileH / 8); /* v32.16: ranh gioi DAI (khong phai lan lap) — de cac dai thua che man 48-50 */
-  var top = path.querySelector("#mapRoadTop");
-  if (!top) { top = document.createElement("div"); top.id = "mapRoadTop"; path.appendChild(top); }
-  top.style.height = mapRoadGeom.topH + "px";
-  var tile = path.querySelector("#mapRoadTile");
-  if (!tile) { tile = document.createElement("div"); tile.id = "mapRoadTile"; path.appendChild(tile); }
-  tile.style.top = mapRoadGeom.topH + "px";
-  tile.style.bottom = "auto"; /* v32.14: bottom:0 trong CSS chi la du phong khi JS chua chay — JS gioi han o gach o tileEnd (xem ghi chu o mapRoadGeom). */
-  tile.style.height = (mapRoadGeom.tileEnd - mapRoadGeom.topH) + "px"; /* v32.16: chieu cao o gach = so NGUYEN dai toi sau dia ket (lan lap tron + cac dai thua). */
-  var bottom = path.querySelector("#mapRoadBottom");
-  if (!bottom) { bottom = document.createElement("div"); bottom.id = "mapRoadBottom"; path.appendChild(bottom); }
-  bottom.style.top = mapRoadGeom.tileEnd + "px"; /* v32.17: dai duoi bat dau ngay duoi o gach (tileEnd) */
-  bottom.style.height = (MAP_ROAD_BOTTOM_H * s) + "px"; /* v32.17: cao 840 * ti le rong (~256px o rong 430) — nam trong 320px padding-bottom cua #mapPath; lop TINH, dat 1 lan luc dung/resize, khong ghi gi khi cuon */
-  var swirl = path.querySelector("#mapRoadSwirl");
-  if (!swirl) { swirl = document.createElement("div"); swirl.id = "mapRoadSwirl"; path.appendChild(swirl); }
-  swirl.style.top = (nodeContentY(50) - 19) + "px"; /* v32.13: dia ket DAT THEO NUT 50 (tam nut 50 = 10326 — v32.34 (v32.31: 7166); dinh dia o 10307, orb nut che 55px dinh dia — nhu v32.12 o rong 430); nut 50 cuon len gan giua man hinh nho padding-bottom 320px tren #mapPath nen vuong mien boss moi thay ro. */
-  swirl.style.bottom = "auto"; /* top thang, bottom:4px trong CSS chi la du phong khi JS chua chay */
+  buildRoadStrips(path, w, s); /* v32.37: cat nen ve thanh cac DAI NGANG lan cung nut (thay 4 lop tinh) — xem buildRoadStrips; hinh hoc (topH/tileH/tileEnd) giu nguyen. */
+}
+function buildRoadStrips(path, w, s) { /* v32.37: LAN TRON CUNG NHAU (An 2026-11-17: map TRUOT thay vi LAN) — nen ve cu chi truot phang theo noi dung trong khi chi nut + be co transform lan, nen ca map doc nhu truot tren nen phang. Gio nen ve cat thanh cac dai ngang (moi dai <=120px + cat dung ranh dai o gach de khong cat ngang dai lat): moi dai la 1 lat cat cua dung anh nen (nap/o gach/dai duoi) o dung vi tri, applyFisheye lan TUNG DAI bang dung cong thuc sin cua nut — nen + nut + be cung lan tren 1 mat cau. Xoa het dai cu roi dung lai (renderMap/resize deu chay qua day; buildMapCache chay SAU nen cache luon moi). */
+  var olds = path.querySelectorAll(".road-strip");
+  for (var oi = olds.length - 1; oi >= 0; oi--) olds[oi].parentNode.removeChild(olds[oi]);
+  var g = mapRoadGeom;
+  var bandH = g.tileH / 8;
+  var bottomH = MAP_ROAD_BOTTOM_H * s;
+  var endY = g.tileEnd + bottomH;
+  var cuts = [0, g.topH, g.tileEnd, endY];
+  var k;
+  for (k = 1; k < 8; k++) cuts.push(g.topH + k * bandH); /* ranh dai o gach */
+  for (var y = 120; y < endY; y += 120) cuts.push(y); /* luoi 120px */
+  cuts.sort(function(a, b) { return a - b; });
+  var uniq = [];
+  for (var ci = 0; ci < cuts.length; ci++) {
+    if (ci === 0 || cuts[ci] - uniq[uniq.length - 1] > 1) uniq.push(cuts[ci]);
+  }
+  for (var si = 0; si < uniq.length - 1; si++) {
+    var y0 = uniq[si], y1 = uniq[si + 1];
+    var d = document.createElement("div");
+    d.className = "road-strip";
+    d.style.top = y0 + "px";
+    d.style.height = (y1 - y0) + "px";
+    if (y0 < g.topH) {
+      d.className += " strip-top";
+      d.style.backgroundSize = w + "px " + g.topH + "px";
+      d.style.backgroundPosition = "0 " + (-y0) + "px";
+      d.setAttribute("data-flip", "1");
+    } else if (y0 < g.tileEnd) {
+      d.className += " strip-tile";
+      var imgY = (y0 - g.topH) % g.tileH;
+      d.style.backgroundSize = w + "px " + g.tileH + "px";
+      d.style.backgroundPosition = "0 " + (-imgY) + "px";
+      d.style.backgroundRepeat = "repeat-y";
+      d.setAttribute("data-flip", "1"); /* KHONG flip: anh goc da lat xen ke san theo dai (band le = mirror band chan) — flip them lat nguoc lai, duong gay khuc o ranh dai; cat dung ranh dai (bandH) van giu de lat cat khop dai goc. */
+    } else {
+      d.className += " strip-bottom";
+      d.style.backgroundSize = w + "px " + bottomH + "px";
+      d.style.backgroundPosition = "0 " + (-(y0 - g.tileEnd)) + "px";
+      d.setAttribute("data-flip", "1");
+    }
+    path.appendChild(d);
+  }
+  /* Dia ket (swirl): 1 dai rieng, lan nhu nut (khong cat) — giu vi tri cu (top theo nut 50, dinh dia o 10307), doi left:50%+translateX thanh left:6%/width:88% de transform lan khong bi ghi de. */
+  var sw = document.createElement("div");
+  sw.className = "road-strip strip-swirl";
+  sw.style.left = "6%";
+  sw.style.width = "88%";
+  sw.style.top = (nodeContentY(50) - 19) + "px";
+  sw.style.height = (0.88 * w * 252 / 1140) + "px";
+  sw.setAttribute("data-flip", "1");
+  path.appendChild(sw);
 }
 var mapCurrentLevel = 1;
 function mapMaxShown() { return LANDS.length; } /* v31.65: show ALL 50 levels — An wants to scroll through every level (2026-11-14); .map-scroll already scrolls */
@@ -4204,7 +4241,7 @@ function placePartyAt(lv) {
     updateCandies();
   }
 }
-function walkParty(fromLv, toLv) {
+function walkParty(fromLv, toLv) { /* v32.37: DI MUOT (An 2026-11-17: be di nut-nut chua muot) — ban cu: moi doan dung cubic voi tiep tuyen DOC o 2 dau (van toc ngang = 0 o moi nut) + hop |sin| co goc nhon o dinh — be DUNG LAI + GIAT o moi nut trung gian. Ban moi: 1 duong Catmull-Rom LIEN TUC qua tat ca nut (tiep tuyen tai nut giua = (P[i+1]-P[i-1])/2, khong dung) + tham so theo DO DAI CUNG (toc do deu doc duong) + easeInOutCubic TOAN bo doan di (chi tang/giam toc o dau/cuoi) + nhip nhay MEM theo quang duong (stride 42px, dao ham 0 o dinh/chan). Thoi gian nhu cu (1600ms/nut, toi da 4800ms). */
   var party = document.getElementById("mapParty");
   if (!party) return;
   var pts = [];
@@ -4218,22 +4255,48 @@ function walkParty(fromLv, toLv) {
   party.classList.remove("idle");
   party.classList.add("walking");
   var total = Math.min(1600 * (pts.length - 1), 4800); /* v31.63: slower — An said she glides too fast */
-  var start = null;
-  function cubic(p0, p1, t) {
-    var my = (p0.y + p1.y) / 2, u = 1 - t;
+  /* Catmull-Rom qua pts, lay mau thanh duong gap khuc day (16 mau/doan) + do dai tich luy. */
+  var samples = [], cum = [0];
+  function cr(p0, p1, p2, p3, t) {
+    var t2 = t * t, t3 = t2 * t;
     return {
-      x: u*u*u*p0.x + 3*u*u*t*p0.x + 3*u*t*t*p1.x + t*t*t*p1.x,
-      y: u*u*u*p0.y + 3*u*u*t*my + 3*u*t*t*my + t*t*t*p1.y
+      x: 0.5 * ((2 * p1.x) + (-p0.x + p2.x) * t + (2 * p0.x - 5 * p1.x + 4 * p2.x - p3.x) * t2 + (-p0.x + 3 * p1.x - 3 * p2.x + p3.x) * t3),
+      y: 0.5 * ((2 * p1.y) + (-p0.y + p2.y) * t + (2 * p0.y - 5 * p1.y + 4 * p2.y - p3.y) * t2 + (-p0.y + 3 * p1.y - 3 * p2.y + p3.y) * t3)
     };
   }
+  var SEG = 16, si, sj;
+  for (si = 0; si < pts.length - 1; si++) {
+    var q0 = pts[si - 1] || pts[si], q1 = pts[si], q2 = pts[si + 1], q3 = pts[si + 2] || pts[si + 1];
+    for (sj = 0; sj < SEG; sj++) {
+      var sp = cr(q0, q1, q2, q3, sj / SEG);
+      if (samples.length) {
+        var lp = samples[samples.length - 1];
+        cum.push(cum[cum.length - 1] + Math.sqrt((sp.x - lp.x) * (sp.x - lp.x) + (sp.y - lp.y) * (sp.y - lp.y)));
+      }
+      samples.push(sp);
+    }
+  }
+  samples.push(pts[pts.length - 1]);
+  var lp2 = samples[samples.length - 2];
+  cum.push(cum[cum.length - 1] + Math.sqrt((pts[pts.length - 1].x - lp2.x) * (pts[pts.length - 1].x - lp2.x) + (pts[pts.length - 1].y - lp2.y) * (pts[pts.length - 1].y - lp2.y)));
+  var totalLen = cum[cum.length - 1];
+  function posAt(dist) {
+    if (dist <= 0) return samples[0];
+    if (dist >= totalLen) return samples[samples.length - 1];
+    var lo = 0, hi = cum.length - 1;
+    while (lo < hi) { var mid = (lo + hi) >> 1; if (cum[mid] < dist) lo = mid + 1; else hi = mid; }
+    var i1 = Math.max(1, lo), i0 = i1 - 1;
+    var f = (dist - cum[i0]) / (cum[i1] - cum[i0] || 1);
+    return { x: samples[i0].x + (samples[i1].x - samples[i0].x) * f, y: samples[i0].y + (samples[i1].y - samples[i0].y) * f };
+  }
+  var startTs = null;
   function frame(ts) {
-    if (!start) start = ts;
-    var p = Math.min((ts - start) / total, 1);
-    var segFloat = p * (pts.length - 1);
-    var si = Math.min(Math.floor(segFloat), pts.length - 2);
-    var st = segFloat - si;
-    var pos = cubic(pts[si], pts[si + 1], st);
-    var hop = Math.abs(Math.sin(st * Math.PI * 2)) * 5;
+    if (!startTs) startTs = ts;
+    var p = Math.min((ts - startTs) / total, 1);
+    var e = p < 0.5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2; /* easeInOutCubic TOAN doan di */
+    var dist = e * totalLen;
+    var pos = posAt(dist);
+    var hop = (1 - Math.cos(dist * Math.PI * 2 / 42)) / 2 * 4; /* nhip mem theo quang duong (42px/buoc), dao ham 0 o dinh + chan */
     placeParty(pos.x, pos.y - hop);
     requestMapMotion(); /* v32.05: 1 rAF duy nhat (lan + fisheye) — be ca buoc di -> cap nhat lan/fisheye theo tung buoc */
     /* Record where she just was, so the candies can glide after her. */
@@ -4396,6 +4459,7 @@ function applyFisheye() { /* v32.07: LAN CONG HON (An 09:13: "Cho cong hon xiu d
     if (mapCache.partyT) { mapCache.partyEl.style.transform = ""; mapCache.partyT = ""; }
     if (mapCache.partyO) { mapCache.partyEl.style.opacity = ""; mapCache.partyO = ""; }
     mapCache.partyOff = true;
+    if (mapCache.strips) { for (var sj2 = 0; sj2 < mapCache.strips.length; sj2++) { var sd2 = mapCache.strips[sj2]; if (sd2.t) { sd2.el.style.transform = ""; sd2.t = ""; } if (sd2.o) { sd2.el.style.opacity = ""; sd2.o = ""; } sd2.off = true; } } /* v32.37: giam chuyen dong — dai nen ve phang nhu nut + be. */
     /* v32.12: giam chuyen dong — duong la nen ve tinh (khong bep theo lan) nen khong can tra ve phang; chi nut + be ca ve phang o tren. */
     updateLabelFade(); /* v32.25: giam chuyen dong — transform ve phang (identity) nen nhan mo theo vi tri tu nhien */
     updateStarsPill(true); /* v32.32: vien sao cung tranh nut/nhan/be ca/sticker o che do phang */
@@ -4439,6 +4503,36 @@ function applyFisheye() { /* v32.07: LAN CONG HON (An 09:13: "Cho cong hon xiu d
     op = op * edgeFade;
     var os = op.toFixed(2);
     if (nd.o !== os) { nd.el.style.opacity = os; nd.o = os; }
+  }
+  /* v32.37: NEN LAN CUNG NUT — moi dai nen lay DUNG cong thuc sin cua nut (cung centerY/R/ROLL_MAX): ty tinh tu MEP TREN dai, scaleY tinh CHINH XAC tu 2 mep (R*(sin(bot)-sin(top))/h) de dai ke khop nhau khong ho/khong chong (dung cos truc tiep thi sai so bac 2 ~p^2/2R toi ~23px o rim); scaleX=1 (KHONG thu hep ngang — dai full-width, thu hep lam mep duong lech nhau nhu bac thang o ranh dai) — KHONG flip (anh goc da lat xen ke san theo dai; flip them gay khuc duong o ranh dai); mo nhu nut (0.56/edgeFade /0.38). Chi tinh dai trong cua so lan, chi ghi khi chuoi doi. */
+  if (mapCache.strips) {
+    for (var si2 = 0; si2 < mapCache.strips.length; si2++) {
+      var sd = mapCache.strips[si2];
+      if (sd.off && (sd.yT + sd.h < winLo || sd.yT > winHi)) continue;
+      var syc = sd.yT + sd.h / 2 - centerY;
+      var salpha = syc / R;
+      if (salpha > GLOBE_ROLL_MAX || salpha < -GLOBE_ROLL_MAX) {
+        if (!sd.off) { sd.el.style.transform = ""; sd.el.style.opacity = ""; sd.t = ""; sd.o = ""; sd.off = true; }
+        continue;
+      }
+      sd.off = false;
+      var ssin = Math.sin(salpha);
+      var srr = Math.abs(ssin);
+      var sTop = (sd.yT - centerY) / R, sBot = (sd.yT + sd.h - centerY) / R;
+      var sty = R * Math.sin(sTop) - (sd.yT - centerY);
+      var ssy = R * (Math.sin(sBot) - Math.sin(sTop)) / sd.h;
+      if (ssy < 0.05) ssy = 0.05; if (ssy > 1.6) ssy = 1.6;
+      var ssx = 1; /* KHONG thu hep ngang: dai nen rong full-width — scaleX<1 lam mep trai/phai cua duong lech nhau o moi ranh dai (desktop rong 1920 lech toi ~400px, nhin nhu bac thang); lan doc qua scaleY + ty + mo la du, giong nut theo chieu doc. */
+      var stf = "translate(0px," + sty.toFixed(1) + "px) scale(" + (sd.flip * ssx).toFixed(3) + "," + ssy.toFixed(3) + ")";
+      if (sd.t !== stf) { sd.el.style.transform = stf; sd.t = stf; }
+      var sedge = (GLOBE_ROLL_MAX - Math.abs(salpha)) / 0.38;
+      if (sedge > 1) sedge = 1; if (sedge < 0) sedge = 0;
+      var sop = 1 - 0.56 * srr * srr;
+      if (sop < 0) sop = 0;
+      sop = sop * sedge;
+      var sos = sop.toFixed(2);
+      if (sd.o !== sos) { sd.el.style.opacity = sos; sd.o = sos; }
+    }
   }
   /* v32.06: BE CA LAN CUNG NUT CUA MINH — kiem tra v32.05 (01:23) phat hien be KHONG bep/mo theo nut o rim: nut chi con lat mong 30x15px ma be van cao ~70px dung thang — trong nhu loi lung tren mep. Gio be lay DUNG ti le + do mo + goc bep cua NUT CUA MINH (tinh tu vi tri nut: party.y + 62.5 = tam nut — v32.35: hop 76x125, chan be o tam nut, be dung TREN MAT nut): translate bend cua nut (chan be dap dung tam nut da bep), rotate(phi) scale(sR,sT) rotate(-phi) — be van DUNG THANG (xoay nguoc -phi) nhung BEP DOC theo nut khi nut vong ra sau cau; opacity = opacity cua nut, chuan hoa len (o diem dung be hien 1.0). Be bien mat CUNG nut khi nut vong ra sau (khong loi lung o rim). transform-origin 50% 100% (chan) tren #mapParty giu chan be dung yen khi scale. */
   var party = mapCache.partyEl;
@@ -4510,19 +4604,26 @@ function buildMapCache() { /* do layout 1 LAN: vi tri noi dung cua 50 nut (nodeC
     L2.el.style.top = (nc2.y + 46) + "px";
     L2.el.style.transformOrigin = L2.hw + "px -46px";
   }
+  /* v32.37: cache DAI NEN cho applyFisheye — doc top/height/flip tu inline style + data-flip (layoutPaintedRoad chay TRUOC buildMapCache o ca renderMap lan resize — xem thu tu moi trong resize handler). */
+  var strips = [];
+  var stripEls = path.querySelectorAll(".road-strip");
+  for (var qi = 0; qi < stripEls.length; qi++) {
+    strips.push({ el: stripEls[qi], yT: parseFloat(stripEls[qi].style.top) || 0, h: parseFloat(stripEls[qi].style.height) || 0, flip: parseInt(stripEls[qi].getAttribute("data-flip") || "1", 10), t: "", o: "", off: true });
+  }
   var sr = sc.getBoundingClientRect();
   var pillEl0 = document.getElementById("mapTotal");
   var pillRect0 = null;
   if (pillEl0) { var pr0 = pillEl0.getBoundingClientRect(); pillRect0 = { left: pr0.left, top: pr0.top, right: pr0.right, bottom: pr0.bottom }; } /* v32.32: doc hinh chu nhat vien sao 1 lan luc dung ban do/resize (vien co dinh, khong cuon) — updateStarsPill chi dung cache, khong doc layout moi frame */
   if (pillEl0) { pillEl0.style.opacity = ""; } /* v32.34: DONG BO LAI VIEN SAO KHI DUNG LAI CACHE — cache moi luon coi vien la DANG HIEN, nhung vien co the van mang opacity "0" tu cache cu (vien dang an luc dong map / truoc khi resize); ham cap nhat vien chi ghi khi trang thai DOI nen vien dinh an mai du khong co gi cham no — reset opacity o day de DOM khop cache moi. */
   mapCache = { sc: sc, mapScreen: document.getElementById("mapScreen"), path: path,
-    partyEl: document.getElementById("mapParty"),
+    partyEl: document.getElementById("mapParty"), strips: strips,
     nodes: nodes, labels: labels, R: sr.height * 0.34, /* v32.27: CAU CHAT HON NUA (0.40->0.34) — vung phang giua hep hon (flat zone 0.55R: 141px->120px o cao 640px), keo doc o day man hinh 129px->~219px; alpha day man hinh = (1-0.34)/0.34 = 1.94 phai <= GLOBE_ROLL_MAX 1.95. */ halfW: sr.width / 2, /* v32.07: R CHAT HON (0.5->0.45 chieu cao khung nhin) — vung phang giua hep lai, nut bat dau cong som hon, lan doc ro hon (An 09:13: "cho cong hon xiu") */
     maxScroll: Math.max(0, sc.scrollHeight - sc.clientHeight),
     party: null, partyT: "", partyO: "", partyOff: true, partyS: 1, partySR: 1, partyPhi: 0, partyTX: 0, partyTY: 0, pillEl: pillEl0, pillRect: pillRect0, pillHidden: false, stickerRects: [] }; /* v32.12: khong con o cache cho duong — duong la nen ve tinh, khong can leg/bent */ /* v32.25: + labels o tren + partyS/SR/Phi/TX/TY cho updateLabelFade */
   return mapCache;
 }
-                    /* v32.36: (1) CAN BANG NUT + BE CA — TREN BAN DO (An 2026-11-16 23:01, sau khi duyet be ca o v32.35: "Be ca het mo nhat roi, gio thi toi nut mo nhat, co the nao can bang cho ca hai hong" — be ca da ro, gio NUT mo nhat so voi be): DO LUONG (probe Playwright + PIL tren v32.35, 1920x1080, be o nut 11): chi ~3 nut doc duoc cung luc — nut cach tam 1-2 hang mo xuong op 0.32-0.45 + bep doc chi con 15-33px cao; nut khoa xam (39/50 nut) |dL| chi 4-26 so voi nen hong, sat 0.03-0.06 — orb xam + vom trang + nen hong nhat gan nhu hoa vao nhau (ngay ca o op 0.9, L2/L3 doc |dL| 4-9); huy hieu so 22px thu lai ~14px o nut bep; trong khi be ca op 1.0, 82x112, |dL| 35-49, sat 0.18-0.24 — la vat sang nhat man hinh. Orb HIEN TAI nhieu mau chung minh art co the doc (|dL| 65.6 o L1 ngay ca khi bep) — sua la NANG NUT len, khong day be ca xuong. SUA (chi NUT, khong doi be ca/khoang cach/cong/nhan/sticker): (a) MO NHE HON: fade 0.60->0.56 + edgeFade /0.40->/0.38, ca hai nhanh (nop cua be ca cung doi, giu dong bo) — nut o rr=1 tu op 0.40 len 0.44, rr=1.1 tu 0.27 len 0.32; HINH HOC LAN KHONG DOI (R/BEND/SQUASH/MIN giu nguyen) nen moi cua quet sticker/nhan/vien van dung; (chon 0.56 thay vi 0.45: thu 0.45 lam 36 nhan cat be ca o test muc 9, 0.56 dua cac op do xuong duoi 0.5); (b) ORB DAM HON: saturate 1.9->2.4, contrast 1.2->1.35 (nut hien tai 2.6/1.4); vom trang tren orb ha xuong .55->.35 (duoi .4->.25); orb khoa contrast 1.2->1.35, opacity .85->.92 + vong xam dam hon (#525b68->#3d444f); (c) VIEN + BONG: moi nut them vong trang 2px + vong toi 4px tach khoi nen hong + bong do dam hon (0.35->0.5); nut hien tai quang vang 24px->28px (van noi bat nhat, khong chim hang xom); (d) SO + NHAN + SAO DAM HON: huy hieu so 22px->26px, chu .72->.85rem + bong; ten man .68->.78rem, dam 800, mau #16324a + quang trang manh hon; sao .85->.95rem, sao chua dat #93a3b5->#7c8aa0. (2) GIU NGUYEN BAN TRUOC: be ca 76x125 + vong trang + saturate 1.35 + opacity 1.0 o diem dung; khoang cach nut (134px @1366, 107px @1920, 104px @390); cong fisheye; nut dam; vien sao; khong banner; sticker L8/L27/L36; 50 LANDS, boss 12 HP, 480s, cat sao 120s, khong rung. */
+                      /* v32.37: (1) LAM LAI BAN DO — BE CA NET + DI MUOT + MAP LAN TRON + 4D (An 2026-11-17 23:24, anh chup ban do live v32.36: (1) be ca tren map van MO; (2) be ca di tu nut nay sang nut khac chua MUOT; (3) map TRUOT thay vi LAN — khi keo thi ca map (nen + nut + be ca) phai lan tron cung nhau nhu mot khoi; (4) map + be ca qua PHANG — nang len "4D cinematic"). DO LUONG (Playwright + PIL tren v32.36, 390x844, be o nut 11): be hien ~66x109 (scale fisheye ~0.87) — khong nho, nhung 2 lop drop-shadow TRANG tren sprite (4px .95 + 10px .45) + halo trang .55 lam vien be loang trang, mat net (anh cat 3x: mat be nhoe, vien hood loang, ca hinh co suong trang); duong ve (anh ve) CHI truot phang theo noi dung — chi nut + be ca co transform lan, nen ca map doc nhu truot tren nen phang; walkParty: moi doan dung cubic voi tiep tuyen DOC o 2 dau (van toc ngang = 0 o moi nut) + hop |sin| co goc nhon o dinh — be giat cuc o moi nut trung gian. SUA: (a) BE CA NET: bo 2 drop-shadow TRANG tren sprite (chi giu 1 bong toi duoi chan), halo .55->.42 — vien be het loang trang, mat/mui doc ro; kich thuoc be + sprite giu nguyen (76x125, sheet 2x). (b) DI MUOT: walkParty viet lai — duong Catmull-Rom qua cac nut + tham so theo DO DAI CUNG (toc do deu) + easeInOutCubic TOAN bo doan di (khong dung lai o nut trung gian) + nhip nhay mem theo quang duong (stride 42px, khong con goc nhon |sin|); thoi gian nhu cu (1600ms/nut, toi da 4800ms). (c) LAN TRON CUNG NHAU: nen ve cat thanh ~90 DAI NGANG (moi dai <=120px + cat dung ranh dai o gach de khong cat ngang dai lat) — moi dai la 1 lat cat cua dung anh nen (nap/o gach/dai duoi) o dung vi tri, applyFisheye lan TUNG DAI bang DUNG cong thuc sin cua nut (ty + scaleY tinh chinh xac tu 2 mep dai, scaleX=1, mo nhu nut) — nen + nut + be cung lan tren 1 mat cau, khong con truot rieng; dia ket (swirl) lan nhu 1 dai rieng; KHONG flip dai le — anh goc da lat xen ke san (do PIL: band le ≈ mirror band chan, MAD 2.2 vs 6.1; duong lien tuc khi de nguyen), flip them se gay khuc duong o ranh dai; scaleX=1 (khong thu hep ngang — dai full-width, thu hep lam mep duong lech nhau nhu bac thang tren desktop). (d) 4D CINEMATIC (nhe, nen van binh tinh): bong cham dat mem duoi chan be (#mapParty::after) + lop mo vien mem tren/duoi khung cuon (#mapVignette, toi da 9%, khong cham nut) — chieu sau ma khong them chi tiet/roi mat; khong mo (blur) nut xa (nut van doc nhu v32.36); #mapVignette dat absolute duoi #mapScreen, KHONG trong #mapScroll (sticky + margin-bottom:-100% day #mapPath lech vi margin % tinh theo rong: +397px phone / -897px desktop). (e) GIU NGUYEN: 50 nut/khoang cach/cong fisheye (R/BEND/SQUASH/MIN), nut dam v32.36, vien sao, nhan, sticker, 50 LANDS, boss 12 HP, 480s, cat sao 120s, khong rung man hinh bao gio, khong keo ven duong; map chi mo qua nut "Ban do man"; ?level=N chi o preview. */
+  /* v32.36: (1) CAN BANG NUT + BE CA — TREN BAN DO (An 2026-11-16 23:01, sau khi duyet be ca o v32.35: "Be ca het mo nhat roi, gio thi toi nut mo nhat, co the nao can bang cho ca hai hong" — be ca da ro, gio NUT mo nhat so voi be): DO LUONG (probe Playwright + PIL tren v32.35, 1920x1080, be o nut 11): chi ~3 nut doc duoc cung luc — nut cach tam 1-2 hang mo xuong op 0.32-0.45 + bep doc chi con 15-33px cao; nut khoa xam (39/50 nut) |dL| chi 4-26 so voi nen hong, sat 0.03-0.06 — orb xam + vom trang + nen hong nhat gan nhu hoa vao nhau (ngay ca o op 0.9, L2/L3 doc |dL| 4-9); huy hieu so 22px thu lai ~14px o nut bep; trong khi be ca op 1.0, 82x112, |dL| 35-49, sat 0.18-0.24 — la vat sang nhat man hinh. Orb HIEN TAI nhieu mau chung minh art co the doc (|dL| 65.6 o L1 ngay ca khi bep) — sua la NANG NUT len, khong day be ca xuong. SUA (chi NUT, khong doi be ca/khoang cach/cong/nhan/sticker): (a) MO NHE HON: fade 0.60->0.56 + edgeFade /0.40->/0.38, ca hai nhanh (nop cua be ca cung doi, giu dong bo) — nut o rr=1 tu op 0.40 len 0.44, rr=1.1 tu 0.27 len 0.32; HINH HOC LAN KHONG DOI (R/BEND/SQUASH/MIN giu nguyen) nen moi cua quet sticker/nhan/vien van dung; (chon 0.56 thay vi 0.45: thu 0.45 lam 36 nhan cat be ca o test muc 9, 0.56 dua cac op do xuong duoi 0.5); (b) ORB DAM HON: saturate 1.9->2.4, contrast 1.2->1.35 (nut hien tai 2.6/1.4); vom trang tren orb ha xuong .55->.35 (duoi .4->.25); orb khoa contrast 1.2->1.35, opacity .85->.92 + vong xam dam hon (#525b68->#3d444f); (c) VIEN + BONG: moi nut them vong trang 2px + vong toi 4px tach khoi nen hong + bong do dam hon (0.35->0.5); nut hien tai quang vang 24px->28px (van noi bat nhat, khong chim hang xom); (d) SO + NHAN + SAO DAM HON: huy hieu so 22px->26px, chu .72->.85rem + bong; ten man .68->.78rem, dam 800, mau #16324a + quang trang manh hon; sao .85->.95rem, sao chua dat #93a3b5->#7c8aa0. (2) GIU NGUYEN BAN TRUOC: be ca 76x125 + vong trang + saturate 1.35 + opacity 1.0 o diem dung; khoang cach nut (134px @1366, 107px @1920, 104px @390); cong fisheye; nut dam; vien sao; khong banner; sticker L8/L27/L36; 50 LANDS, boss 12 HP, 480s, cat sao 120s, khong rung. */
   /* v32.35: (1) BE CA NOI BAT — TREN BAN DO (An 2026-11-16 22:38, sau khi duyet khoang cach v32.34: "be ca van bi mo nhat qua, cho be noi bat len"): DO LUONG (probe Playwright + PIL tren ban truoc, 1920x1080): hop be cu hien 69x95px o diem dung (cap ti le 1.0, bep 0.87) — HEP HON orb 94px dang dung, ~3.6% rong man hinh; do mo 0.85 o diem dung (ke thua mo fisheye cua nut); 47% pixel hinh nhat (V>0.85, S<0.25), do bao hoa trung binh 0.26 — vien mo tan o 64px; vong sang vang 128px rua be thay vi tach be. SUA (chi be ca, khong doi khoang cach/nut/cong/nhan/sticker): (a) TO HON: hop 64 -> 76px (sprite 76x125, 1.19x, nua 38/62.5) — chan van o tam nut, nua tren troi ra ngoai nut; cap ti le 1.0 giu nguyen. (BAN DAU 84x138 NHUNG THU NGHIEM THAY: hop 84x138 lam nhan nut tren CHAM DAU be o 35/49 vi tri (toi 9.2px, ca hai deu ro) — tai hien loi nhan xuyen be ma v32.33/34 da sua; be cung lam mo nhan L49, buildMapCache dung lai giu opacity '0' cu lam vien sao tron vo co — nen chon 76x125, co LON NHAT giu 0 cham nhan (khe ho phang 13px > do chong fisheye ~9px). SUA THEM: buildMapCache reset opacity '0' cu cua nhan khi dung lai (het ket mo cu).; (b) VONG TRANG + DAM HON: vong sang 128px vang -> 152px trang, sprite filter saturate(1.35) contrast(1.12) brightness(1.02) + vong trang (halo) + bong chan, bong cu o span baby bo; (c) KHONG BI MO O DIEM DUNG: do mo cua be chuan hoa (nop/0.85, toi da 1.0) — o diem dung be hien 1.0 thay vi 0.85, van mo dan khi vong ra rim. (2) GIU NGUYEN v32.34: khoang cach nut (134px @1366, 107px @1920, 104px @390), cong fisheye, nut dam, vien sao, khong banner, sticker L8/L27/L36, 50 LANDS, boss 12 HP, 480s, cat sao 120s, khong rung. */
   /* v32.34: (1) GIAN HANG RA — TAT CA 50 NUT (An 2026-11-16 21:43: "tren lap may cai man con dinh nhau nhieu qua bom, nut van con gan nhau a" — xem tu man 1 den 50, nut nao gan thi cho ra xa): hang 1-5 cao 280px (MAP_ROW_H_EARLY), hang 6-50 cao 200px (MAP_ROW_H) — nut 1-5 o 126/406/686/966/1246, nut 50 o 10326, #mapPath cao 7584 -> 10804. DO LUONG (probe Playwright tren ban v32.33, 4 viewport, moi buoc cuon, tam that getBoundingClientRect): cap ke gan nhau nhat (tam-tam, op >= 0.4) chi 52px o 1366x768, 30px o 1920x1080, 83px o 390x844; hang 200px don thuan van de cap 1-2 dinh nhau 42px o 1920 (cap tren di qua rim qua cau duoi TOP_ROLL) nen vung dau tang them len 280px; voi hang 1-5 280px + hang 6-50 200px: cap gan nhau nhat 134px o 1366x768, 107px o 1920x1080, 104px o 390x844, 154px o 1366x640 — KHONG cap nao duoi 90px o bat ky viewport nao; khe giua man hinh 92px, dau be cach orb nut tren ~18px o nut 11. Luu y: dung lan sin van xep chong cap ke dung luc di qua rim qua cau (alpha ~1.57, cos -> 0) — khoang dinh nho lai nhung van con, o rim cac nut mo dan (op ~0.2-0.4) nen it thay. (2) GIU NGUYEN ban truoc (chan be dung giua nut, nut dam, vien sao, khong banner, khong rung). (3) STICKER L36 off 115 -> 135 (quet sticker: label sticker L36 cham orb nut L36 1.9px o 1024w / 1.4px o 1366w, scroll 7175 — giong tien le L8/L27). (4) VIEN SAO DONG BO LAI KHI DUNG LAI CACHE (loi cu, hien ra khi hinh hoc moi lam vien ket thuc 1 vong quet o trang thai an): buildMapCache reset opacity vien ve hien khi tao cache moi — neu khong, vien dinh an mai du khong co gi cham no. */
   /* v32.33: (1) CHAN BE CA DUNG GIUA NUT (An 2026-11-16 15:56: "bom cho be ca dung giua nut a, la chan thi cham vao ben trong chinh giua cua nut, nua nguoi tren thi troi ra ngoai nut giong nhu be ca dang di tren mat nut chu khong phai ngoai vong tron cua nut"): chan be tu dinh nut (y-26) xuong CHINH GIUA nut (y) — be dung TREN MAT nut: chan cham vao trong chinh giua orb, nua nguoi tren troi ra ngoai nut; chi doi neo doc (placeParty top y-26 -> y, party.y -> y-52.5, neo o updateLabelFade + applyFisheye doi theo) — khong doi kich thuoc, di bo, truot, nut, nhan, sticker. DO LUONG (probe tren v32.32, nut 11 o viewport y 480 + dich truot giua man hinh, 6 rong): chan cu cach tam nut -26.0px moi rong (dung tren mep tren orb), chan moi 0.0px; dau van tren mep tren orb ~16px (proxy) / ~50-60px (giua man hinh); ngang chan-tam nut von 0.0px moi rong (sprite can giua khung +/-0.2px) nen khong can sua ngang. (2) GIU NGUYEN v32.32 (banner da bo, vien sao, nut dam, hang 1-3 200px, sticker L8/L27, 50 LANDS, boss 12 HP, 480s, cat sao 120s, khong rung). */
@@ -4771,7 +4872,7 @@ var mapResizeTimer = null;
 window.addEventListener("resize", function() {
   if (document.getElementById("mapScreen").classList.contains("hidden")) return;
   clearTimeout(mapResizeTimer);
-  mapResizeTimer = setTimeout(function() { buildMapCache(); layoutPaintedRoad(); positionMapStickers(); requestMapMotion(); }, 120); /* v32.24: resize — dat lai vi tri sticker (phia rong hon doi theo rong moi) */ /* v32.12: resize — dat lai hinh hoc nen ve (topH/tileH theo rong moi); nut la % nen tu dich theo, khong can dung lai ban do */ /* v32.25: + requestMapMotion — lam moi lan + mo nhan sau resize (khong thi transform cu + nhan mo cu dinh den khi cuon) */
+  mapResizeTimer = setTimeout(function() { layoutPaintedRoad(); buildMapCache(); positionMapStickers(); requestMapMotion(); /* v32.37: THU TU DOI — dai nen dung lai trong layoutPaintedRoad nen cache phai doc SAU (buildMapCache doc top/height/flip tu style cua dai moi); nut doc offsetTop nen khong phu thuoc thu tu. */ }, 120); /* v32.24: resize — dat lai vi tri sticker (phia rong hon doi theo rong moi) */ /* v32.12: resize — dat lai hinh hoc nen ve (topH/tileH theo rong moi); nut la % nen tu dich theo, khong can dung lai ban do */ /* v32.25: + requestMapMotion — lam moi lan + mo nhan sau resize (khong thi transform cu + nhan mo cu dinh den khi cuon) */
 });
 document.getElementById("mapPlayNextBtn").addEventListener("click", function() {
   AudioEng.unlock();
